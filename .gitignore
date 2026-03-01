@@ -1,0 +1,9 @@
+# Sparse-checkout repos (use update-repos.sh to restore)
+*/repos/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
