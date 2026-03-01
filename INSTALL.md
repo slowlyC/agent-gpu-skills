@@ -3,7 +3,6 @@
 ## 首次安装
 
 ```bash
-cd cursor-gpu-skills
 
 # 1. 获取源码 repo（sparse checkout 从 GitHub，约 114MB）
 bash update-repos.sh
@@ -34,7 +33,7 @@ cursor-gpu-skills/              # 项目目录（统一维护）
 │   └── repos/sglang/           # sparse checkout (~44MB)
 ├── install.sh                  # 安装到 ~/.cursor/skills/
 ├── update-repos.sh             # 获取/更新源码 repo
-├── scrape_cuda_docs.py         # CUDA 文档爬虫
+├── scrape_docs.py              # 文档爬虫
 └── INSTALL.md
 ```
 
@@ -50,7 +49,7 @@ bash update-repos.sh cutlass
 bash update-repos.sh sglang
 
 # 更新 CUDA 文档库
-uv run scrape_cuda_docs.py all --force
+uv run scrape_docs.py all --force
 
 # 同步 SKILL.md（修改源文件后重新安装）
 bash install.sh

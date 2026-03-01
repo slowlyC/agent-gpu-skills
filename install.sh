@@ -170,10 +170,10 @@ echo "验证: $PASS 通过, $FAIL 失败"
 if [ $FAIL -gt 0 ]; then
     echo ""
     echo "提示: 缺失的路径可能影响 skill 的搜索功能."
-    echo "  - CUDA 文档: 运行 'uv run scrape_cuda_docs.py all --force'"
+    echo "  - CUDA 文档: 运行 'uv run scrape_docs.py all --force'"
     echo "  - 源码 repo: 运行 'bash update-repos.sh'"
 fi
 
 echo ""
-echo "安装完成. 在 Cursor 中按 Ctrl+Shift+P 执行 'Developer: Reload Window' 即可生效."
+echo "安装完成. 在 Cursor Settings > Skills 中可以看到已安装的 skill."
 echo "手动引用: @cuda-skill, @triton-skill, @cutlass-skill, @sglang-skill"

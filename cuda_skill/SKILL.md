@@ -1,6 +1,6 @@
 ---
 name: cuda-skill
-description: "Query NVIDIA PTX ISA 9.1, CUDA Runtime API 13.1, Driver API 13.1, Programming Guide v13.1 local documentation. Debug and optimize GPU kernels with nsys/ncu/compute-sanitizer workflows. Use when writing, debugging, or optimizing CUDA code, GPU kernels, PTX instructions, inline PTX, TensorCore operations (WMMA, WGMMA, TMA, tcgen05), or when the user mentions CUDA API functions, error codes, device properties, memory management, profiling, GPU performance, compute capabilities, CUDA Graphs, Cooperative Groups, Unified Memory, dynamic parallelism, or CUDA programming model concepts."
+description: "Query NVIDIA PTX ISA 9.1, CUDA Runtime API 13.1, Driver API 13.1, Programming Guide v13.1, Best Practices Guide, Nsight Compute, Nsight Systems local documentation. Debug and optimize GPU kernels with nsys/ncu/compute-sanitizer workflows. Use when writing, debugging, or optimizing CUDA code, GPU kernels, PTX instructions, inline PTX, TensorCore operations (WMMA, WGMMA, TMA, tcgen05), or when the user mentions CUDA API functions, error codes, device properties, memory management, profiling, GPU performance, compute capabilities, CUDA Graphs, Cooperative Groups, Unified Memory, dynamic parallelism, or CUDA programming model concepts."
 ---
 
 # CUDA & PTX Reference
@@ -24,11 +24,14 @@ references/
 │   ├── 04-special-topics/ # Graphs, Unified Memory, Coop Groups, TMA, etc.
 │   ├── 05-appendices/     # Compute Capabilities, C++ extensions, math funcs
 │   └── INDEX.md
+├── best-practices-guide/  # CUDA C++ Best Practices Guide
+├── ncu-docs/              # Nsight Compute full docs (ProfilingGuide, CLI, etc.)
+├── nsys-docs/             # Nsight Systems full docs (UserGuide, etc.)
 ├── ptx-isa.md             # PTX search guide
 ├── cuda-runtime.md        # Runtime API search guide
 ├── cuda-driver.md         # Driver API search guide
-├── nsys-guide.md          # Nsight Systems profiling
-├── ncu-guide.md           # Nsight Compute metrics
+├── nsys-guide.md          # Nsight Systems quick reference
+├── ncu-guide.md           # Nsight Compute quick reference
 ├── debugging-tools.md     # compute-sanitizer, cuda-gdb
 ├── nvtx-patterns.md       # NVTX instrumentation
 └── performance-traps.md   # Bank conflicts, coalescing
@@ -121,6 +124,42 @@ rg "cluster" ~/.cursor/skills/cuda-skill/references/cuda-guide/01-introduction/p
 cat ~/.cursor/skills/cuda-skill/references/cuda-guide/INDEX.md
 ```
 
+### Best Practices Guide Lookup
+
+```bash
+# Memory coalescing best practices
+rg -i "coalescing" ~/.cursor/skills/cuda-skill/references/best-practices-guide/
+
+# Occupancy optimization
+rg -i "occupancy" ~/.cursor/skills/cuda-skill/references/best-practices-guide/
+
+# Shared memory usage patterns
+rg -i "shared memory" ~/.cursor/skills/cuda-skill/references/best-practices-guide/
+```
+
+### Nsight Compute Lookup
+
+```bash
+# Metric meanings and collection
+rg -i "metric" ~/.cursor/skills/cuda-skill/references/ncu-docs/ProfilingGuide.md
+
+# CLI usage and options
+rg -i "section" ~/.cursor/skills/cuda-skill/references/ncu-docs/NsightComputeCli.md
+
+# Roofline analysis
+rg -i "roofline" ~/.cursor/skills/cuda-skill/references/ncu-docs/ProfilingGuide.md
+```
+
+### Nsight Systems Lookup
+
+```bash
+# CLI profiling options
+rg -i "nsys profile" ~/.cursor/skills/cuda-skill/references/nsys-docs/UserGuide.md
+
+# CUDA trace analysis
+rg -i "cuda.*trace" ~/.cursor/skills/cuda-skill/references/nsys-docs/UserGuide.md
+```
+
 ## When to Use Each Source
 
 | Need | Source | Path shorthand |
@@ -149,6 +188,11 @@ cat ~/.cursor/skills/cuda-skill/references/cuda-guide/INDEX.md
 | Math functions (device) | Programming Guide | `cuda-guide/05-appendices/mathematical-functions.md` |
 | Multi-GPU programming | Programming Guide | `cuda-guide/03-advanced/multi-gpu-systems.md` |
 | Environment variables | Programming Guide | `cuda-guide/05-appendices/environment-variables.md` |
+| Memory optimization practices | Best Practices | `best-practices-guide/` |
+| Performance profiling strategy | Best Practices | `best-practices-guide/` |
+| ncu metrics, sections, roofline | Nsight Compute | `ncu-docs/ProfilingGuide.md` |
+| ncu CLI options and workflows | Nsight Compute | `ncu-docs/NsightComputeCli.md` |
+| nsys profiling and tracing | Nsight Systems | `nsys-docs/UserGuide.md` |
 
 ## Debugging Workflow
 
@@ -191,9 +235,12 @@ For detailed tool options, read `~/.cursor/skills/cuda-skill/references/debuggin
 | High sectors/request (>4) | Poor coalescing | ncu memory metrics |
 
 For detailed guides, read:
-- `~/.cursor/skills/cuda-skill/references/nsys-guide.md`
-- `~/.cursor/skills/cuda-skill/references/ncu-guide.md`
+- `~/.cursor/skills/cuda-skill/references/nsys-guide.md` (quick reference)
+- `~/.cursor/skills/cuda-skill/references/ncu-guide.md` (quick reference)
 - `~/.cursor/skills/cuda-skill/references/performance-traps.md`
+- `~/.cursor/skills/cuda-skill/references/ncu-docs/ProfilingGuide.md` (full Nsight Compute profiling guide)
+- `~/.cursor/skills/cuda-skill/references/nsys-docs/UserGuide.md` (full Nsight Systems user guide)
+- `~/.cursor/skills/cuda-skill/references/best-practices-guide/` (CUDA C++ Best Practices)
 
 ## Compilation Reference
 
@@ -259,15 +306,18 @@ ptx-docs/
 ```bash
 cd /path/to/cursor-gpu-skills
 
-# Update everything (PTX + Runtime + Driver + ptx-simple + guide)
-uv run scrape_cuda_docs.py all --force
+# Update everything
+uv run scrape_docs.py all --force
 
 # Or update individually:
-uv run scrape_cuda_docs.py ptx-simple --force   # Condensed PTX from triton repo
-uv run scrape_cuda_docs.py ptx                   # Full PTX ISA from NVIDIA
-uv run scrape_cuda_docs.py runtime               # CUDA Runtime API
-uv run scrape_cuda_docs.py driver                # CUDA Driver API
-uv run scrape_cuda_docs.py guide --force         # CUDA Programming Guide v13.1
+uv run scrape_docs.py ptx-simple --force    # Condensed PTX from triton repo
+uv run scrape_docs.py ptx                    # Full PTX ISA from NVIDIA
+uv run scrape_docs.py runtime                # CUDA Runtime API
+uv run scrape_docs.py driver                 # CUDA Driver API
+uv run scrape_docs.py guide --force          # CUDA Programming Guide v13.1
+uv run scrape_docs.py best-practices --force # CUDA C++ Best Practices Guide
+uv run scrape_docs.py ncu-docs --force       # Nsight Compute docs
+uv run scrape_docs.py nsys-docs --force      # Nsight Systems docs
 ```
 
 ## Additional References

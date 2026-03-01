@@ -829,6 +829,302 @@ class ProgrammingGuideScraper(DocumentationScraper):
         print(f"  ✓ Created: {index_path}")
 
 
+class BestPracticesScraper(DocumentationScraper):
+    """Scraper for CUDA C++ Best Practices Guide (single-page, Sphinx/Furo)."""
+
+    BASE_URL = "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/"
+
+    def __init__(self, output_dir: Path, force: bool = False):
+        super().__init__(self.BASE_URL, output_dir, force=force)
+
+    def _find_main_content(self, soup: BeautifulSoup) -> Tag | None:
+        for selector in [
+            ("article", {}),
+            ("div", {"class": "bd-article-container"}),
+            ("main", {}),
+            ("body", {}),
+        ]:
+            result = soup.find(selector[0], selector[1])
+            if result:
+                return result
+        return None
+
+    def _extract_sections(self, soup: BeautifulSoup) -> list[dict]:
+        """Extract top-level sections (h1) from single-page doc."""
+        main = self._find_main_content(soup)
+        if not main:
+            return []
+
+        # Remove nav/UI cruft
+        for nav in main.find_all(
+            ["nav", "div", "a"],
+            class_=[
+                "prev-next-area", "bd-sidebar-primary",
+                "bd-sidebar-secondary", "headerlink",
+            ],
+        ):
+            nav.decompose()
+
+        sections = []
+        headings = main.find_all(["h1", "h2"])
+
+        for heading in headings:
+            text = heading.get_text(strip=True)
+            if not text:
+                continue
+
+            section_match = re.match(r"^(\d+(?:\.\d+)*)\.\s*(.+)$", text)
+            section_num = section_match.group(1) if section_match else ""
+            title = section_match.group(2) if section_match else text
+            level = int(heading.name[1]) - 1
+
+            content_elements = []
+            current = heading.next_sibling
+            while current:
+                if isinstance(current, Tag) and current.name in ["h1", "h2"]:
+                    break
+                if isinstance(current, Tag):
+                    content_elements.append(current)
+                current = current.next_sibling
+
+            sections.append({
+                "title": title,
+                "section_num": section_num,
+                "level": level,
+                "content": content_elements,
+            })
+
+        return sections
+
+    def run(self) -> None:
+        print("=" * 70)
+        print("CUDA C++ Best Practices Guide Scraper")
+        print(f"Source: {self.BASE_URL}")
+        print("=" * 70)
+
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        soup = self.fetch_page(self.BASE_URL)
+        if not soup:
+            print("Failed to fetch documentation")
+            return
+
+        print("\nExtracting sections...")
+        sections = self._extract_sections(soup)
+        print(f"Found {len(sections)} sections")
+
+        saved = 0
+        for section in sections:
+            if not section["section_num"]:
+                continue
+
+            filename = self.sanitize_filename(
+                section["title"], section["section_num"]
+            )
+            output_file = self.output_dir / f"{filename}.md"
+
+            if output_file.exists() and not self.force:
+                print(f"  ✓ Cached: {output_file.name}")
+                saved += 1
+                continue
+
+            markdown_parts = []
+            level_prefix = "#" * (section["level"] + 1)
+            title_with_num = f"{section['section_num']}. {section['title']}"
+            markdown_parts.append(f"{level_prefix} {title_with_num}\n")
+
+            for element in section["content"]:
+                for cls in ["headerlink", "viewcode-link"]:
+                    for unwanted in element.find_all(class_=cls):
+                        unwanted.decompose()
+
+                for img in element.find_all("img"):
+                    src = img.get("src")
+                    if src and not src.startswith(("http://", "https://")):
+                        img["src"] = urljoin(self.BASE_URL, src)
+
+                md = self.h2t.handle(str(element))
+                if md.strip():
+                    markdown_parts.append(md)
+
+            markdown = "\n\n".join(markdown_parts)
+            markdown = re.sub(r"\n{4,}", "\n\n\n", markdown)
+
+            output_file.write_text(markdown, encoding="utf-8")
+            print(f"  ✓ Saved: {output_file.name} ({len(markdown):,} bytes)")
+            saved += 1
+
+        self._create_index()
+        print(f"\nDone: {saved} sections saved to {self.output_dir}")
+
+    def _create_index(self) -> None:
+        files = sorted(self.output_dir.glob("*.md"))
+        files = [f for f in files if f.name != "INDEX.md"]
+        content = "# CUDA C++ Best Practices Guide Index\n\n"
+        for f in files:
+            title = f.stem.replace("-", " ").title()
+            content += f"- [{title}]({f.name})\n"
+
+        index_path = self.output_dir / "INDEX.md"
+        index_path.write_text(content, encoding="utf-8")
+        print(f"  ✓ Created: {index_path}")
+
+
+class NsightDocsScraper(DocumentationScraper):
+    """Scraper for Nsight Compute / Nsight Systems multi-page documentation.
+
+    Index page links to sub-documents like ProfilingGuide/index.html.
+    Each sub-document is a single-page Sphinx/Furo doc.
+    """
+
+    CONFIGS = {
+        "ncu-docs": {
+            "base_url": "https://docs.nvidia.com/nsight-compute/",
+            "name": "Nsight Compute",
+            "skip": {"Archives", "CopyrightAndLicenses", "Training"},
+        },
+        "nsys-docs": {
+            "base_url": "https://docs.nvidia.com/nsight-systems/",
+            "name": "Nsight Systems",
+            "skip": {"Archives", "CopyrightAndLicenses"},
+        },
+    }
+
+    def __init__(self, doc_type: str, output_dir: Path, force: bool = False):
+        config = self.CONFIGS[doc_type]
+        self.doc_type = doc_type
+        self.doc_name = config["name"]
+        self.skip_sections = config["skip"]
+        super().__init__(config["base_url"], output_dir, force=force)
+
+    def discover_pages(self) -> list[dict[str, str]]:
+        """Discover sub-document pages from the index."""
+        soup = self.fetch_page(self.base_url)
+        if not soup:
+            return []
+
+        pages = []
+        seen = set()
+        for link in soup.find_all("a", href=True):
+            href = link.get("href", "")
+            title = link.get_text(strip=True)
+            if not href or not title:
+                continue
+            match = re.match(r"([A-Za-z][A-Za-z0-9]+)/index\.html", href)
+            if not match:
+                continue
+            section = match.group(1)
+            if section in self.skip_sections or section in seen:
+                continue
+            seen.add(section)
+            pages.append({
+                "section": section,
+                "title": title,
+                "url": urljoin(self.base_url, href),
+            })
+
+        return pages
+
+    def scrape_page(self, url: str, output_path: Path) -> bool:
+        """Scrape a single Nsight sub-document page."""
+        try:
+            soup = self.fetch_page(url)
+            if not soup:
+                return False
+
+            main = (
+                soup.find("article")
+                or soup.find("div", class_="bd-article-container")
+                or soup.find("main")
+                or soup.find("body")
+            )
+            if not main:
+                return False
+
+            for nav in main.find_all(
+                ["nav", "div", "a"],
+                class_=[
+                    "prev-next-area", "bd-sidebar-primary",
+                    "bd-sidebar-secondary", "headerlink",
+                ],
+            ):
+                nav.decompose()
+            for hl in main.find_all("a", class_="headerlink"):
+                hl.decompose()
+
+            for img in main.find_all("img"):
+                src = img.get("src")
+                if src and not src.startswith(("http://", "https://")):
+                    img["src"] = urljoin(url, src)
+
+            markdown = self.h2t.handle(str(main))
+            markdown = re.sub(r"\n{4,}", "\n\n\n", markdown)
+            markdown = markdown.strip()
+
+            # Remove footer
+            for marker in ["Privacy Policy", "Copyright ©", "NVIDIA-LogoBlack"]:
+                idx = markdown.find(marker)
+                if idx > 0:
+                    last_newline = markdown.rfind("\n", 0, idx)
+                    if last_newline > 0:
+                        markdown = markdown[:last_newline].rstrip()
+
+            header = f"---\nurl: {url}\n---\n\n"
+            output_path.write_text(header + markdown, encoding="utf-8")
+            return True
+
+        except Exception as e:
+            print(f"  ✗ Error: {e}")
+            return False
+
+    def run(self) -> None:
+        print("=" * 70)
+        print(f"{self.doc_name} Documentation Scraper")
+        print(f"Source: {self.base_url}")
+        print("=" * 70)
+
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        print("\n1. Discovering sub-documents...")
+        pages = self.discover_pages()
+        print(f"   Found {len(pages)} sub-documents")
+
+        total_saved = 0
+        total_failed = 0
+        total_skipped = 0
+
+        print("\n2. Scraping pages...")
+        for page in pages:
+            section = page["section"]
+            output_path = self.output_dir / f"{section}.md"
+
+            if output_path.exists() and not self.force:
+                print(f"  ✓ Cached: {section}")
+                total_skipped += 1
+                continue
+
+            if self.scrape_page(page["url"], output_path):
+                size = output_path.stat().st_size
+                print(f"  ✓ Saved: {section} ({size:,} bytes)")
+                total_saved += 1
+            else:
+                print(f"  ✗ Failed: {section}")
+                total_failed += 1
+
+        self._create_index(pages)
+        print(f"\nDone: {total_saved} saved, {total_skipped} cached, {total_failed} failed")
+        print(f"Output: {self.output_dir}")
+
+    def _create_index(self, pages: list[dict[str, str]]) -> None:
+        content = f"# {self.doc_name} Documentation Index\n\n"
+        for page in pages:
+            content += f"- [{page['title']}]({page['section']}.md)\n"
+
+        index_path = self.output_dir / "INDEX.md"
+        index_path.write_text(content, encoding="utf-8")
+        print(f"  ✓ Created: {index_path}")
+
+
 PTX_SIMPLE_REPO = "https://raw.githubusercontent.com/facebookexperimental/triton/main/.claude/knowledge"
 PTX_SIMPLE_FILES = [
     "ptx-isa-arithmetic.md",
@@ -891,8 +1187,11 @@ def main() -> None:
     )
     parser.add_argument(
         "api_type",
-        choices=["ptx", "runtime", "driver", "ptx-simple", "guide", "all"],
-        help="API type to scrape (all = ptx + runtime + driver + ptx-simple + guide)",
+        choices=[
+            "ptx", "runtime", "driver", "ptx-simple", "guide",
+            "best-practices", "ncu-docs", "nsys-docs", "all",
+        ],
+        help="Documentation to scrape",
     )
     parser.add_argument(
         "--output-dir",
@@ -915,8 +1214,11 @@ def main() -> None:
     refs_base = Path("cuda_skill/references")
 
     if args.api_type == "all":
-        # Run all scrapers sequentially
-        for api in ["ptx", "runtime", "driver", "ptx-simple", "guide"]:
+        all_apis = [
+            "ptx", "runtime", "driver", "ptx-simple", "guide",
+            "best-practices", "ncu-docs", "nsys-docs",
+        ]
+        for api in all_apis:
             print(f"\n{'#' * 70}")
             print(f"# Scraping: {api}")
             print(f"{'#' * 70}\n")
@@ -925,6 +1227,14 @@ def main() -> None:
             elif api == "guide":
                 ProgrammingGuideScraper(
                     refs_base / "cuda-guide", args.force
+                ).run()
+            elif api == "best-practices":
+                BestPracticesScraper(
+                    refs_base / "best-practices-guide", args.force
+                ).run()
+            elif api in ("ncu-docs", "nsys-docs"):
+                NsightDocsScraper(
+                    api, refs_base / api, args.force
                 ).run()
             elif api == "ptx":
                 PTXScraper(refs_base / "ptx-docs").run()
@@ -942,6 +1252,16 @@ def main() -> None:
     if args.api_type == "guide":
         output_dir = args.output_dir or refs_base / "cuda-guide"
         ProgrammingGuideScraper(output_dir, args.force).run()
+        return
+
+    if args.api_type == "best-practices":
+        output_dir = args.output_dir or refs_base / "best-practices-guide"
+        BestPracticesScraper(output_dir, args.force).run()
+        return
+
+    if args.api_type in ("ncu-docs", "nsys-docs"):
+        output_dir = args.output_dir or refs_base / args.api_type
+        NsightDocsScraper(args.api_type, output_dir, args.force).run()
         return
 
     # Set default output directory

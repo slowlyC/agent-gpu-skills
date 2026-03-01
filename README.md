@@ -32,10 +32,10 @@ cursor-gpu-skills/
 ├── INSTALL.md                       # 详细安装指南
 ├── install.sh                       # 安装脚本 (创建软链接到 ~/.cursor/skills/)
 ├── update-repos.sh                  # 克隆/更新外部 repo (triton, cutlass, sglang)
-├── scrape_cuda_docs.py              # CUDA 文档爬虫 (uv script)
+├── scrape_docs.py                   # 文档爬虫 (uv script)
 ├── cuda_skill/
 │   ├── SKILL.md
-│   └── references/                  # CUDA 文档库 (~6.5MB, ~700 files)
+│   └── references/                  # CUDA 文档库 (~700 files)
 ├── triton_skill/
 │   ├── SKILL.md
 │   ├── quick-reference.md
@@ -61,9 +61,12 @@ NVIDIA CUDA 全套文档转换为可搜索的 Markdown:
 | CUDA Runtime API 13.1 | 107 | 0.9MB | [NVIDIA Runtime API](https://docs.nvidia.com/cuda/cuda-runtime-api/) |
 | CUDA Driver API 13.1 | 128 | 0.8MB | [NVIDIA Driver API](https://docs.nvidia.com/cuda/cuda-driver-api/) |
 | CUDA Programming Guide v13.1 | 39 | 1.6MB | [NVIDIA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/) |
+| CUDA C++ Best Practices Guide | 73 | 585KB | [NVIDIA Best Practices](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/) |
+| Nsight Compute 文档 | 9 | 741KB | [NVIDIA Nsight Compute](https://docs.nvidia.com/nsight-compute/) |
+| Nsight Systems 文档 | 5 | 833KB | [NVIDIA Nsight Systems](https://docs.nvidia.com/nsight-systems/) |
 | 工具指南 (nsys/ncu/debug) | 6 | - | 手写参考 |
 
-文档通过 `scrape_cuda_docs.py` 管理，用 `uv run scrape_cuda_docs.py all --force` 更新。
+文档通过 `scrape_docs.py` 管理，用 `uv run scrape_docs.py all --force` 更新。
 
 ## triton-skill
 
@@ -100,7 +103,7 @@ NVIDIA CUDA 全套文档转换为可搜索的 Markdown:
 
 ## 致谢
 
-cuda-skill 的 CUDA 文档爬取方案基于 [technillogue/ptx-isa-markdown](https://github.com/technillogue/ptx-isa-markdown)，在此基础上扩展了 triton/cutlass/sglang skill、安装脚本和 Programming Guide 支持。
+cuda-skill 的文档爬取方案受 [technillogue/ptx-isa-markdown](https://github.com/technillogue/ptx-isa-markdown) 启发。
 
 ## 许可
 
