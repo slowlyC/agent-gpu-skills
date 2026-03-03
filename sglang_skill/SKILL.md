@@ -7,16 +7,15 @@ description: "Develop, debug, and optimize SGLang LLM serving engine. Use when t
 
 ## Source Code Locations
 
-SGLang 源码本地路径（由 install.sh 从 GitHub clone）:
+SGLang 源码位于此 skill 安装目录下的 `repos/sglang/`。
+实际路径取决于所用工具:
+- Cursor: `~/.cursor/skills/sglang-skill/repos/sglang/`
+- Claude Code: `~/.claude/skills/sglang-skill/repos/sglang/`
+- Codex: `~/.agents/skills/sglang-skill/repos/sglang/`
 
-**SGLANG_REPO**: `~/.cursor/skills/sglang-skill/repos/sglang/`
+**SGLANG_REPO**: 下文示例用 `~/.cursor/skills/sglang-skill/repos/sglang/` 作占位符，**替换为实际路径**。
 
-如果该路径不存在，运行:
-
-```bash
-# 在 cursor-gpu-skills 项目目录下运行
-bash update-repos.sh sglang
-```
+如果该路径不存在，在项目目录下运行 `bash update-repos.sh sglang`。
 
 ### Core Runtime (SRT)
 

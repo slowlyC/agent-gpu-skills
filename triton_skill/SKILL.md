@@ -7,23 +7,15 @@ description: "Write, debug, and optimize Triton and Gluon GPU kernels using loca
 
 ## Source Code Locations
 
-Triton 源码本地路径（由 install.sh 从 GitHub clone）:
+Triton 源码位于此 skill 安装目录下的 `repos/triton/`。
+实际路径取决于所用工具:
+- Cursor: `~/.cursor/skills/triton-skill/repos/triton/`
+- Claude Code: `~/.claude/skills/triton-skill/repos/triton/`
+- Codex: `~/.agents/skills/triton-skill/repos/triton/`
 
-**TRITON_REPO**: `~/.cursor/skills/triton-skill/repos/triton/`
+**TRITON_REPO**: 下文示例用 `~/.cursor/skills/triton-skill/repos/triton/` 作占位符，**替换为实际路径**。
 
-如果该路径不存在，运行:
-
-```bash
-# 在 cursor-gpu-skills 项目目录下运行
-bash update-repos.sh triton
-```
-
-所有搜索路径基于 `TRITON_REPO` 变量。使用 Grep 工具时，将 `TRITON_REPO` 替换为实际绝对路径。
-可通过以下命令获取实际路径:
-
-```bash
-readlink -f ~/.cursor/skills/triton-skill/repos/triton
-```
+如果该路径不存在，在项目目录下运行 `bash update-repos.sh triton`。
 
 ### Triton Tutorials (入门到进阶)
 

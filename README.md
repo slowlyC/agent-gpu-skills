@@ -1,36 +1,49 @@
-# cursor-gpu-skills
+# agent-gpu-skills
 
-Cursor IDE 的 GPU 开发 Skill 集合，目前包含四个 Skill:
+GPU 开发 Agent Skill 集合，适用于 Cursor / Claude Code / Codex / Gemini CLI。
 
 | Skill | 层级 | 使用场景 |
 |:------|:-----|:---------|
 | **cuda-skill** | 底层 (PTX/CUDA C++) | 查 PTX 指令、CUDA API、Programming Guide，nsys/ncu 分析 |
+| **cutlass-skill** | 中间层 (CUTLASS/CuTeDSL) | 写 CUTLASS/CuTe kernel，查 CuTeDSL 示例 |
 | **triton-skill** | 高层 (Python DSL) | 写 Triton/Gluon 内核，查教程和示例 |
-| **cutlass-skill** | 中间层 (C++/CuTeDSL) | 写 CUTLASS/CuTe kernel，查 CuTeDSL 示例 |
 | **sglang-skill** | 应用层 (LLM Serving) | SGLang 推理引擎开发，KV cache、Attention backend |
 
 ## 安装
 
 ```bash
-git clone https://github.com/slowlyC/cursor-gpu-skills.git
-cd cursor-gpu-skills
+git clone https://github.com/slowlyC/agent-gpu-skills.git
+cd agent-gpu-skills
 
 # 1. 获取外部源码 repo (sparse checkout, ~114MB)
 bash update-repos.sh
 
-# 2. 安装 skill 到 ~/.cursor/skills/
+# 2. 安装 skill (默认 Cursor，用 --agent claude/codex/gemini 安装到其他工具)
 bash install.sh
 ```
 
-脚本会创建软链接到 `~/.cursor/skills/`，自动同步更新。详细安装说明参考 [INSTALL.md](INSTALL.md)。
+脚本会创建目录并复制 SKILL.md（Cursor 不识别软链接的 SKILL.md），其余文件软链接回项目目录，自动同步更新。详细安装说明参考 [INSTALL.md](INSTALL.md)。
+
+### 其他工具
+
+SKILL.md 格式兼容 Claude Code、Codex、Gemini CLI 等支持 Agent Skills 的工具。安装脚本提供了 `--agent` 参数将文件复制到对应路径:
+
+| 工具 | 安装路径 | 命令 |
+|:-----|:---------|:-----|
+| Cursor | `~/.cursor/skills/` | `bash install.sh` (默认) |
+| Claude Code | `~/.claude/skills/` | `bash install.sh --agent claude` |
+| Codex | `~/.agents/skills/` | `bash install.sh --agent codex` |
+| Gemini CLI | `~/.gemini/skills/` | `bash install.sh --agent gemini` |
+
+注: 本项目只在 Cursor 下完整验证过。其他工具的 skill 发现和搜索机制可能有差异，如遇问题可以让对应工具的 AI 协助排查。
 
 ## 目录结构
 
 ```
-cursor-gpu-skills/
+agent-gpu-skills/
 ├── README.md
 ├── INSTALL.md                       # 详细安装指南
-├── install.sh                       # 安装脚本 (创建软链接到 ~/.cursor/skills/)
+├── install.sh                       # 安装脚本 (支持 --agent cursor|claude|codex|gemini)
 ├── update-repos.sh                  # 克隆/更新外部 repo (triton, cutlass, sglang)
 ├── scrape_docs.py                   # 文档爬虫 (uv script)
 ├── cuda_skill/
@@ -68,6 +81,17 @@ NVIDIA CUDA 全套文档转换为可搜索的 Markdown:
 
 文档通过 `scrape_docs.py` 管理，用 `uv run scrape_docs.py all --force` 更新。
 
+## cutlass-skill
+
+引用 CUTLASS 源码:
+
+| 内容 | 路径 |
+|:-----|:-----|
+| CuTeDSL Python 教程 | `cutlass/python/CuTeDSL/` |
+| CuTe Python bindings | `cutlass/python/pycute/` |
+| CUTLASS C++ 示例 | `cutlass/examples/` |
+| CuTe 头文件 | `cutlass/include/cute/` |
+
 ## triton-skill
 
 直接引用 Triton 源码中的教程、示例和内核实现:
@@ -79,17 +103,6 @@ NVIDIA CUDA 全套文档转换为可搜索的 Markdown:
 | Gluon 示例 | `triton/python/examples/gluon/` | Flash Attention (Blackwell) |
 | 生产级内核 | `triton/python/triton_kernels/` | matmul, reduce, top-k, SwiGLU, MXFP |
 | 语言定义 | `triton/python/triton/language/` | tl.* 操作语义 |
-
-## cutlass-skill
-
-引用 CUTLASS 源码:
-
-| 内容 | 路径 |
-|:-----|:-----|
-| CuTeDSL Python 教程 | `cutlass/python/CuTeDSL/` |
-| CuTe Python bindings | `cutlass/python/pycute/` |
-| CUTLASS C++ 示例 | `cutlass/examples/` |
-| CuTe 头文件 | `cutlass/include/cute/` |
 
 ## sglang-skill
 

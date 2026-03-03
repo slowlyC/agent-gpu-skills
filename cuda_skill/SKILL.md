@@ -7,9 +7,19 @@ description: "Query NVIDIA PTX ISA 9.1, CUDA Runtime API 13.1, Driver API 13.1, 
 
 ## Documentation Locations
 
-All documentation is under a single base directory:
+All documentation is under the `references/` directory within this skill's install location.
+The base path depends on which agent tool is used:
+- Cursor: `~/.cursor/skills/cuda-skill/references/`
+- Claude Code: `~/.claude/skills/cuda-skill/references/`
+- Codex: `~/.agents/skills/cuda-skill/references/`
 
-**CUDA_REFS**: `~/.cursor/skills/cuda-skill/references/`
+**Determine actual path at runtime:**
+
+```bash
+CUDA_REFS="$(dirname "$(find ~/.cursor/skills ~/.claude/skills ~/.agents/skills -name 'cuda-skill' -type d 2>/dev/null | head -1)")/cuda-skill/references"
+```
+
+All `rg` examples below use `~/.cursor/skills/cuda-skill/references/` as placeholder. **Replace with the actual path.**
 
 ```
 references/
