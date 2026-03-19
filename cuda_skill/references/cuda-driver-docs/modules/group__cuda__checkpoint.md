@@ -139,3 +139,4 @@ Unlocks a process specified by `pid` allowing it to resume making CUDA API calls
 
 Upon successful return the process will be in the RUNNING state.
 
+* * *

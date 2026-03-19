@@ -16,6 +16,7 @@ and converts to searchable markdown format.
 
 import argparse
 import re
+import shutil
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -40,6 +41,12 @@ class DocumentationScraper:
         self.cache_dir = cache_dir or (output_dir.parent / f"{output_dir.name}-raw")
         self.skip_download = skip_download
         self.force = force
+
+    def _clean_output_if_forced(self) -> None:
+        """Remove output_dir when --force is set, ensuring a clean re-scrape."""
+        if self.force and self.output_dir.exists():
+            shutil.rmtree(self.output_dir)
+            print(f"  Cleaned: {self.output_dir}")
 
         # HTTP session with headers
         self.session = requests.Session()
@@ -76,7 +83,7 @@ class DocumentationScraper:
         name = re.sub(r"^\d+(\.\d+)*\.?\s*", "", name)
         name = re.sub(r"#.*$", "", name)  # Remove anchors
         name = re.sub(r"\.html?$", "", name)  # Remove extensions
-        name = re.sub(r"[^\w\s\-_.]", "", name)  # Remove special chars
+        name = re.sub(r"[^\w\s\-_]", "", name)  # Remove special chars (incl. dots)
         name = re.sub(r"\s+", "-", name)  # Spaces to hyphens
         name = name.lower().strip("-")
 
@@ -417,6 +424,7 @@ class APIScraper(DocumentationScraper):
         print(f"CUDA {self.api_type.title()} API Documentation Scraper")
         print("=" * 70)
 
+        self._clean_output_if_forced()
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -493,6 +501,9 @@ class APIScraper(DocumentationScraper):
         print(f"\n{'5' if not self.skip_download else '2'}. Creating index...")
         self._create_index(out_modules_dir, out_structures_dir)
 
+        if self.cache_dir.exists():
+            shutil.rmtree(self.cache_dir)
+
         print("\n" + "=" * 70)
         print("COMPLETE")
         print("=" * 70)
@@ -537,10 +548,11 @@ class APIScraper(DocumentationScraper):
 class PTXScraper(DocumentationScraper):
     """Scraper for PTX ISA single-page documentation."""
 
-    def __init__(self, output_dir: Path):
+    def __init__(self, output_dir: Path, force: bool = False):
         super().__init__(
             "https://docs.nvidia.com/cuda/parallel-thread-execution/",
             output_dir,
+            force=force,
         )
 
     def run(self) -> None:
@@ -549,6 +561,7 @@ class PTXScraper(DocumentationScraper):
         print("PTX ISA Documentation Scraper")
         print("=" * 70)
 
+        self._clean_output_if_forced()
         soup = self.fetch_page(f"{self.base_url}index.html")
         if not soup:
             print("Failed to fetch documentation")
@@ -774,6 +787,7 @@ class ProgrammingGuideScraper(DocumentationScraper):
         print(f"Source: {self.BASE_URL}")
         print("=" * 70)
 
+        self._clean_output_if_forced()
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         print("\n1. Discovering pages from part indices...")
@@ -902,6 +916,7 @@ class BestPracticesScraper(DocumentationScraper):
         print(f"Source: {self.BASE_URL}")
         print("=" * 70)
 
+        self._clean_output_if_forced()
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         soup = self.fetch_page(self.BASE_URL)
@@ -1083,6 +1098,7 @@ class NsightDocsScraper(DocumentationScraper):
         print(f"Source: {self.base_url}")
         print("=" * 70)
 
+        self._clean_output_if_forced()
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         print("\n1. Discovering sub-documents...")
@@ -1237,7 +1253,7 @@ def main() -> None:
                     api, refs_base / api, args.force
                 ).run()
             elif api == "ptx":
-                PTXScraper(refs_base / "ptx-docs").run()
+                PTXScraper(refs_base / "ptx-docs", args.force).run()
             else:
                 APIScraper(
                     api, refs_base / f"cuda-{api}-docs", args.skip_download, args.force
@@ -1272,7 +1288,7 @@ def main() -> None:
     # Create appropriate scraper
     scraper: PTXScraper | APIScraper
     if args.api_type == "ptx":
-        scraper = PTXScraper(args.output_dir)
+        scraper = PTXScraper(args.output_dir, args.force)
     else:
         scraper = APIScraper(
             args.api_type, args.output_dir, args.skip_download, args.force

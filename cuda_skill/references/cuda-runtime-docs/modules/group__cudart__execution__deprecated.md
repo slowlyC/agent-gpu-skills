@@ -44,18 +44,11 @@ The supported bank configurations are:
   * cudaSharedMemBankSizeEightByte: set shared memory bank width to be eight bytes natively when launching this function.
 
 
-  *   * Use of a string naming a function as the `func` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+  *
+
+  * Use of a string naming a function as the `func` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaDeviceSetSharedMemConfig, cudaDeviceGetSharedMemConfig, cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaFuncSetCacheConfig, cuFuncSetSharedMemConfig
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

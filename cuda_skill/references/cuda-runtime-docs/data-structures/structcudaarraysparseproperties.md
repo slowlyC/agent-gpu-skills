@@ -51,8 +51,3 @@ unsigned int cudaArraySparseProperties::width
 Tile width in elements
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

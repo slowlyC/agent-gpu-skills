@@ -30,8 +30,3 @@ cudaExternalSemaphoreSignalParams * cudaExternalSemaphoreSignalNodeParams::param
 Array of external semaphore signal parameters.
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -49,6 +49,7 @@ Nsight Compute
         * [Overview](#overview)
         * [Asynchronous GPU activity](#asynchronous-gpu-activity)
         * [Multi-pass data collection](#multi-pass-data-collection)
+        * [Workload Durations](#workload-durations)
         * [Tool issue](#tool-issue)
     * [2.4. Metrics Reference](#metrics-reference)
       * [2.4.1. Overview](#id5)
@@ -153,7 +154,7 @@ __[NsightCompute](../index.html)
 
   * [](../index.html) »
   * 2\. Profiling Guide
-  *   * v2025.4.1 | [Archive](https://developer.nvidia.com/nsight-compute-history)
+  *   * v2026.1.0 | [Archive](https://developer.nvidia.com/nsight-compute-history)
 
 
 * * *
@@ -1126,6 +1127,43 @@ Out-of-range metrics often occur when the profiler [replays](index.html#kernel-r
 
 To mitigate the issue, when applicable try to increase the measured workload to allow the GPU to reach a steady state for each launch. Reducing the number of metrics collected at the same time can also improve precision by increasing the likelihood that counters contributing to one metric are collected in a single pass.
 
+#### Workload Durations
+
+Nsight Compute measures the duration of workloads (e.g., CUDA kernels) differently than Nsight Systems (via CUPTI). This can lead to discrepancies in the reported duration for the same workload between the two tools.
+
+The following factors impact the measured duration:
+
+  * [Clock control](index.html#clock-control): Nsight Compute locks SM clocks [by default](../NsightComputeCli/index.html#profile). Nsight Systems does not lock clocks. When comparing results, we recommend to lock clocks with `nvidia-smi` externally before profiling and use `--clock-control none` for ncu.
+
+  * [Cache control](index.html#cache-control): Nsight Compute flushes all GPU caches [by default](../NsightComputeCli/index.html#profile) between replay passes. Nsight Systems collects data only in a single pass, and therefore also does not flush any caches. If the workload is highly sensitive to cache state, it’s recommended to use `--replay-mode application --cache-control none` for ncu to let the application handle priming the caches implicitly.
+
+  * [Serialization](index.html#serialization): Nsight Compute serializes kernel launches, unless a dedicated replay mode is used. Nsight Systems does not serialize launches. Concurrent kernels on the same device can lead to differences in the reported duration between the two tools.
+
+  * [Tool overhead](index.html#overhead): Nsight Compute introduces varying overhead around and during the execution of a workload for the purpose of metric collection:
+
+    * Metrics collected using software-patching introduce significant overhead during the workload execution. For this reason, the workload duration is never collected in such a replay pass.
+
+    * Preparing the GPU for metric collection and processing the profiled data adds overhead before and after each replay pass. This overhead is not included in the reported duration.
+
+    * It is important though to note that this makes it impossible to derive the workload duration using host-side timers or CUDA events when profiling with Nsight Compute, as such methods would include the overhead introduced by the tool.
+
+  * **Duration measurement** : Nsight Compute and Nsight Systems/CUPTI use different methods to measure the duration of a workload (`gpu__time_duration` metric in Nsight Compute):
+
+    * For the start timestamp, Nsight Compute inserts a _WaitForIdle_ and a semaphore timestamp after the launch setup (copy parameters, copy qmd) and before the submission of the command to execute the grid. These semaphores are processed by the GPU’s front-end and the timestamp is taken when the semaphore command is executed. This timestamp consequently occurs before the grid’s blocks and warps are scheduled and distributed to the SMs.
+
+Before Blackwell, Nsight Systems measures the start timestamp by replacing the entry point of the kernel with a prolog that all warps execute. Logical thread 0 writes out the timestamp. This method is required to trace concurrent kernels. From Blackwell onwards, Nsight Systems collects the start timestamp using a HW method. It is taken before the first CTA is launched on the SM.
+
+    * For the end timestamp, Nsight Compute inserts a _WaitForIdle_ followed by another semaphore into the command buffer.
+
+Before Blackwell, Nsight Systems instead uses a semaphore that instructs the scheduler unit to collect the timestamp upon completion of all blocks of the grid. This can occur before or after the semaphore method used by Nsight Compute. From Blackwell onwards, Nsight Systems collects the end timestamp using a HW method. It is taken after the final memory barrier is issued.
+
+    * In general, Nsight Systems should report shorter durations since the start timestamp is as close as possible (later, never earlier) to the first instruction executed by the kernel on a SM.
+
+    * The above method is used in Nsight Compute to be compatible with other ways to measure “duration” in the profiler, such as _elapsed cycles_ metrics.
+
+    * Note that for _Workload Execution_ rows in the PM Sampling [timeline](../NsightCompute/index.html#timeline), Nsight Compute and Nsight Systems use the same method to measure start and end timestamps.
+
+
 #### Tool issue
 
 If you still observe metric issues after following the guidelines above, please [reach out to us](https://forums.developer.nvidia.com/c/developer-tools/nsight-compute) and describe your issue.
@@ -1210,6 +1248,7 @@ The following metrics can be collected explicitly but do not follow the naming s
 > `launch__uses_cdp` | Set to 1 if any function object in the launched workload can use CUDA dynamic parallelism.  
 > `launch__uses_green_context` | Set to 1 if launch was on a green context.  
 > `launch__uses_mps` | Set to 1 if launch was on a device in MPS mode.  
+> `launch__uses_nvlink_centric_scheduling` | Set to 1 if the launch used NVLink-centric scheduling. Some SM resources may not be available to the workload if this is enabled, which can result in lower-than-expected measured utilization.  
 > `launch__uses_vgpu` | Set to 1 if launch was on a vGPU device.  
 > `launch__waves_per_multiprocessor` | Number of waves per SM. Partial waves can lead to tail effects where some SMs become idle while others still have pending work to complete. When using green contexts, this metric is scaled with the number of SMs used by the green context.  
 > `launch__work_queue_concurrency_limit` | Concurrency limit of the workqueue resource used for the kernel launch (for green context launches only).  
@@ -1380,10 +1419,12 @@ Collected using SASS-patching. These metrics have instance values mapping from t
 
 > Instructions Per Opcode Metrics `sass__inst_executed_per_opcode` | Number of warp-level executed instructions, instanced by basic SASS opcode.  
 > ---|---  
-> `sass__inst_executed_per_opcode_category` | Number of warp-level executed instructions, instanced by SASS opcode category  
+> `sass__inst_executed_per_opcode_category` | Number of warp-level executed instructions, instanced by SASS opcode category.  
+> `sass__inst_executed_per_opcode_pipeline` | Estimated number of warp-level executed instructions, instanced by SASS opcode pipeline. Some instructions can execute in one of multiple pipelines, and the dynamic assignment is not taken into account here.  
 > `sass__inst_executed_per_opcode_with_modifier_all` | Number of warp-level executed instructions, instanced by all SASS opcode modifiers.  
 > `sass__inst_executed_per_opcode_with_modifier_selective` | Number of warp-level executed instructions, instanced by selective SASS opcode modifiers.  
-> `sass__thread_inst_executed_per_opcode_category` | Number of thread_level executed instructions, instanced by SASS opcode category  
+> `sass__thread_inst_executed_per_opcode_category` | Number of thread-level executed instructions, instanced by SASS opcode category.  
+> `sass__thread_inst_executed_per_opcode_pipeline` | Estimated number of thread-level executed instructions, instanced by SASS opcode pipeline. Some instructions can execute in one of multiple pipelines, and the dynamic assignment is not taken into account here.  
 > `sass__thread_inst_executed_true_per_opcode` | Number of thread-level executed instructions, instanced by basic SASS opcode.  
 > `sass__thread_inst_executed_true_per_opcode_with_modifier_all` | Number of thread-level executed instructions, instanced by all SASS opcode modifiers.  
 > `sass__thread_inst_executed_true_per_opcode_with_modifier_selective` | Number of thread-level executed instructions, instanced by selective SASS opcode modifiers.  
@@ -1416,7 +1457,7 @@ Number of unit-level warp instructions executed.
 > `group:memory__shared_table` | Group of metrics for the shared memory workload analysis table.  
 > `group:smsp__pcsamp_warp_stall_reasons` | Group of metrics for the number of samples from the warp sampler per program location.  
 > `group:smsp__pcsamp_warp_stall_reasons_not_issued` | Group of metrics for the number of samples from the warp sampler per program location on cycles the warp scheduler issued no instructions.  
-> `group:smsp__pmwarpsamp_warp_stall_reasons` | Group of metrics for the number of samples from the warp sampler per program location collected with PM sampling.  
+> `group:smsp__pmwarpsamp_warp_stall_reasons` | Group of metrics for the number of samples from the warp sampler per program location collected with PM sampling. These metrics can not yet be collected from the command line.  
   
 ### 2.4.14. Profiler Metrics
 

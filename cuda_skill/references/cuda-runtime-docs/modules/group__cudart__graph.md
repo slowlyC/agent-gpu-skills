@@ -38,15 +38,12 @@ Valid attributes are:
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceSetGraphMemAttribute, cudaGraphAddMemAllocNode, cudaGraphAddMemFreeNode, cudaDeviceGraphMemTrim, cudaMallocAsync, cudaFreeAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGraphMemTrim ( int  device )
-
-
-Free unused memory that was cached on the specified device for use with graphs back to the OS.
 
 ######  Parameters
 
@@ -63,15 +60,12 @@ Blocks which are not in use by a graph that is either currently executing or sch
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemAllocNode, cudaGraphAddMemFreeNode, cudaDeviceGetGraphMemAttribute, cudaDeviceSetGraphMemAttribute, cudaMallocAsync, cudaFreeAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceSetGraphMemAttribute ( int  device, cudaGraphMemAttributeType attr, void* value )
-
-
-Set asynchronous allocation attributes related to graphs.
 
 ######  Parameters
 
@@ -97,15 +91,12 @@ Valid attributes are:
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceGetGraphMemAttribute, cudaGraphAddMemAllocNode, cudaGraphAddMemFreeNode, cudaDeviceGraphMemTrim, cudaMallocAsync, cudaFreeAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__device__ cudaGraphExec_t cudaGetCurrentGraphExec ( void ) [inline]
-
-
-Get the currently running device graph id.
 
 ###### Returns
 
@@ -114,15 +105,6 @@ Returns the current device graph id, 0 if the call is outside of a device graph.
 ###### Description
 
 Get the currently running device graph id.
-
-**See also:**
-
-cudaGraphLaunch
-
-__host__ cudaError_t cudaGraphAddChildGraphNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, cudaGraph_t childGraph )
-
-
-Creates a child graph node and adds it to a graph.
 
 ######  Parameters
 
@@ -151,15 +133,12 @@ The node executes an embedded child graph. The child graph is cloned in this cal
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphChildGraphNodeGetGraph, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode, cudaGraphClone
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddDependencies ( cudaGraph_t graph, const cudaGraphNode_t* from, const cudaGraphNode_t* to, const cudaGraphEdgeData* edgeData, size_t numDependencies )
-
-
-Adds dependency edges to a graph.
 
 ######  Parameters
 
@@ -186,15 +165,12 @@ If `numDependencies` is 0, elements in `pFrom` and `pTo` will be ignored. Specif
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphRemoveDependencies, cudaGraphGetEdges, cudaGraphNodeGetDependencies, cudaGraphNodeGetDependentNodes
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddEmptyNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies )
-
-
-Creates an empty node and adds it to a graph.
 
 ######  Parameters
 
@@ -221,15 +197,8 @@ An empty node performs no operation during execution, but can be used for transi
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaGraphAddNode, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
-
-__host__ cudaError_t cudaGraphAddEventRecordNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, cudaEvent_t event )
-
-
-Creates an event record node and adds it to a graph.
 
 ######  Parameters
 
@@ -258,15 +227,12 @@ These nodes may not be used in loops or conditionals.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphAddEventWaitNode, cudaEventRecordWithFlags, cudaStreamWaitEvent, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddEventWaitNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, cudaEvent_t event )
-
-
-Creates an event wait node and adds it to a graph.
 
 ######  Parameters
 
@@ -295,15 +261,12 @@ These nodes may not be used in loops or conditionals.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphAddEventRecordNode, cudaEventRecordWithFlags, cudaStreamWaitEvent, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddExternalSemaphoresSignalNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const cudaExternalSemaphoreSignalNodeParams* nodeParams )
-
-
-Creates an external semaphore signal node and adds it to a graph.
 
 ######  Parameters
 
@@ -330,15 +293,12 @@ Performs a signal operation on a set of externally allocated semaphore objects w
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphExternalSemaphoresSignalNodeGetParams, cudaGraphExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaImportExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddEventRecordNode, cudaGraphAddEventWaitNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddExternalSemaphoresWaitNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const cudaExternalSemaphoreWaitNodeParams* nodeParams )
-
-
-Creates an external semaphore wait node and adds it to a graph.
 
 ######  Parameters
 
@@ -365,15 +325,12 @@ Performs a wait operation on a set of externally allocated semaphore objects whe
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphExternalSemaphoresWaitNodeGetParams, cudaGraphExternalSemaphoresWaitNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphAddExternalSemaphoresSignalNode, cudaImportExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddEventRecordNode, cudaGraphAddEventWaitNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddHostNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const cudaHostNodeParams* pNodeParams )
-
-
-Creates a host execution node and adds it to a graph.
 
 ######  Parameters
 
@@ -400,15 +357,12 @@ When the graph is launched, the node will invoke the specified CPU function. Hos
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaLaunchHostFunc, cudaGraphHostNodeGetParams, cudaGraphHostNodeSetParams, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddKernelNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const cudaKernelNodeParams* pNodeParams )
-
-
-Creates a kernel execution node and adds it to a graph.
 
 ######  Parameters
 
@@ -469,19 +423,16 @@ Kernels launched using graphs must not use texture and surface references. Readi
 
   * Graph objects are not threadsafe. More here.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaGraphAddNode, cudaLaunchKernel, cudaGraphKernelNodeGetParams, cudaGraphKernelNodeSetParams, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddHostNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
-
-__host__ cudaError_t cudaGraphAddMemAllocNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, cudaMemAllocNodeParams* nodeParams )
-
-
-Creates an allocation node and adds it to a graph.
 
 ######  Parameters
 
@@ -535,15 +486,6 @@ The following restrictions apply to graphs which contain allocation and/or memor
   * Graph objects are not threadsafe. More here.
 
   *
-**See also:**
-
-cudaGraphAddNode, cudaGraphAddMemFreeNode, cudaGraphMemAllocNodeGetParams, cudaDeviceGraphMemTrim, cudaDeviceGetGraphMemAttribute, cudaDeviceSetGraphMemAttribute, cudaMallocAsync, cudaFreeAsync, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddEventRecordNode, cudaGraphAddEventWaitNode, cudaGraphAddExternalSemaphoresSignalNode, cudaGraphAddExternalSemaphoresWaitNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
-
-__host__ cudaError_t cudaGraphAddMemFreeNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, void* dptr )
-
-
-Creates a memory free node and adds it to a graph.
-
 ######  Parameters
 
 `pGraphNode`
@@ -588,15 +530,6 @@ The following restrictions apply to graphs which contain allocation and/or memor
   * Graph objects are not threadsafe. More here.
 
   *
-**See also:**
-
-cudaGraphAddNode, cudaGraphAddMemAllocNode, cudaGraphMemFreeNodeGetParams, cudaDeviceGraphMemTrim, cudaDeviceGetGraphMemAttribute, cudaDeviceSetGraphMemAttribute, cudaMallocAsync, cudaFreeAsync, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddEventRecordNode, cudaGraphAddEventWaitNode, cudaGraphAddExternalSemaphoresSignalNode, cudaGraphAddExternalSemaphoresWaitNode, cudaGraphAddKernelNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
-
-__host__ cudaError_t cudaGraphAddMemcpyNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const cudaMemcpy3DParms* pCopyParams )
-
-
-Creates a memcpy node and adds it to a graph.
-
 ######  Parameters
 
 `pGraphNode`
@@ -624,15 +557,12 @@ Memcpy nodes have some additional restrictions with regards to managed memory, i
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaMemcpy3D, cudaGraphAddMemcpyNodeToSymbol, cudaGraphAddMemcpyNodeFromSymbol, cudaGraphAddMemcpyNode1D, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddMemcpyNode1D ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, void* dst, const void* src, size_t count, cudaMemcpyKind kind )
-
-
-Creates a 1D memcpy node and adds it to a graph.
 
 ######  Parameters
 
@@ -667,15 +597,12 @@ Memcpy nodes have some additional restrictions with regards to managed memory, i
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpy, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParams1D, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddMemcpyNodeFromSymbol ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, void* dst, const void* symbol, size_t count, size_t offset, cudaMemcpyKind kind )
-
-
-Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
 
 ######  Parameters
 
@@ -712,15 +639,12 @@ Memcpy nodes have some additional restrictions with regards to managed memory, i
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyFromSymbol, cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeToSymbol, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddMemcpyNodeToSymbol ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const void* symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind )
-
-
-Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
 
 ######  Parameters
 
@@ -757,15 +681,12 @@ Memcpy nodes have some additional restrictions with regards to managed memory, i
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyToSymbol, cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeFromSymbol, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddMemsetNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const cudaMemsetParams* pMemsetParams )
-
-
-Creates a memset node and adds it to a graph.
 
 ######  Parameters
 
@@ -792,15 +713,12 @@ The element size must be 1, 2, or 4 bytes. When the graph is launched, the node 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaMemset2D, cudaGraphMemsetNodeGetParams, cudaGraphMemsetNodeSetParams, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemcpyNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphAddNode ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, const cudaGraphEdgeData* dependencyData, size_t numDependencies, cudaGraphNodeParams* nodeParams )
-
-
-Adds a node of arbitrary type to a graph.
 
 ######  Parameters
 
@@ -833,15 +751,12 @@ A handle to the new node will be returned in `phGraphNode`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphCreate, cudaGraphNodeSetParams, cudaGraphExecNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphChildGraphNodeGetGraph ( cudaGraphNode_t node, cudaGraph_t* pGraph )
-
-
-Gets a handle to the embedded graph of a child graph node.
 
 ######  Parameters
 
@@ -862,15 +777,12 @@ Allocation and free nodes cannot be added to the returned graph. Attempting to d
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddChildGraphNode, cudaGraphNodeFindInClone
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphClone ( cudaGraph_t* pGraphClone, cudaGraph_t originalGraph )
-
-
-Clones a graph.
 
 ######  Parameters
 
@@ -893,15 +805,12 @@ Child graph nodes in the original graph are recursively copied into the clone.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphCreate, cudaGraphNodeFindInClone
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphConditionalHandleCreate ( cudaGraphConditionalHandle* pHandle_out, cudaGraph_t graph, unsigned int  defaultLaunchValue = 0, unsigned int  flags = 0 )
-
-
-Create a conditional handle.
 
 ######  Parameters
 
@@ -929,15 +838,6 @@ Handles not associated with a conditional node may cause graph instantiation to 
   * Graph objects are not threadsafe. More here.
 
   *
-**See also:**
-
-cuGraphAddNode
-
-__host__ cudaError_t cudaGraphConditionalHandleCreate_v2 ( cudaGraphConditionalHandle* pHandle_out, cudaGraph_t graph, cudaExecutionContext_t ctx = NULL, unsigned int  defaultLaunchValue = 0, unsigned int  flags = 0 )
-
-
-Create a conditional handle.
-
 ######  Parameters
 
 `pHandle_out`
@@ -966,15 +866,6 @@ Handles not associated with a conditional node may cause graph instantiation to 
   * Graph objects are not threadsafe. More here.
 
   *
-**See also:**
-
-cuGraphAddNode
-
-__host__ cudaError_t cudaGraphCreate ( cudaGraph_t* pGraph, unsigned int  flags )
-
-
-Creates a graph.
-
 ######  Parameters
 
 `pGraph`
@@ -992,15 +883,12 @@ Creates an empty graph, which is returned via `pGraph`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode, cudaGraphInstantiate, cudaGraphDestroy, cudaGraphGetNodes, cudaGraphGetRootNodes, cudaGraphGetEdges, cudaGraphClone
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphDebugDotPrint ( cudaGraph_t graph, const char* path, unsigned int  flags )
-
-
-Write a DOT file describing graph structure.
 
 ######  Parameters
 
@@ -1039,17 +927,14 @@ Destroys the graph specified by `graph`, as well as all of its nodes.
 
   * Graph objects are not threadsafe. More here.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaGraphCreate
-
-__host__ cudaError_t cudaGraphDestroyNode ( cudaGraphNode_t node )
-
-
-Remove a node from the graph.
 
 ######  Parameters
 
@@ -1068,17 +953,14 @@ Dependencies cannot be removed from graphs which contain allocation or free node
 
   * Graph objects are not threadsafe. More here.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemcpyNode, cudaGraphAddMemsetNode
-
-__host__ cudaError_t cudaGraphEventRecordNodeGetEvent ( cudaGraphNode_t node, cudaEvent_t* event_out )
-
-
-Returns the event associated with an event record node.
 
 ######  Parameters
 
@@ -1097,15 +979,12 @@ Returns the event of event record node `hNode` in `event_out`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddEventRecordNode, cudaGraphEventRecordNodeSetEvent, cudaGraphEventWaitNodeGetEvent, cudaEventRecordWithFlags, cudaStreamWaitEvent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphEventRecordNodeSetEvent ( cudaGraphNode_t node, cudaEvent_t event )
-
-
-Sets an event record node's event.
 
 ######  Parameters
 
@@ -1124,15 +1003,12 @@ Sets the event of event record node `hNode` to `event`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaGraphAddEventRecordNode, cudaGraphEventRecordNodeGetEvent, cudaGraphEventWaitNodeSetEvent, cudaEventRecordWithFlags, cudaStreamWaitEvent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphEventWaitNodeGetEvent ( cudaGraphNode_t node, cudaEvent_t* event_out )
-
-
-Returns the event associated with an event wait node.
 
 ######  Parameters
 
@@ -1151,15 +1027,12 @@ Returns the event of event wait node `hNode` in `event_out`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddEventWaitNode, cudaGraphEventWaitNodeSetEvent, cudaGraphEventRecordNodeGetEvent, cudaEventRecordWithFlags, cudaStreamWaitEvent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphEventWaitNodeSetEvent ( cudaGraphNode_t node, cudaEvent_t event )
-
-
-Sets an event wait node's event.
 
 ######  Parameters
 
@@ -1178,15 +1051,12 @@ Sets the event of event wait node `hNode` to `event`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaGraphAddEventWaitNode, cudaGraphEventWaitNodeGetEvent, cudaGraphEventRecordNodeSetEvent, cudaEventRecordWithFlags, cudaStreamWaitEvent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecChildGraphNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, cudaGraph_t childGraph )
-
-
-Updates node parameters in the child graph node in the given graphExec.
 
 ######  Parameters
 
@@ -1211,15 +1081,12 @@ The topology of `childGraph`, as well as the node insertion order, must match th
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddChildGraphNode, cudaGraphChildGraphNodeGetGraph, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecDestroy ( cudaGraphExec_t graphExec )
-
-
-Destroys an executable graph.
 
 ######  Parameters
 
@@ -1236,17 +1103,14 @@ Destroys the executable graph specified by `graphExec`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaGraphInstantiate, cudaGraphUpload, cudaGraphLaunch
-
-__host__ cudaError_t cudaGraphExecEventRecordNodeSetEvent ( cudaGraphExec_t hGraphExec, cudaGraphNode_t hNode, cudaEvent_t event )
-
-
-Sets the event for an event record node in the given graphExec.
 
 ######  Parameters
 
@@ -1269,15 +1133,12 @@ The modifications only affect future launches of `hGraphExec`. Already enqueued 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddEventRecordNode, cudaGraphEventRecordNodeGetEvent, cudaGraphEventWaitNodeSetEvent, cudaEventRecordWithFlags, cudaStreamWaitEvent, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecEventWaitNodeSetEvent ( cudaGraphExec_t hGraphExec, cudaGraphNode_t hNode, cudaEvent_t event )
-
-
-Sets the event for an event wait node in the given graphExec.
 
 ######  Parameters
 
@@ -1300,15 +1161,12 @@ The modifications only affect future launches of `hGraphExec`. Already enqueued 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddEventWaitNode, cudaGraphEventWaitNodeGetEvent, cudaGraphEventRecordNodeSetEvent, cudaEventRecordWithFlags, cudaStreamWaitEvent, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecExternalSemaphoresSignalNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t hNode, const cudaExternalSemaphoreSignalNodeParams* nodeParams )
-
-
-Sets the parameters for an external semaphore signal node in the given graphExec.
 
 ######  Parameters
 
@@ -1335,15 +1193,12 @@ Changing `nodeParams->numExtSems` is not supported.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddExternalSemaphoresSignalNode, cudaImportExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecExternalSemaphoresWaitNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t hNode, const cudaExternalSemaphoreWaitNodeParams* nodeParams )
-
-
-Sets the parameters for an external semaphore wait node in the given graphExec.
 
 ######  Parameters
 
@@ -1370,15 +1225,12 @@ Changing `nodeParams->numExtSems` is not supported.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaImportExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecGetFlags ( cudaGraphExec_t graphExec, unsigned long long* flags )
-
-
-Query the instantiation flags of an executable graph.
 
 ######  Parameters
 
@@ -1397,15 +1249,12 @@ Returns the flags that were passed to instantiation for the given executable gra
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiate, cudaGraphInstantiateWithFlags, cudaGraphInstantiateWithParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecGetId ( cudaGraphExec_t hGraphExec, unsigned int* graphID )
-
-
-Returns the id of a given graph exec.
 
 ######  Parameters
 
@@ -1421,15 +1270,6 @@ cudaSuccess, cudaErrorInvalidValue
 ###### Description
 
 Returns the id of `hGraphExec` in `*graphId`. The value in `*graphId` matches that referenced by cudaGraphDebugDotPrint.
-
-**See also:**
-
-cudaGraphGetNodes, cudaGraphDebugDotPrintcudaGraphNodeGetContainingGraphcudaGraphNodeGetLocalIdcudaGraphNodeGetToolsIdcudaGraphGetId
-
-__host__ cudaError_t cudaGraphExecHostNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, const cudaHostNodeParams* pNodeParams )
-
-
-Sets the parameters for a host node in the given graphExec.
 
 ######  Parameters
 
@@ -1452,15 +1292,12 @@ The modifications only affect future launches of `hGraphExec`. Already enqueued 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddHostNode, cudaGraphHostNodeSetParams, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecKernelNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, const cudaKernelNodeParams* pNodeParams )
-
-
-Sets the parameters for a kernel node in the given graphExec.
 
 ######  Parameters
 
@@ -1496,19 +1333,16 @@ If `node` is a device-updatable kernel node, the next upload/launch of `hGraphEx
 
   * Graph objects are not threadsafe. More here.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaGraphExecNodeSetParams, cudaGraphAddKernelNode, cudaGraphKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
-
-__host__ cudaError_t cudaGraphExecMemcpyNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, const cudaMemcpy3DParms* pNodeParams )
-
-
-Sets the parameters for a memcpy node in the given graphExec.
 
 ######  Parameters
 
@@ -1535,15 +1369,12 @@ Returns cudaErrorInvalidValue if the memory operands' mappings changed or either
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeSetParams, cudaGraphExecMemcpyNodeSetParamsToSymbol, cudaGraphExecMemcpyNodeSetParamsFromSymbol, cudaGraphExecMemcpyNodeSetParams1D, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecMemcpyNodeSetParams1D ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, void* dst, const void* src, size_t count, cudaMemcpyKind kind )
-
-
-Sets the parameters for a memcpy node in the given graphExec to perform a 1-dimensional copy.
 
 ######  Parameters
 
@@ -1576,15 +1407,12 @@ Returns cudaErrorInvalidValue if the memory operands' mappings changed or the or
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNode1D, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParams1D, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecMemcpyNodeSetParamsFromSymbol ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, void* dst, const void* symbol, size_t count, size_t offset, cudaMemcpyKind kind )
-
-
-Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the device.
 
 ######  Parameters
 
@@ -1619,15 +1447,12 @@ Returns cudaErrorInvalidValue if the memory operands' mappings changed or the or
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeFromSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemcpyNodeSetParamsToSymbol, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecMemcpyNodeSetParamsToSymbol ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, const void* symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind )
-
-
-Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the device.
 
 ######  Parameters
 
@@ -1662,15 +1487,12 @@ Returns cudaErrorInvalidValue if the memory operands' mappings changed or the or
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeToSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemcpyNodeSetParamsFromSymbol, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecMemsetNodeSetParams ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, const cudaMemsetParams* pNodeParams )
-
-
-Sets the parameters for a memset node in the given graphExec.
 
 ######  Parameters
 
@@ -1699,15 +1521,12 @@ The modifications only affect future launches of `hGraphExec`. Already enqueued 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphExecNodeSetParams, cudaGraphAddMemsetNode, cudaGraphMemsetNodeSetParams, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecHostNodeSetParams, cudaGraphExecChildGraphNodeSetParams, cudaGraphExecEventRecordNodeSetEvent, cudaGraphExecEventWaitNodeSetEvent, cudaGraphExecExternalSemaphoresSignalNodeSetParams, cudaGraphExecExternalSemaphoresWaitNodeSetParams, cudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecNodeSetParams ( cudaGraphExec_t graphExec, cudaGraphNode_t node, cudaGraphNodeParams* nodeParams )
-
-
-Update's a graph node's parameters in an instantiated graph.
 
 ######  Parameters
 
@@ -1746,15 +1565,12 @@ memory free |  API unsupported
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphNodeSetParamscudaGraphExecUpdate, cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExecUpdate ( cudaGraphExec_t hGraphExec, cudaGraph_t hGraph, cudaGraphExecUpdateResultInfo* resultInfo )
-
-
-Check whether an executable graph can be updated with a graph and perform the update if possible.
 
 ######  Parameters
 
@@ -1848,15 +1664,12 @@ cudaGraphExecUpdate returns cudaSuccess when the updated was performed successfu
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExternalSemaphoresSignalNodeGetParams ( cudaGraphNode_t hNode, cudaExternalSemaphoreSignalNodeParams* params_out )
-
-
-Returns an external semaphore signal node's parameters.
 
 ######  Parameters
 
@@ -1875,15 +1688,12 @@ Returns the parameters of an external semaphore signal node `hNode` in `params_o
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaLaunchKernel, cudaGraphAddExternalSemaphoresSignalNode, cudaGraphExternalSemaphoresSignalNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExternalSemaphoresSignalNodeSetParams ( cudaGraphNode_t hNode, const cudaExternalSemaphoreSignalNodeParams* nodeParams )
-
-
-Sets an external semaphore signal node's parameters.
 
 ######  Parameters
 
@@ -1902,15 +1712,12 @@ Sets the parameters of an external semaphore signal node `hNode` to `nodeParams`
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaGraphAddExternalSemaphoresSignalNode, cudaGraphExternalSemaphoresSignalNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExternalSemaphoresWaitNodeGetParams ( cudaGraphNode_t hNode, cudaExternalSemaphoreWaitNodeParams* params_out )
-
-
-Returns an external semaphore wait node's parameters.
 
 ######  Parameters
 
@@ -1929,15 +1736,12 @@ Returns the parameters of an external semaphore wait node `hNode` in `params_out
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaLaunchKernel, cudaGraphAddExternalSemaphoresWaitNode, cudaGraphExternalSemaphoresWaitNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphExternalSemaphoresWaitNodeSetParams ( cudaGraphNode_t hNode, const cudaExternalSemaphoreWaitNodeParams* nodeParams )
-
-
-Sets an external semaphore wait node's parameters.
 
 ######  Parameters
 
@@ -1956,15 +1760,12 @@ Sets the parameters of an external semaphore wait node `hNode` to `nodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaGraphExternalSemaphoresWaitNodeSetParams, cudaGraphAddExternalSemaphoresWaitNode, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphGetEdges ( cudaGraph_t graph, cudaGraphNode_t* from, cudaGraphNode_t* to, cudaGraphEdgeData* edgeData, size_t* numEdges )
-
-
-Returns a graph's dependency edges.
 
 ######  Parameters
 
@@ -1989,15 +1790,12 @@ Returns a list of `graph's` dependency edges. Edges are returned via correspondi
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphGetNodes, cudaGraphGetRootNodes, cudaGraphAddDependencies, cudaGraphRemoveDependencies, cudaGraphNodeGetDependencies, cudaGraphNodeGetDependentNodes
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphGetId ( cudaGraph_t hGraph, unsigned int* graphID )
-
-
-Returns the id of a given graph.
 
 ######  Parameters
 
@@ -2013,15 +1811,6 @@ cudaSuccess, cudaErrorInvalidValue
 ###### Description
 
 Returns the id of `hGraph` in `*graphId`. The value in `*graphId` matches that referenced by cudaGraphDebugDotPrint.
-
-**See also:**
-
-cudaGraphGetNodes, cudaGraphDebugDotPrintcudaGraphNodeGetContainingGraphcudaGraphNodeGetLocalIdcudaGraphNodeGetToolsIdcudaGraphExecGetId
-
-__host__ cudaError_t cudaGraphGetNodes ( cudaGraph_t graph, cudaGraphNode_t* nodes, size_t* numNodes )
-
-
-Returns a graph's nodes.
 
 ######  Parameters
 
@@ -2042,15 +1831,12 @@ Returns a list of `graph's` nodes. `nodes` may be NULL, in which case this funct
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphCreate, cudaGraphGetRootNodes, cudaGraphGetEdges, cudaGraphNodeGetType, cudaGraphNodeGetDependencies, cudaGraphNodeGetDependentNodes
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphGetRootNodes ( cudaGraph_t graph, cudaGraphNode_t* pRootNodes, size_t* pNumRootNodes )
-
-
-Returns a graph's root nodes.
 
 ######  Parameters
 
@@ -2071,15 +1857,12 @@ Returns a list of `graph's` root nodes. `pRootNodes` may be NULL, in which case 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphCreate, cudaGraphGetNodes, cudaGraphGetEdges, cudaGraphNodeGetType, cudaGraphNodeGetDependencies, cudaGraphNodeGetDependentNodes
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphHostNodeGetParams ( cudaGraphNode_t node, cudaHostNodeParams* pNodeParams )
-
-
-Returns a host node's parameters.
 
 ######  Parameters
 
@@ -2098,15 +1881,12 @@ Returns the parameters of host node `node` in `pNodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaLaunchHostFunc, cudaGraphAddHostNode, cudaGraphHostNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphHostNodeSetParams ( cudaGraphNode_t node, const cudaHostNodeParams* pNodeParams )
-
-
-Sets a host node's parameters.
 
 ######  Parameters
 
@@ -2125,15 +1905,12 @@ Sets the parameters of host node `node` to `nodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaLaunchHostFunc, cudaGraphAddHostNode, cudaGraphHostNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphInstantiate ( cudaGraphExec_t* pGraphExec, cudaGraph_t graph, unsigned long long flags = 0 )
-
-
-Creates an executable graph from a graph.
 
 ######  Parameters
 
@@ -2190,15 +1967,12 @@ If `graph` is not instantiated for launch on the device but contains kernels whi
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiateWithFlags, cudaGraphCreate, cudaGraphUpload, cudaGraphLaunch, cudaGraphExecDestroy
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphInstantiateWithFlags ( cudaGraphExec_t* pGraphExec, cudaGraph_t graph, unsigned long long flags = 0 )
-
-
-Creates an executable graph from a graph.
 
 ######  Parameters
 
@@ -2255,15 +2029,12 @@ Graphs instantiated for launch on the device have additional restrictions which 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiate, cudaGraphCreate, cudaGraphUpload, cudaGraphLaunch, cudaGraphExecDestroy
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphInstantiateWithParams ( cudaGraphExec_t* pGraphExec, cudaGraph_t graph, cudaGraphInstantiateParams* instantiateParams )
-
-
-Creates an executable graph from a graph.
 
 ######  Parameters
 
@@ -2346,15 +2117,12 @@ If instantiation is successful, `result_out` will be set to cudaGraphInstantiate
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphCreate, cudaGraphInstantiate, cudaGraphInstantiateWithFlags, cudaGraphExecDestroy
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphKernelNodeCopyAttributes ( cudaGraphNode_t hDst, cudaGraphNode_t hSrc )
-
-
-Copies attributes from source node to destination node.
 
 ######  Parameters
 
@@ -2370,15 +2138,6 @@ cudaSuccess, cudaErrorInvalidContext
 ###### Description
 
 Copies attributes from source node `hSrc` to destination node `hDst`. Both node must have the same context.
-
-**See also:**
-
-cudaAccessPolicyWindow
-
-__host__ cudaError_t cudaGraphKernelNodeGetAttribute ( cudaGraphNode_t hNode, cudaKernelNodeAttrID attr, cudaKernelNodeAttrValue* value_out )
-
-
-Queries node attribute.
 
 ######  Parameters
 
@@ -2396,15 +2155,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle
 ###### Description
 
 Queries attribute `attr` from node `hNode` and stores it in corresponding member of `value_out`.
-
-**See also:**
-
-cudaAccessPolicyWindow
-
-__host__ cudaError_t cudaGraphKernelNodeGetParams ( cudaGraphNode_t node, cudaKernelNodeParams* pNodeParams )
-
-
-Returns a kernel node's parameters.
 
 ######  Parameters
 
@@ -2425,15 +2175,12 @@ The params will contain either `kernelParams` or `extra`, according to which of 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaLaunchKernel, cudaGraphAddKernelNode, cudaGraphKernelNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphKernelNodeSetAttribute ( cudaGraphNode_t hNode, cudaKernelNodeAttrID attr, const cudaKernelNodeAttrValue* value )
-
-
-Sets node attribute.
 
 ######  Parameters
 
@@ -2452,15 +2199,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle
 
 Sets attribute `attr` on node `hNode` from corresponding attribute of `value`.
 
-**See also:**
-
-cudaAccessPolicyWindow
-
-__device__ cudaError_t cudaGraphKernelNodeSetEnabled ( cudaGraphDeviceNode_t node, bool  enable )
-
-
-Enables or disables the given kernel node.
-
 ######  Parameters
 
 `node`
@@ -2478,15 +2216,6 @@ Enables or disables `node` based upon `enable`. If `enable` is true, the node wi
 
 If this function is called for the node's immediate dependent and that dependent is configured for programmatic dependent launch, then a memory fence must be invoked via __threadfence() before kickoff of the dependent is triggered via cudaTriggerProgrammaticLaunchCompletion() to ensure that the update is visible to that dependent node before it is launched.
 
-**See also:**
-
-cudaGraphKernelNodeSetParam, cudaGraphKernelNodeSetGridDim, cudaGraphKernelNodeUpdatesApply
-
-__device__ cudaError_t cudaGraphKernelNodeSetGridDim ( cudaGraphDeviceNode_t node, dim3 gridDim )
-
-
-Updates the grid dimensions of the given kernel node.
-
 ######  Parameters
 
 `node`
@@ -2503,17 +2232,6 @@ cudaSuccess, cudaErrorInvalidValue
 Sets the grid dimensions of `node` to `gridDim`. `node` must be device-updatable, and must reside upon the same device as thecalling kernel.
 
 If this function is called for the node's immediate dependent and that dependent is configured for programmatic dependent launch, then a memory fence must be invoked via __threadfence() before kickoff of the dependent is triggered via cudaTriggerProgrammaticLaunchCompletion() to ensure that the update is visible to that dependent node before it is launched.
-
-**See also:**
-
-cudaGraphKernelNodeSetParam, cudaGraphKernelNodeSetEnabled, cudaGraphKernelNodeUpdatesApply
-
-template < typename T >
-
-__device__ cudaError_t cudaGraphKernelNodeSetParam ( cudaGraphDeviceNode_t node, size_t offset, const T& value ) [inline]
-
-
-Updates the kernel parameters of the given kernel node.
 
 ######  Parameters
 
@@ -2533,15 +2251,6 @@ cudaSuccess, cudaErrorInvalidValue
 Updates the kernel parameters of `node` at `offset` to `value`. `node` must be device-updatable, and must reside upon the same device as the calling kernel.
 
 If this function is called for the node's immediate dependent and that dependent is configured for programmatic dependent launch, then a memory fence must be invoked via __threadfence() before kickoff of the dependent is triggered via cudaTriggerProgrammaticLaunchCompletion() to ensure that the update is visible to that dependent node before it is launched.
-
-**See also:**
-
-cudaGraphKernelNodeSetEnabled, cudaGraphKernelNodeSetGridDim, cudaGraphKernelNodeUpdatesApply
-
-__device__ cudaError_t cudaGraphKernelNodeSetParam ( cudaGraphDeviceNode_t node, size_t offset, const void* value, size_t size )
-
-
-Updates the kernel parameters of the given kernel node.
 
 ######  Parameters
 
@@ -2564,15 +2273,6 @@ Updates `size` bytes in the kernel parameters of `node` at `offset` to the conte
 
 If this function is called for the node's immediate dependent and that dependent is configured for programmatic dependent launch, then a memory fence must be invoked via __threadfence() before kickoff of the dependent is triggered via cudaTriggerProgrammaticLaunchCompletion() to ensure that the update is visible to that dependent node before it is launched.
 
-**See also:**
-
-cudaGraphKernelNodeSetEnabled, cudaGraphKernelNodeSetGridDim, cudaGraphKernelNodeUpdatesApply
-
-__host__ cudaError_t cudaGraphKernelNodeSetParams ( cudaGraphNode_t node, const cudaKernelNodeParams* pNodeParams )
-
-
-Sets a kernel node's parameters.
-
 ######  Parameters
 
 `node`
@@ -2590,19 +2290,16 @@ Sets the parameters of kernel node `node` to `pNodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaGraphNodeSetParams, cudaLaunchKernel, cudaGraphAddKernelNode, cudaGraphKernelNodeGetParams
-
-__device__ cudaError_t cudaGraphKernelNodeUpdatesApply ( const cudaGraphKernelNodeUpdate* updates, size_t updateCount )
-
-
-Batch applies multiple kernel node updates.
 
 ######  Parameters
 
@@ -2620,15 +2317,6 @@ cudaSuccess, cudaErrorInvalidValue
 Batch applies one or more kernel node updates based on the information provided in `updates`. `updateCount` specifies the number of updates to apply. Each entry in `updates` must specify a node to update, the type of update to apply, and the parameters for that type of update. See the documentation for cudaGraphKernelNodeUpdate for more detail.
 
 If this function is called for the node's immediate dependent and that dependent is configured for programmatic dependent launch, then a memory fence must be invoked via __threadfence() before kickoff of the dependent is triggered via cudaTriggerProgrammaticLaunchCompletion() to ensure that the update is visible to that dependent node before it is launched.
-
-**See also:**
-
-cudaGraphKernelNodeSetParam, cudaGraphKernelNodeSetEnabled, cudaGraphKernelNodeSetGridDim
-
-__host__  __device__ cudaError_t cudaGraphLaunch ( cudaGraphExec_t graphExec, cudaStream_t stream )
-
-
-Launches an executable graph in a stream.
 
 ######  Parameters
 
@@ -2649,15 +2337,12 @@ If any allocations created by `graphExec` remain unfreed (from a previous launch
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiate, cudaGraphUpload, cudaGraphExecDestroy
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemAllocNodeGetParams ( cudaGraphNode_t node, cudaMemAllocNodeParams* params_out )
-
-
-Returns a memory alloc node's parameters.
 
 ######  Parameters
 
@@ -2676,15 +2361,12 @@ Returns the parameters of a memory alloc node `hNode` in `params_out`. The `pool
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemAllocNode, cudaGraphMemFreeNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemFreeNodeGetParams ( cudaGraphNode_t node, void* dptr_out )
-
-
-Returns a memory free node's parameters.
 
 ######  Parameters
 
@@ -2703,15 +2385,12 @@ Returns the address of a memory free node `hNode` in `dptr_out`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemFreeNode, cudaGraphMemFreeNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemcpyNodeGetParams ( cudaGraphNode_t node, cudaMemcpy3DParms* pNodeParams )
-
-
-Returns a memcpy node's parameters.
 
 ######  Parameters
 
@@ -2730,15 +2409,12 @@ Returns the parameters of memcpy node `node` in `pNodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpy3D, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemcpyNodeSetParams ( cudaGraphNode_t node, const cudaMemcpy3DParms* pNodeParams )
-
-
-Sets a memcpy node's parameters.
 
 ######  Parameters
 
@@ -2757,15 +2433,12 @@ Sets the parameters of memcpy node `node` to `pNodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaMemcpy3D, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphMemcpyNodeSetParams1D, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemcpyNodeSetParams1D ( cudaGraphNode_t node, void* dst, const void* src, size_t count, cudaMemcpyKind kind )
-
-
-Sets a memcpy node's parameters to perform a 1-dimensional copy.
 
 ######  Parameters
 
@@ -2792,15 +2465,12 @@ When the graph is launched, the node will copy `count` bytes from the memory are
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpy, cudaGraphMemcpyNodeSetParams, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemcpyNodeSetParamsFromSymbol ( cudaGraphNode_t node, void* dst, const void* symbol, size_t count, size_t offset, cudaMemcpyKind kind )
-
-
-Sets a memcpy node's parameters to copy from a symbol on the device.
 
 ######  Parameters
 
@@ -2829,15 +2499,12 @@ When the graph is launched, the node will copy `count` bytes from the memory are
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyFromSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemcpyNodeSetParamsToSymbol ( cudaGraphNode_t node, const void* symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind )
-
-
-Sets a memcpy node's parameters to copy to a symbol on the device.
 
 ######  Parameters
 
@@ -2866,15 +2533,12 @@ When the graph is launched, the node will copy `count` bytes from the memory are
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyToSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemsetNodeGetParams ( cudaGraphNode_t node, cudaMemsetParams* pNodeParams )
-
-
-Returns a memset node's parameters.
 
 ######  Parameters
 
@@ -2893,15 +2557,12 @@ Returns the parameters of memset node `node` in `pNodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemset2D, cudaGraphAddMemsetNode, cudaGraphMemsetNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphMemsetNodeSetParams ( cudaGraphNode_t node, const cudaMemsetParams* pNodeParams )
-
-
-Sets a memset node's parameters.
 
 ######  Parameters
 
@@ -2920,15 +2581,12 @@ Sets the parameters of memset node `node` to `pNodeParams`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetParams, cudaMemset2D, cudaGraphAddMemsetNode, cudaGraphMemsetNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeFindInClone ( cudaGraphNode_t* pNode, cudaGraphNode_t originalNode, cudaGraph_t clonedGraph )
-
-
-Finds a cloned version of a node.
 
 ######  Parameters
 
@@ -2951,15 +2609,12 @@ This function returns the node in `clonedGraph` corresponding to `originalNode` 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphClone
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeGetContainingGraph ( cudaGraphNode_t hNode, cudaGraph_t* phGraph )
-
-
-Returns the graph that contains a given graph node.
 
 ######  Parameters
 
@@ -2975,15 +2630,6 @@ cudaSuccesscudaErrorInvalidValue
 ###### Description
 
 Returns the graph that contains `hNode` in `*phGraph`. If hNode is in a child graph, the child graph it is in is returned.
-
-**See also:**
-
-cudaGraphGetNodes, cudaGraphDebugDotPrintcudaGraphNodeGetLocalIdcudaGraphNodeGetToolsIdcudaGraphGetIdcudaGraphExecGetId
-
-__host__ cudaError_t cudaGraphNodeGetDependencies ( cudaGraphNode_t node, cudaGraphNode_t* pDependencies, cudaGraphEdgeData* edgeData, size_t* pNumDependencies )
-
-
-Returns a node's dependencies.
 
 ######  Parameters
 
@@ -3008,15 +2654,12 @@ Note that if an edge has non-zero (non-default) edge data and `edgeData` is NULL
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeGetDependentNodes, cudaGraphGetNodes, cudaGraphGetRootNodes, cudaGraphGetEdges, cudaGraphAddDependencies, cudaGraphRemoveDependencies
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeGetDependentNodes ( cudaGraphNode_t node, cudaGraphNode_t* pDependentNodes, cudaGraphEdgeData* edgeData, size_t* pNumDependentNodes )
-
-
-Returns a node's dependent nodes.
 
 ######  Parameters
 
@@ -3041,15 +2684,12 @@ Note that if an edge has non-zero (non-default) edge data and `edgeData` is NULL
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeGetDependencies, cudaGraphGetNodes, cudaGraphGetRootNodes, cudaGraphGetEdges, cudaGraphAddDependencies, cudaGraphRemoveDependencies
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeGetEnabled ( cudaGraphExec_t hGraphExec, cudaGraphNode_t hNode, unsigned int* isEnabled )
-
-
-Query whether a node in the given graphExec is enabled.
 
 ######  Parameters
 
@@ -3076,15 +2716,12 @@ Currently only kernel, memset and memcpy nodes are supported.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeSetEnabled, cudaGraphExecUpdate, cudaGraphInstantiatecudaGraphLaunch
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeGetLocalId ( cudaGraphNode_t hNode, unsigned int* nodeId )
-
-
-Returns the node id of a given graph node.
 
 ######  Parameters
 
@@ -3101,14 +2738,33 @@ cudaSuccesscudaErrorInvalidValue
 
 Returns the node id of `hNode` in `*nodeId`. The nodeId matches that referenced by cudaGraphDebugDotPrint. The local nodeId and graphId together can uniquely identify the node.
 
-**See also:**
+######  Parameters
 
-cudaGraphGetNodes, cudaGraphDebugDotPrintcudaGraphNodeGetContainingGraphcudaGraphNodeGetToolsIdcudaGraphGetIdcudaGraphExecGetId
+`node`
+    \- Node to get the parameters for
+`nodeParams`
+    \- Pointer to return the parameters
 
-__host__ cudaError_t cudaGraphNodeGetToolsId ( cudaGraphNode_t hNode, unsigned long long* toolsNodeId )
+###### Returns
 
+cudaSuccess, cudaErrorInvalidValue, cudaErrorNotSupported
 
-Returns an id used by tools to identify a given node.
+###### Description
+
+Returns the parameters of graph node `node` in `*nodeParams`.
+
+Any pointers returned in `*nodeParams` point to driver-owned memory associated with the node. This memory remains valid until the node is destroyed. Any memory pointed to from `*nodeParams` must not be modified.
+
+The returned parameters are a description of the node, but may not be identical to the struct provided at creation and may not be suitable for direct creation of identical nodes. This is because parameters may be partially unspecified and filled in by the driver at creation, may reference non-copyable handles, or may describe ownership semantics or other parameters that govern behavior of node creation but are not part of the final functional descriptor.
+
+  * Graph objects are not threadsafe. More here.
+
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
 
 ######  Parameters
 
@@ -3122,15 +2778,6 @@ Returns an id used by tools to identify a given node.
 CUDA_SUCCESScudaErrorInvalidValue
 
 ###### Description
-
-**See also:**
-
-cudaGraphGetNodes, cudaGraphDebugDotPrintcudaGraphNodeGetContainingGraphcudaGraphNodeGetLocalIdcudaGraphGetIdcudaGraphExecGetId
-
-__host__ cudaError_t cudaGraphNodeGetType ( cudaGraphNode_t node, cudaGraphNodeType ** pType )
-
-
-Returns a node's type.
 
 ######  Parameters
 
@@ -3149,15 +2796,12 @@ Returns the node type of `node` in `pType`.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphGetNodes, cudaGraphGetRootNodes, cudaGraphChildGraphNodeGetGraph, cudaGraphKernelNodeGetParams, cudaGraphKernelNodeSetParams, cudaGraphHostNodeGetParams, cudaGraphHostNodeSetParams, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphMemsetNodeGetParams, cudaGraphMemsetNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeSetEnabled ( cudaGraphExec_t hGraphExec, cudaGraphNode_t hNode, unsigned int  isEnabled )
-
-
-Enables or disables the specified node in the given graphExec.
 
 ######  Parameters
 
@@ -3186,15 +2830,12 @@ Currently only kernel, memset and memcpy nodes are supported.
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphNodeGetEnabled, cudaGraphExecUpdate, cudaGraphInstantiatecudaGraphLaunch
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphNodeSetParams ( cudaGraphNode_t node, cudaGraphNodeParams* nodeParams )
-
-
-Update's a graph node's parameters.
 
 ######  Parameters
 
@@ -3215,15 +2856,12 @@ Modifying parameters is not supported for node types cudaGraphNodeTypeMemAlloc a
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddNode, cudaGraphExecNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphReleaseUserObject ( cudaGraph_t graph, cudaUserObject_t object, unsigned int  count = 1 )
-
-
-Release a user object reference from a graph.
 
 ######  Parameters
 
@@ -3243,15 +2881,6 @@ cudaSuccess, cudaErrorInvalidValue
 Releases user object references owned by a graph.
 
 See CUDA User Objects in the CUDA C++ Programming Guide for more information on user objects.
-
-**See also:**
-
-cudaUserObjectCreatecudaUserObjectRetain, cudaUserObjectRelease, cudaGraphRetainUserObject, cudaGraphCreate
-
-__host__ cudaError_t cudaGraphRemoveDependencies ( cudaGraph_t graph, const cudaGraphNode_t* from, const cudaGraphNode_t* to, const cudaGraphEdgeData* edgeData, size_t numDependencies )
-
-
-Removes dependency edges from a graph.
 
 ######  Parameters
 
@@ -3278,15 +2907,12 @@ If `numDependencies` is 0, elements in `pFrom` and `pTo` will be ignored. Specif
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddDependencies, cudaGraphGetEdges, cudaGraphNodeGetDependencies, cudaGraphNodeGetDependentNodes
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphRetainUserObject ( cudaGraph_t graph, cudaUserObject_t object, unsigned int  count = 1, unsigned int  flags = 0 )
-
-
-Retain a reference to a user object from a graph.
 
 ######  Parameters
 
@@ -3309,29 +2935,11 @@ Creates or moves user object references that will be owned by a CUDA graph.
 
 See CUDA User Objects in the CUDA C++ Programming Guide for more information on user objects.
 
-**See also:**
-
-cudaUserObjectCreatecudaUserObjectRetain, cudaUserObjectRelease, cudaGraphReleaseUserObject, cudaGraphCreate
-
-__device__  void cudaGraphSetConditional ( cudaGraphConditionalHandle handle, unsigned int  value )
-
-
-Sets the condition value associated with a conditional node.
-
 ###### Description
 
 Sets the condition value associated with a conditional node.
 
 Note: `handle` must be associated with the same context as the kernel calling this function. Note: It is undefined behavior to have racing / possibly concurrent calls to cudaGraphSetConditional.
-
-**See also:**
-
-cudaGraphConditionalHandleCreate
-
-__host__ cudaError_t cudaGraphUpload ( cudaGraphExec_t graphExec, cudaStream_t stream )
-
-
-Uploads an executable graph in a stream.
 
 ###### Returns
 
@@ -3341,15 +2949,10 @@ cudaSuccess, cudaErrorInvalidValue
 
 Uploads `hGraphExec` to the device in `hStream` without executing it. Uploads of the same `hGraphExec` will be serialized. Each upload is ordered behind both any previous work in `hStream` and any previous launches of `hGraphExec`. Uses memory cached by `stream` to back the allocations owned by `graphExec`.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiate, cudaGraphLaunch, cudaGraphExecDestroy
-
-__host__ cudaError_t cudaUserObjectCreate ( cudaUserObject_t* object_out, void* ptr, cudaHostFn_t destroy, unsigned int  initialRefcount, unsigned int  flags )
-
-
-Create a user object.
 
 ######  Parameters
 
@@ -3376,15 +2979,6 @@ Destructor callbacks cannot make CUDA API calls and should avoid blocking behavi
 
 See CUDA User Objects in the CUDA C++ Programming Guide for more information on user objects.
 
-**See also:**
-
-cudaUserObjectRetain, cudaUserObjectRelease, cudaGraphRetainUserObject, cudaGraphReleaseUserObject, cudaGraphCreate
-
-__host__ cudaError_t cudaUserObjectRelease ( cudaUserObject_t object, unsigned int  count = 1 )
-
-
-Release a reference to a user object.
-
 ######  Parameters
 
 `object`
@@ -3404,15 +2998,6 @@ It is undefined behavior to release references not owned by the caller, or to us
 
 See CUDA User Objects in the CUDA C++ Programming Guide for more information on user objects.
 
-**See also:**
-
-cudaUserObjectCreate, cudaUserObjectRetain, cudaGraphRetainUserObject, cudaGraphReleaseUserObject, cudaGraphCreate
-
-__host__ cudaError_t cudaUserObjectRetain ( cudaUserObject_t object, unsigned int  count = 1 )
-
-
-Retain a reference to a user object.
-
 ######  Parameters
 
 `object`
@@ -3429,14 +3014,3 @@ cudaSuccess, cudaErrorInvalidValue
 Retains new references to a user object. The new references are owned by the caller.
 
 See CUDA User Objects in the CUDA C++ Programming Guide for more information on user objects.
-
-**See also:**
-
-cudaUserObjectCreate, cudaUserObjectRelease, cudaGraphRetainUserObject, cudaGraphReleaseUserObject, cudaGraphCreate
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

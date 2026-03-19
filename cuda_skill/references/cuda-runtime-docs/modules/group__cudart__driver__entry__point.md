@@ -65,15 +65,8 @@ This API is deprecated and cudaGetDriverEntryPointByVersion (with a hardcoded cu
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuGetProcAddress
-
-__host__ cudaError_t cudaGetDriverEntryPointByVersion ( const char* symbol, void** funcPtr, unsigned int  cudaVersion, unsigned long long flags, cudaDriverEntryPointQueryResult ** driverStatus = NULL )
-
-
-Returns the requested driver API function pointer by CUDA version.
 
 ######  Parameters
 
@@ -128,14 +121,5 @@ The requested flags can be:
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuGetProcAddress
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

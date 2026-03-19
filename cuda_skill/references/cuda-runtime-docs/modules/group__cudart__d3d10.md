@@ -30,15 +30,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown
 
 Returns in `*device` the CUDA-compatible device corresponding to the adapter `pAdapter` obtained from IDXGIFactory::EnumAdapters. This call will succeed only if a device on adapter `pAdapter` is CUDA-compatible.
 
-**See also:**
-
-cudaGraphicsD3D10RegisterResource, cuD3D10GetDevice
-
-__host__ cudaError_t cudaD3D10GetDevices ( unsigned int* pCudaDeviceCount, int* pCudaDevices, unsigned int  cudaDeviceCount, ID3D10Device* pD3D10Device, cudaD3D10DeviceList deviceList )
-
-
-Gets the CUDA devices corresponding to a Direct3D 10 device.
-
 ######  Parameters
 
 `pCudaDeviceCount`
@@ -61,15 +52,6 @@ cudaSuccess, cudaErrorNoDevice, cudaErrorUnknown
 Returns in `*pCudaDeviceCount` the number of CUDA-compatible devices corresponding to the Direct3D 10 device `pD3D10Device`. Also returns in `*pCudaDevices` at most `cudaDeviceCount` of the the CUDA-compatible devices corresponding to the Direct3D 10 device `pD3D10Device`.
 
 If any of the GPUs being used to render `pDevice` are not CUDA capable then the call will return cudaErrorNoDevice.
-
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuD3D10GetDevices
-
-__host__ cudaError_t cudaGraphicsD3D10RegisterResource ( cudaGraphicsResource** resource, ID3D10Resource* pD3DResource, unsigned int  flags )
-
-
-Registers a Direct3D 10 resource for access by CUDA.
 
 ######  Parameters
 
@@ -154,13 +136,4 @@ A complete list of supported DXGI formats is as follows. For compactness the not
 
 If `pD3DResource` is of incorrect type or is already registered, then cudaErrorInvalidResourceHandle is returned. If `pD3DResource` cannot be registered, then cudaErrorUnknown is returned.
 
-**See also:**
 
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuGraphicsD3D10RegisterResource
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

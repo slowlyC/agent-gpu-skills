@@ -34,15 +34,6 @@ Registers the VdpOutputSurface specified by `vdpSurface` for access by CUDA. A h
   * cudaGraphicsMapFlagsWriteDiscard: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
 
 
-**See also:**
-
-cudaVDPAUSetVDPAUDevice, cudaGraphicsUnregisterResource, cudaGraphicsSubResourceGetMappedArray, cuGraphicsVDPAURegisterOutputSurface
-
-__host__ cudaError_t cudaGraphicsVDPAURegisterVideoSurface ( cudaGraphicsResource** resource, VdpVideoSurface vdpSurface, unsigned int  flags )
-
-
-Register a VdpVideoSurface object.
-
 ######  Parameters
 
 `resource`
@@ -67,15 +58,6 @@ Registers the VdpVideoSurface specified by `vdpSurface` for access by CUDA. A ha
   * cudaGraphicsMapFlagsWriteDiscard: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
 
 
-**See also:**
-
-cudaVDPAUSetVDPAUDevice, cudaGraphicsUnregisterResource, cudaGraphicsSubResourceGetMappedArray, cuGraphicsVDPAURegisterVideoSurface
-
-__host__ cudaError_t cudaVDPAUGetDevice ( int* device, VdpDevice vdpDevice, VdpGetProcAddress* vdpGetProcAddress )
-
-
-Gets the CUDA device associated with a VdpDevice.
-
 ######  Parameters
 
 `device`
@@ -92,15 +74,6 @@ cudaSuccess
 ###### Description
 
 Returns the CUDA device associated with a VdpDevice, if applicable.
-
-**See also:**
-
-cudaVDPAUSetVDPAUDevice, cuVDPAUGetDevice
-
-__host__ cudaError_t cudaVDPAUSetVDPAUDevice ( int  device, VdpDevice vdpDevice, VdpGetProcAddress* vdpGetProcAddress )
-
-
-Sets a CUDA device to use VDPAU interoperability.
 
 ######  Parameters
 
@@ -123,13 +96,4 @@ This function will immediately initialize the primary context on `device` if nee
 
 If `device` has already been initialized then this call will fail with the error cudaErrorSetOnActiveProcess. In this case it is necessary to reset `device` using cudaDeviceReset() before VDPAU interoperability on `device` may be enabled.
 
-**See also:**
 
-cudaGraphicsVDPAURegisterVideoSurface, cudaGraphicsVDPAURegisterOutputSurface, cudaDeviceReset
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

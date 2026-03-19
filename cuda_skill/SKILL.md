@@ -1,6 +1,6 @@
 ---
 name: cuda-skill
-description: "Query NVIDIA PTX ISA 9.1, CUDA Runtime API 13.1, Driver API 13.1, Programming Guide v13.1, Best Practices Guide, Nsight Compute, Nsight Systems local documentation. Debug and optimize GPU kernels with nsys/ncu/compute-sanitizer workflows. Use when writing, debugging, or optimizing CUDA code, GPU kernels, PTX instructions, inline PTX, TensorCore operations (WMMA, WGMMA, TMA, tcgen05), or when the user mentions CUDA API functions, error codes, device properties, memory management, profiling, GPU performance, compute capabilities, CUDA Graphs, Cooperative Groups, Unified Memory, dynamic parallelism, or CUDA programming model concepts."
+description: "Query NVIDIA PTX ISA 9.1, CUDA Runtime API 13.1, Driver API 13.1, Programming Guide v13.1, Best Practices Guide, Nsight Compute, Nsight Systems local documentation. Debug and optimize GPU kernels with nsys/ncu/compute-sanitizer workflows. Use when writing, debugging, or optimizing CUDA code, GPU kernels, PTX instructions, inline PTX, TensorCore operations (WMMA, WGMMA, TMA, tcgen05), or when the user mentions CUDA API functions, error codes, device properties, memory management, profiling, GPU performance, compute capabilities, CUDA Graphs, Cooperative Groups, Unified Memory, dynamic parallelism, CUDA programming model concepts, bank conflicts, shared memory optimization, warp divergence, memory coalescing, occupancy tuning, register pressure, L2 cache control, async copy, mbarrier, thread block clusters, or CUDA architecture questions (Ampere sm_80, Hopper sm_90, Blackwell sm_100)."
 ---
 
 # CUDA & PTX Reference
@@ -13,13 +13,9 @@ The base path depends on which agent tool is used:
 - Claude Code: `~/.claude/skills/cuda-skill/references/`
 - Codex: `~/.agents/skills/cuda-skill/references/`
 
-**Determine actual path at runtime:**
-
-```bash
-CUDA_REFS="$(dirname "$(find ~/.cursor/skills ~/.claude/skills ~/.agents/skills -name 'cuda-skill' -type d 2>/dev/null | head -1)")/cuda-skill/references"
-```
-
-All `rg` examples below use `~/.cursor/skills/cuda-skill/references/` as placeholder. **Replace with the actual path.**
+Below, `CUDA_REFS` refers to the `references/` directory inside the skill's install path.
+For example: `~/.cursor/skills/cuda-skill/references/` (Cursor) or `~/.claude/skills/cuda-skill/references/` (Claude Code).
+**Replace with the actual path** in all search commands.
 
 ```
 references/

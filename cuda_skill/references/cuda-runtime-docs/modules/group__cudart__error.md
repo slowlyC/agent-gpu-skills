@@ -6,6 +6,12 @@
 ### Functions
 
 __host__  __device__ const char* cudaGetErrorName ( cudaError_t error )
+     Returns the string representation of an error code enum name.
+__host__  __device__ const char* cudaGetErrorString ( cudaError_t error )
+     Returns the description string for an error code.
+### Functions
+
+__host__  __device__ const char* cudaGetErrorName ( cudaError_t error )
 
 
 Returns the string representation of an error code enum name.
@@ -23,15 +29,6 @@ Returns the string representation of an error code enum name.
 
 Returns a string containing the name of an error code in the enum. If the error code is not recognized, "unrecognized error code" is returned.
 
-**See also:**
-
-cudaGetErrorString, cudaGetLastError, cudaPeekAtLastError, cudaError, cuGetErrorName
-
-__host__  __device__ const char* cudaGetErrorString ( cudaError_t error )
-
-
-Returns the description string for an error code.
-
 ######  Parameters
 
 `error`
@@ -45,15 +42,6 @@ Returns the description string for an error code.
 
 Returns the description string for an error code. If the error code is not recognized, "unrecognized error code" is returned.
 
-**See also:**
-
-cudaGetErrorName, cudaGetLastError, cudaPeekAtLastError, cudaError, cuGetErrorString
-
-__host__  __device__ cudaError_t cudaGetLastError ( void )
-
-
-Returns the last error from a runtime call.
-
 ###### Returns
 
 cudaSuccess, cudaErrorMissingConfiguration, cudaErrorMemoryAllocation, cudaErrorInitializationError, cudaErrorLaunchFailure, cudaErrorLaunchTimeout, cudaErrorLaunchOutOfResources, cudaErrorInvalidDeviceFunction, cudaErrorInvalidConfiguration, cudaErrorInvalidDevice, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidSymbol, cudaErrorUnmapBufferObjectFailed, cudaErrorInvalidDevicePointer, cudaErrorInvalidTexture, cudaErrorInvalidTextureBinding, cudaErrorInvalidChannelDescriptor, cudaErrorInvalidMemcpyDirection, cudaErrorInvalidFilterSetting, cudaErrorInvalidNormSetting, cudaErrorUnknown, cudaErrorInvalidResourceHandle, cudaErrorInsufficientDriver, cudaErrorNoDevice, cudaErrorSetOnActiveProcess, cudaErrorStartupFailure, cudaErrorInvalidPtx, cudaErrorUnsupportedPtxVersion, cudaErrorNoKernelImageForDevice, cudaErrorJitCompilerNotFound, cudaErrorJitCompilationDisabled
@@ -64,15 +52,12 @@ Returns the last error that has been produced by any of the runtime calls in the
 
 Note: Multiple instances of the CUDA Runtime library can be present in an application when using a library that statically links the CUDA Runtime.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaPeekAtLastError, cudaGetErrorName, cudaGetErrorString, cudaError
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaPeekAtLastError ( void )
-
-
-Returns the last error from a runtime call.
 
 ###### Returns
 
@@ -84,14 +69,9 @@ Returns the last error that has been produced by any of the runtime calls in the
 
 Note: Multiple instances of the CUDA Runtime library can be present in an application when using a library that statically links the CUDA Runtime.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetLastError, cudaGetErrorName, cudaGetErrorString, cudaError
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -123,8 +123,3 @@ cudaSuccess, cudaErrorInvalidValue
 ###### Description
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

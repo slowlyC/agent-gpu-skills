@@ -16,8 +16,3 @@ char CUuuid_st::bytes[16]
 < CUDA definition of UUID
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

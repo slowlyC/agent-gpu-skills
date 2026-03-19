@@ -2314,7 +2314,7 @@ For the case of NVTX ranges from multiple threads, only the NVTX ranges from eit
     
     
     [1] mkdir reports && cd reports
-    [2] <path to target-linux-sbsa-armv8>/cpu/collect_cpu_topdown.sh ./myApp
+    [2] <path to target-linux-sbsa-armv8>/CpuProfiling/collect_cpu_topdown.sh ./myApp
     [3] nsys recipe nvtx_cpu_topdown --input .
     
 
@@ -2612,7 +2612,7 @@ To check the version of your exported SQLite file, check the value of `EXPORT_SC
 
 The changes between schema versions are documented in `<install_dir>/host*/exporter/export_schema_version_notes.txt`.
 
-This is the schema as of the 2025.5 release, schema version 3.23.2.
+This is the schema as of the 2026.2 release, schema version 3.25.0.
     
     
     CREATE TABLE StringIds (
@@ -2664,8 +2664,8 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
     CREATE TABLE TARGET_INFO_SESSION_START_TIME (
         utcEpochNs                  INTEGER,                               -- UTC Epoch timestamp at start of the capture (ns).
         utcTime                     TEXT,                                  -- Start of the capture in UTC.
-        localTime                   TEXT                                   -- Start of the capture in local time of target.
-        systemClockNs               INTEGER,                               -- Target system clock timestamp at start of the capture (ns).
+        localTime                   TEXT,                                  -- Start of the capture in local time of target.
+        systemClockNs               INTEGER                                -- Target system clock timestamp at start of the capture (ns).
     );
     CREATE TABLE ANALYSIS_DETAILS (
         -- Details about the analysis session.
@@ -2739,7 +2739,9 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
     CREATE TABLE TARGET_INFO_CUDA_DEVICE (
         gpuId                       INTEGER,                               -- GPU ID.
         cudaId                      INTEGER   NOT NULL,                    -- CUDA device ID.
-        pid                         INTEGER   NOT NULL                     -- Process ID.
+        pid                         INTEGER   NOT NULL,                    -- Process ID.
+        uuid                        TEXT,                                  -- Device UUID.
+        numMultiprocessors          INTEGER                                -- Number of SMs available on the device.
     );
     CREATE TABLE TARGET_INFO_PROCESS (
         processId                   INTEGER   NOT NULL,                    -- Process ID.
@@ -2778,7 +2780,13 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         deviceId                    INTEGER   NOT NULL,                    -- Device ID.
         contextId                   INTEGER   NOT NULL,                    -- Context ID.
         parentContextId             INTEGER,                               -- For green context, this is the parent context id.
-        isGreenContext              INTEGER                                -- Is this a Green Context?
+        isGreenContext              INTEGER,                               -- Is this a Green Context?
+        numMultiprocessors          INTEGER,                               -- For green context, number of SMs allocated.
+        numTpcs                     INTEGER,                               -- For green context, number of TPCs allocated.
+        tpcMask                     TEXT,                                  -- For green context, comma-separated hex TPC mask values (e.g., '0xf,0x0').
+        workqueueResourceId         INTEGER,                               -- For green context, workqueue resource ID.
+        workqueueConcurrencyLimit   INTEGER,                               -- For green context, workqueue concurrency limit.
+        workqueueSharingScope       INTEGER                                -- For green context, workqueue sharing scope.
     );
     CREATE TABLE TARGET_INFO_CUDA_STREAM (
         streamId                    INTEGER   NOT NULL,                    -- Stream ID.
@@ -2800,7 +2808,7 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         name                        TEXT      NOT NULL,                    -- Event or Metric name
         description                 TEXT      NOT NULL,                    -- Event or Metric description
         unit                        TEXT      NOT NULL,                    -- Event or Metric measurement unit
-        nameSuffix                  TEXT                                   -- Event or Metric name suffix
+        displayName                 TEXT                                   -- GUI friendly name of the Event or Metric
     );
     CREATE TABLE TARGET_INFO_NETWORK_METRICS (
         metricsListId               INTEGER   NOT NULL,                    -- Metric list ID
@@ -2991,6 +2999,13 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         name                        TEXT,                                  -- Enum symbol name.
         label                       TEXT                                   -- Enum human name.
     );
+    CREATE TABLE ENUM_CUPTI_OVERHEAD_TYPE (
+        -- CUPTI overhead type labels
+    
+        id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
+    );
     CREATE TABLE ENUM_STACK_UNWIND_METHOD (
         -- Stack unwind method labels
     
@@ -3033,68 +3048,61 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         name                        TEXT,                                  -- Enum symbol name.
         label                       TEXT                                   -- Enum human name.
     );
-    CREATE TABLE ENUM_OSRT_FILE_ACCESS_EVENT_TYPE (
-        -- OSRT File Access event type
+    CREATE TABLE ENUM_VULKAN_PIPELINE_CREATION_FLAGS (
+        -- Vulkan pipeline creation feedback flag labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
         name                        TEXT,                                  -- Enum symbol name.
         label                       TEXT                                   -- Enum human name.
     );
-    CREATE TABLE ENUM_VULKAN_PIPELINE_CREATION_FLAGS (
-        -- Vulkan pipeline creation feedback flag labels
-    
-        id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
-    );
     CREATE TABLE ENUM_VULKAN_HEAP_TYPE (
         -- Vulkan heap type labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_VULKAN_HEAP_FLAGS (
-        -- Vulkan heap flags labels
+        -- Vulkan heap flag labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_VULKAN_MEMORY_PROPERTY_FLAGS (
-        -- Vulkan memory property flags labels
+        -- Vulkan memory property flag labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_D3D12_HEAP_TYPE (
         -- D3D12 heap type labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_D3D12_PAGE_PROPERTY (
         -- D3D12 CPU page property labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_D3D12_HEAP_FLAGS (
         -- D3D12 heap flag labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_D3D12_CMD_LIST_TYPE (
         -- D3D12 command list type labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbolic name.
-        label                       TEXT                                   -- Enum human-readable name.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
     );
     CREATE TABLE ENUM_OPENACC_DEVICE (
         -- OpenACC device type labels
@@ -3161,13 +3169,6 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
     );
     CREATE TABLE ENUM_OPENMP_TASK_STATUS (
         -- OpenMP task status labels
-    
-        id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
-        name                        TEXT,                                  -- Enum symbol name.
-        label                       TEXT                                   -- Enum human name.
-    );
-    CREATE TABLE ENUM_DXGI_FORMAT (
-        -- DXGI image format labels
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
         name                        TEXT,                                  -- Enum symbol name.
@@ -3301,6 +3302,13 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
     );
     CREATE TABLE ENUM_NET_IB_CONGESTION_EVENT_TYPE (
         -- IB Switch congestion event types
+    
+        id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
+        name                        TEXT,                                  -- Enum symbol name.
+        label                       TEXT                                   -- Enum human name.
+    );
+    CREATE TABLE ENUM_OSRT_FILE_ACCESS_EVENT_TYPE (
+        -- OSRT File Access event type
     
         id                          INTEGER   NOT NULL   PRIMARY KEY,      -- Enum numerical value.
         name                        TEXT,                                  -- Enum symbol name.
@@ -3461,7 +3469,8 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         size                        INTEGER,                               -- MPI communicator size.
         groupRoot                   INTEGER,                               -- Root rank (global) in MPI communicator.
         groupRootUid                INTEGER,                               -- Group root's communicator ID.
-        members                     TEXT                                   -- MPI communicator members (index is global rank).
+        members                     TEXT,                                  -- MPI communicator members (index is global rank).
+        commUid                     INTEGER                                -- Globally unique MPI communicator ID.
     );
     CREATE TABLE NVTX_PAYLOAD_SCHEMAS (
         -- NVTX payload schema attributes.
@@ -3552,6 +3561,19 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         graphNodeId                 INTEGER,                               -- REFERENCES CUDA_GRAPH_NODE_EVENTS(graphNodeId)
         memKind                     INTEGER                                -- REFERENCES ENUM_CUDA_MEM_KIND(id)
     );
+    CREATE TABLE CUPTI_ACTIVITY_KIND_MEM_DECOMPRESS (
+        start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
+        end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
+        eventClass                  INTEGER   NOT NULL,                    -- REFERENCES ENUM_NSYS_EVENT_CLASS(id)
+        deviceId                    INTEGER   NOT NULL,                    -- Device ID.
+        contextId                   INTEGER   NOT NULL,                    -- Context ID.
+        streamId                    INTEGER   NOT NULL,                    -- Stream ID.
+        correlationId               INTEGER,                               -- REFERENCES CUPTI_ACTIVITY_KIND_RUNTIME(correlationId)
+        globalPid                   INTEGER,                               -- Serialized GlobalId.
+        ChannelID                   INTEGER   NOT NULL,                    -- Channel Id of MemDecompress Operation.
+        sourceBytes                 INTEGER   NOT NULL,                    -- Number of source bytes (B).
+        NumberOfOperations          INTEGER   NOT NULL                     -- Number of operations.
+    );
     CREATE TABLE CUPTI_ACTIVITY_KIND_KERNEL (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
         end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
@@ -3580,7 +3602,19 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         gridId                      INTEGER   NOT NULL,                    -- Unique grid ID of the kernel assigned at runtime.
         sharedMemoryExecuted        INTEGER,                               -- Shared memory size set by the driver.
         graphNodeId                 INTEGER,                               -- REFERENCES CUDA_GRAPH_NODE_EVENTS(graphNodeId)
-        sharedMemoryLimitConfig     INTEGER                                -- REFERENCES ENUM_CUDA_SHARED_MEM_LIMIT_CONFIG(id)
+        sharedMemoryLimitConfig     INTEGER,                               -- REFERENCES ENUM_CUDA_SHARED_MEM_LIMIT_CONFIG(id)
+        qmdBulkReleaseDone          INTEGER,                               -- QMD bulk release done timestamp from CWD events.
+        qmdPreexitDone              INTEGER,                               -- QMD pre-exit done timestamp from CWD events.
+        qmdLastCtaDone              INTEGER,                               -- QMD last CTA done timestamp from CWD events.
+        graphId                     INTEGER,                               -- Kernel graph ID.
+        clusterX                    INTEGER,                               -- Cluster X dimension.
+        clusterY                    INTEGER,                               -- Cluster Y dimension.
+        clusterZ                    INTEGER,                               -- Cluster Z dimension.
+        clusterSchedulingPolicy     INTEGER,                               -- Cluster scheduling policy.
+        maxPotentialClusterSize     INTEGER,                               -- Maximum potential cluster size.
+        maxActiveClusters           INTEGER,                               -- Maximum active clusters.
+        sharedMemoryRequestedPercentage   INTEGER,                         -- Shared memory requested percentage.
+        tensorSizeMinusOneElements   TEXT      NOT NULL                    -- TMA descriptor tensor size minus one elements array.
     );
     CREATE TABLE CUPTI_ACTIVITY_KIND_SYNCHRONIZATION (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
@@ -3597,7 +3631,7 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         eventSyncId                 INTEGER                                -- CUDA Event Sync ID to link the synchronization API to associated event record API.
     );
     CREATE TABLE CUPTI_ACTIVITY_KIND_CUDA_EVENT (
-        timestamp                   INTEGER   NOT NULL,                    -- Event timestamp (ns).
+        timestamp                   INTEGER,                               -- The device-side CUDA Event completion timestamp. 0 if not collected.
         deviceId                    INTEGER   NOT NULL,                    -- Device ID.
         contextId                   INTEGER   NOT NULL,                    -- Context ID.
         greenContextId              INTEGER,                               -- Green context ID.
@@ -3606,6 +3640,20 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         globalPid                   INTEGER,                               -- Serialized GlobalId.
         eventId                     INTEGER   NOT NULL,                    -- Event ID for which the event record API is called.
         eventSyncId                 INTEGER                                -- CUDA Event Sync ID to link event record API to related synchronization APIs.
+    );
+    CREATE TABLE CUPTI_ACTIVITY_KIND_GRAPH_HOST_NODE_AND_HOST_LAUNCH (
+        -- This table includes both CUPTI_ACTIVITY_KIND_GRAPH_HOST_NODE and CUPTI_ACTIVITY_KIND_HOST_LAUNCH events. These are stored as a single internal event type in Nsys reports. For HOST_LAUNCH events, graphNodeId and graphId fields will be NULL.
+    
+        start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
+        end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
+        deviceId                    INTEGER   NOT NULL,                    -- Device ID.
+        contextId                   INTEGER   NOT NULL,                    -- Context ID.
+        greenContextId              INTEGER,                               -- Green context ID.
+        streamId                    INTEGER   NOT NULL,                    -- Stream ID.
+        correlationId               INTEGER,                               -- REFERENCES CUPTI_ACTIVITY_KIND_RUNTIME(correlationId)
+        globalPid                   INTEGER,                               -- Serialized GlobalId.
+        graphNodeId                 INTEGER,                               -- REFERENCES CUDA_GRAPH_NODE_EVENTS(graphNodeId)
+        graphId                     INTEGER                                -- REFERENCES CUDA_GRAPH_EVENTS(graphId)
     );
     CREATE TABLE CUPTI_ACTIVITY_KIND_GRAPH_TRACE (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
@@ -3619,15 +3667,24 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         graphId                     INTEGER   NOT NULL,                    -- REFERENCES CUDA_GRAPH_EVENTS(graphId)
         graphExecId                 INTEGER   NOT NULL                     -- REFERENCES CUDA_GRAPH_EVENTS(graphExecId)
     );
-    CREATE TABLE CUPTI_ACTIVITY_KIND_RUNTIME (
+    CREATE TABLE CUPTI_ACTIVITY_KIND_OVERHEAD (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
         end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
         eventClass                  INTEGER   NOT NULL,                    -- REFERENCES ENUM_NSYS_EVENT_CLASS(id)
         globalTid                   INTEGER,                               -- Serialized GlobalId.
         correlationId               INTEGER,                               -- ID used to identify events that this function call has triggered.
-        nameId                      INTEGER   NOT NULL,                    -- REFERENCES StringIds(id) -- Function name
-        returnValue                 INTEGER   NOT NULL,                    -- Return value of the function call.
-        callchainId                 INTEGER                                -- REFERENCES CUDA_CALLCHAINS(id)
+        nameId                      INTEGER,                               -- REFERENCES StringIds(id) -- Function name
+        overheadType                INTEGER   NOT NULL                     -- REFERENCES ENUM_CUPTI_OVERHEAD_TYPE(id)
+    );
+    CREATE TABLE CUDA_HOST_CALLBACK (
+        -- Host-side callback functions triggered from CUDA streams. These represent CPU-side execution from CUDA graph host function nodes or cudaLaunchHostFunc() calls. Corresponding device-side activities are stored at the CUPTI_ACTIVITY_KIND_GRAPH_HOST_NODE_AND_HOST_LAUNCH table.
+    
+        start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
+        end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
+        eventClass                  INTEGER   NOT NULL,                    -- REFERENCES ENUM_NSYS_EVENT_CLASS(id)
+        globalTid                   INTEGER,                               -- Serialized GlobalId.
+        correlationId               INTEGER,                               -- ID used to identify events that this function call has triggered.
+        nameId                      INTEGER                                -- REFERENCES StringIds(id) -- Function name
     );
     CREATE TABLE CUDNN_EVENTS (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
@@ -3661,6 +3718,16 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         graphId                     INTEGER,                               -- Graph ID.
         originalGraphId             INTEGER,                               -- Reference to the original graph ID, if cloned.
         graphExecId                 INTEGER                                -- Executable graph ID.
+    );
+    CREATE TABLE CUPTI_ACTIVITY_KIND_RUNTIME (
+        start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
+        end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
+        eventClass                  INTEGER   NOT NULL,                    -- REFERENCES ENUM_NSYS_EVENT_CLASS(id)
+        globalTid                   INTEGER,                               -- Serialized GlobalId.
+        correlationId               INTEGER,                               -- ID used to identify events that this function call has triggered.
+        nameId                      INTEGER   NOT NULL,                    -- REFERENCES StringIds(id) -- Function name
+        returnValue                 INTEGER   NOT NULL,                    -- Return value of the function call.
+        callchainId                 INTEGER                                -- REFERENCES CUDA_CALLCHAINS(id)
     );
     CREATE TABLE CUPTI_ACTIVITY_KIND_BLOCK_TRACE (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
@@ -3711,8 +3778,11 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         globalPid                   INTEGER,                               -- Serialized GlobalId.
         BlockID                     INTEGER   NOT NULL,                    -- Block ID.
         WarpID                      INTEGER   NOT NULL,                    -- Warp ID.
-        WarpEventIds                TEXT,                                  -- Warp event IDs.
-        WarpEventTimestampOffsets   TEXT,                                  -- Warp event timestamp offsets.
+        EventName                   INTEGER   NOT NULL,                    -- Event Name.
+        InternalEventCount          INTEGER   NOT NULL,                    -- Internal event count.
+        eventType                   INTEGER   NOT NULL,                    -- Event type, 0 = range, 1 = marker, 2 = warp start/end
+        WarpEventIds                TEXT      NOT NULL,                    -- warp event ids.
+        WarpEventTimestampOffsets   TEXT      NOT NULL,                    -- warp event timestamp offsets.
         UGPUId                      INTEGER,                               -- uGPU ID of the event on which the particular event was running.
         CGAId                       INTEGER                                -- CGA ID of the event on which the particular event was running.
     );
@@ -3791,6 +3861,7 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         globalTid                   INTEGER,                               -- Serialized GlobalId.
         textId                      INTEGER,                               -- REFERENCES StringIds(id) -- Registered NVTX domain/string
         commHandle                  INTEGER,                               -- MPI communicator handle.
+        commUid                     INTEGER,                               -- Globally unique MPI communicator ID.
         tag                         INTEGER,                               -- MPI message tag
         remoteRank                  INTEGER,                               -- MPI remote rank (destination or source)
         size                        INTEGER,                               -- MPI message size in bytes
@@ -3802,7 +3873,8 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         globalTid                   INTEGER,                               -- Serialized GlobalId.
         textId                      INTEGER,                               -- REFERENCES StringIds(id) -- Registered NVTX domain/string
         commHandle                  INTEGER,                               -- MPI communicator handle.
-        rootRank                    INTEGER,                               -- root rank in the collective
+        commUid                     INTEGER,                               -- Globally unique MPI communicator ID.
+        rootRank                    INTEGER,                               -- Root rank in the collective
         size                        INTEGER,                               -- MPI message size in bytes (send size for bidirectional ops)
         recvSize                    INTEGER,                               -- MPI receive size in bytes
         requestHandle               INTEGER                                -- MPI request handle.
@@ -3933,7 +4005,8 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         nameId                      INTEGER   NOT NULL,                    -- REFERENCES StringIds(id) -- Function name
         returnValue                 INTEGER   NOT NULL,                    -- Return value of the function call.
         nestingLevel                INTEGER,                               -- Zero-base index of the nesting level.
-        callchainId                 INTEGER   NOT NULL                     -- REFERENCES OSRT_CALLCHAINS(id)
+        callchainId                 INTEGER   NOT NULL,                    -- REFERENCES OSRT_CALLCHAINS(id)
+        argumentsId                 INTEGER   NOT NULL                     -- REFERENCES OSRT_ARGUMENTS(id) -- Experimental.
     );
     CREATE TABLE OSRT_CALLCHAINS (
         -- Callchains attached to OSRT events, depending on selected profiling settings.
@@ -3951,14 +4024,14 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
     
         PRIMARY KEY (id, stackDepth)
     );
-    CREATE TABLE OSRT_FILE_ACCESS_DESCRIPTORS (
-        -- Metadata of all file accesses that were made by the OS during the recording.
+    CREATE TABLE OSRT_ARGUMENTS (
+        -- Arguments OSRT functions were called with. This is an experimental feature and arguments are collected for some specific functions only. Please avoid relying on the content for now.
     
-        fileAccessId                INTEGER   NOT NULL,                    -- File Access Id.
-        processId                   INTEGER   NOT NULL,                    -- Process ID.
-        openedAt                    INTEGER   NOT NULL,                    -- The time when the file was opened (ns).
-        closedAt                    INTEGER   NOT NULL,                    -- The time when the file was closed (ns).
-        filePath                    TEXT      NOT NULL,                    -- The opened file path.
+        id                          INTEGER   NOT NULL,                    -- Part of PRIMARY KEY (id, argumentIndex).
+        value                       INTEGER   NOT NULL,                    -- Value of the argument.
+        argumentIndex               INTEGER   NOT NULL,                    -- Zero-base index of the argument.
+    
+        PRIMARY KEY (id, argumentIndex)
     );
     CREATE TABLE OSRT_FILE_ACCESS_EVENTS (
         -- OS Runtime events related to file accesses (opening, closing, reading, and writing).
@@ -3969,14 +4042,24 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         endedAt                     INTEGER   NOT NULL,                    -- Event end timestamp (ns).
         eventType                   INTEGER   NOT NULL,                    -- REFERENCES ENUM_OSRT_FILE_ACCESS_EVENT_TYPE(id)
         apiCallId                   INTEGER   NOT NULL,                    -- REFERENCES StringIds(id) -- Function name
-        bytesProcessed              INTEGER   NOT NULL                     -- Actual bytes read/written.
+        bytesProcessed              INTEGER   NOT NULL,                    -- Actual bytes read/written.
+        context                     TEXT      NOT NULL                     -- Additional information about the event
+    );
+    CREATE TABLE OSRT_FILE_ACCESS_DESCRIPTORS (
+        -- Metadata of all the file accesses that were made by the OS during the recording.
+    
+        fileAccessId                INTEGER   NOT NULL,                    -- File Access Id.
+        processId                   INTEGER   NOT NULL,                    -- Process ID.
+        openedAt                    INTEGER   NOT NULL,                    -- The time when the file was opened (ns).
+        closedAt                    INTEGER   NOT NULL,                    -- The time when the file was closed (ns).
+        filePath                    TEXT      NOT NULL                     -- The opened file path.
     );
     CREATE TABLE PROFILER_OVERHEAD (
         start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
         end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
         globalTid                   INTEGER,                               -- Serialized GlobalId.
         nameId                      INTEGER   NOT NULL,                    -- REFERENCES StringIds(id) -- Function name
-        returnValue                 INTEGER   NOT NULL                     -- Return value of the function call.
+        overheadType                INTEGER   NOT NULL                     -- REFERENCES ENUM_CUPTI_OVERHEAD_TYPE(id)
     );
     CREATE TABLE SCHED_EVENTS (
         -- Thread scheduling events.
@@ -4077,12 +4160,12 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         heapFlags                   INTEGER,                               -- REFERENCES ENUM_D3D12_HEAP_FLAGS(id)
         cpuPageProperty             INTEGER,                               -- REFERENCES ENUM_D3D12_PAGE_PROPERTY(id)
         nvApiFlags                  INTEGER,                               -- NV specific flags. See docs for specifics.
-        objectHandle                INTEGER,                               -- Handle to the graphics object.
+        objectHandle                INTEGER,                               -- Handle to the graphics object created or modified by the memory operation.
         bindTargetHandle            INTEGER,                               -- Handle to the target resource for bind operations.
         memorySize                  INTEGER,                               -- Size of the memory allocation (B).
         memoryOffset                INTEGER,                               -- Offset within the memory allocation (B).
-        resourceFlags               INTEGER,                               -- Combination of D3D12_RESOURCE_FLAGS enum values.
-        dimension                   INTEGER,                               -- D3D12_RESOURCE_DIMENSION enum value.
+        resourceFlags               INTEGER,                               -- Combination of D3D12_RESOURCE_FLAGS enum values specifying resource usage options.
+        dimension                   INTEGER,                               -- D3D12_RESOURCE_DIMENSION enum value specifying the resource type.
         traceEventId                INTEGER   NOT NULL                     -- REFERENCES DX12_API(id)
     );
     CREATE TABLE DXGI_API (
@@ -4185,7 +4268,7 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         heapFlags                   INTEGER,                               -- REFERENCES ENUM_VULKAN_HEAP_FLAGS(id)
         memoryProperty              INTEGER,                               -- REFERENCES ENUM_VULKAN_MEMORY_PROPERTY_FLAGS(id)
         heapType                    INTEGER,                               -- REFERENCES ENUM_VULKAN_HEAP_TYPE(id)
-        memOpId                     INTEGER   NOT NULL                     -- REFERENCES VULKAN_MEMORY_OPERATION(id)
+        memOpId                     INTEGER   NOT NULL                     -- REFERENCES VULKAN_MEMORY_OPERATION(id) -- ID of the parent memory operation.
     );
     CREATE TABLE GPU_CONTEXT_SWITCH_EVENTS (
         tag                         INTEGER   NOT NULL,                    -- REFERENCES ENUM_GPU_CTX_SWITCH(id)
@@ -4859,6 +4942,21 @@ This is the schema as of the 2025.5 release, schema version 3.23.2.
         unresolved                  INTEGER,                               -- True if the symbol was not resolved.
     
         PRIMARY KEY (id, stackDepth)
+    );
+    CREATE TABLE BANDWIDTH_USAGE_EVENTS (
+        start                       INTEGER   NOT NULL,                    -- Event start timestamp (ns).
+        end                         INTEGER   NOT NULL,                    -- Event end timestamp (ns).
+        globalVm                    INTEGER   NOT NULL,                    -- Serialized GlobalId.
+        valuesId                    INTEGER                                -- REFERENCES BANDWIDTH_USAGE_VALUES(id)
+    );
+    CREATE TABLE BANDWIDTH_USAGE_VALUES (
+        -- BandwidthUsage event XmcClient values.
+    
+        id                          INTEGER   NOT NULL,
+        idx                         INTEGER   NOT NULL,
+        value                       INTEGER   NOT NULL,                    -- Counter data value
+    
+        PRIMARY KEY (id, idx)
     );
     
 
@@ -6195,47 +6293,18 @@ A sample function that reads all Arrow tables in a `.arrows` file is provided be
 
 The Arrow directory exporter type, `_arwdir`, will create a directory with one arrow file per table/dataset.
 
-### JSON and Text
+### JSON Lines
 
-JSON and TXT export formats are generated by serializing buffered messages, each on a new line. First, all collected events are processed. Then strings are serialized, followed by stdout, stderr streams if any, followed by thread names.
+In the JSON Lines export format ([JSON Lines Documentation](https://jsonlines.org/)), events and other report data (such as strings and processes) are serialized into JSON objects, with each object written to a new line.
 
 Output layout:
     
     
-    {Event #1}
-    {Event #2}
+    {"id":0,"table":"StringIds","value":"[Unknown]"}
+    {"globalPid":284057963331584,"name":"chrome","pid":153958,"table":"PROCESSES"}
+    {"globalTid":281523009882942,"nameId":442,"priority":20,"table":"ThreadNames"}
+    {"name":"COLLECT_GPU_CTX_SW_TRACE","table":"META_DATA_CAPTURE","value":"false"}
     ...
-    {Event #N}
-    {Strings}
-    {Streams}
-    {Threads}
     
 
-For easier grepping of JSON output, the `--separate-strings` switch may be used to force manual splitting of strings, streams and thread names data.
-
-Example line split: `nsys export --type=json --separate-strings sample.nsys-rep -- -`
-    
-    
-    {"type":"String","id":"3720","value":"Process 14944 was launched by the profiler"}
-    {"type":"String","id":"3721","value":"Profiling has started."}
-    {"type":"String","id":"3722","value":"Profiler attached to the process."}
-    {"type":"String","id":"3723","value":"Profiling has stopped."}
-    {"type":"ThreadName","globalTid":"72057844756653436","nameId":"14","priority":"10"}
-    {"type":"ThreadName","globalTid":"72057844756657940","nameId":"15","priority":"10"}
-    {"type":"ThreadName","globalTid":"72057844756654400","nameId":"24","priority":"10"}
-    
-
-Compare with: `nsys export --type=json sample.nsys-rep -- -`
-    
-    
-    {"data":["[Unknown]","[Unknown kernel module]","[Max depth]","[Broken backtraces]",
-      "[Called from Java]","QnxKernelTrace","mm_","task_submit","class_id","syncpt_id",
-      "syncpt_thresh","pid","tid","FTrace","[NSys]","[NSys Comms]", "..." ,"Process
-      14944 was launched by the profiler","Profiling has started.","Profiler attached
-      to the process.","Profiling has stopped."]}
-    {"data":[{"nameIdx":"14","priority":"10","globalTid":"72057844756653436"},
-      {"nameIdx":"15","priority":"10","globalTid":"72057844756657940"},{"nameIdx":"24",
-      "priority":"10","globalTid":"72057844756654400"}]}
-    
-
-Note that only last few lines are shown here for clarity, and that carriage returns and indents were added to avoid wrapping documentation.
+Note the presence of the “table” field in each JSON object. This field allows readers to identify the type of the event and corresponds to the table name in the `sqlite` export.

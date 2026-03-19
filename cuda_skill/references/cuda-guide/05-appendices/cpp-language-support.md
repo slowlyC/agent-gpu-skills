@@ -2448,13 +2448,13 @@ For example, the following code patterns are not supported in the body of the ho
 
   4. During host code generation, the body of a device-only `constexpr` function is preserved in the code sent to the host compiler. However, if the body of a device function attempts to ODR-use a namespace-scope device variable or a non-`constexpr` device function, the call to the device function from host code is not supported. While the code may build without compiler diagnostics, it may behave incorrectly at runtime. Example:
          
-         __device__ int host_var1, host_var2;
+         __device__ int device_var1, device_var2;
          
-         constexpr __device__ int* device_function(bool b) { return b ? &host_var1 : &host_var2; };
+         constexpr __device__ int* device_function(bool b) { return b ? &device_var1 : &device_var2; };
          
          int host_function(bool flag) {
              return *device_function(flag); // ERROR, device_function() attempts to refer to device variables
-                                            //        'host_var1' and 'host_var2'
+                                            //        'device_var1' and 'device_var2'
                                             // The code will compile, but will NOT execute correctly.
          }
          

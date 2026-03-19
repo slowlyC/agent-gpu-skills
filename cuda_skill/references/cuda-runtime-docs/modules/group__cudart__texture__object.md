@@ -40,15 +40,6 @@ Returns a channel descriptor with format `f` and number of bits of each componen
 
 where cudaChannelFormatKind is one of cudaChannelFormatKindSigned, cudaChannelFormatKindUnsigned, or cudaChannelFormatKindFloat.
 
-**See also:**
-
-cudaCreateChannelDesc ( C++ API), cudaGetChannelDesc, cudaCreateTextureObject, cudaCreateSurfaceObject
-
-__host__ cudaError_t cudaCreateTextureObject ( cudaTextureObject_t* pTexObject, const cudaResourceDesc* pResDesc, const cudaTextureDesc* pTexDesc, const cudaResourceViewDesc* pResViewDesc )
-
-
-Creates a texture object.
-
 ######  Parameters
 
 `pTexObject`
@@ -253,15 +244,8 @@ where:
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaDestroyTextureObject, cuTexObjectCreate
-
-__host__ cudaError_t cudaDestroyTextureObject ( cudaTextureObject_t texObject )
-
-
-Destroys a texture object.
 
 ######  Parameters
 
@@ -278,17 +262,10 @@ Destroys the texture object specified by `texObject`.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaCreateTextureObject, cuTexObjectDestroy
-
-__host__ cudaError_t cudaGetChannelDesc ( cudaChannelFormatDesc* desc, cudaArray_const_t array )
-
-
-Get the channel descriptor of an array.
 
 ######  Parameters
 
@@ -305,15 +282,12 @@ cudaSuccess, cudaErrorInvalidValue
 
 Returns in `*desc` the channel descriptor of the CUDA array `array`.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaCreateChannelDesc ( C API), cudaCreateTextureObject, cudaCreateSurfaceObject
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGetTextureObjectResourceDesc ( cudaResourceDesc* pResDesc, cudaTextureObject_t texObject )
-
-
-Returns a texture object's resource descriptor.
 
 ######  Parameters
 
@@ -332,15 +306,8 @@ Returns the resource descriptor for the texture object specified by `texObject`.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaCreateTextureObject, cuTexObjectGetResourceDesc
-
-__host__ cudaError_t cudaGetTextureObjectResourceViewDesc ( cudaResourceViewDesc* pResViewDesc, cudaTextureObject_t texObject )
-
-
-Returns a texture object's resource view descriptor.
 
 ######  Parameters
 
@@ -359,15 +326,8 @@ Returns the resource view descriptor for the texture object specified by `texObj
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaCreateTextureObject, cuTexObjectGetResourceViewDesc
-
-__host__ cudaError_t cudaGetTextureObjectTextureDesc ( cudaTextureDesc* pTexDesc, cudaTextureObject_t texObject )
-
-
-Returns a texture object's texture descriptor.
 
 ######  Parameters
 
@@ -386,14 +346,5 @@ Returns the texture descriptor for the texture object specified by `texObject`.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaCreateTextureObject, cuTexObjectGetTextureDesc
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -25,15 +25,12 @@ Returns in `*driverVersion` the latest version of CUDA supported by the driver. 
 
 This function automatically returns cudaErrorInvalidValue if `driverVersion` is NULL.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaRuntimeGetVersion, cuDriverGetVersion
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaRuntimeGetVersion ( int* runtimeVersion )
-
-
-Returns the CUDA Runtime version.
 
 ######  Parameters
 
@@ -54,14 +51,5 @@ This function automatically returns cudaErrorInvalidValue if the `runtimeVersion
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaDriverGetVersion, cuDriverGetVersion
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

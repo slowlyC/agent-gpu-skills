@@ -8,24 +8,25 @@ Nsight Compute
 
   * [1\. Release Notes](#)
     * [1.1. Release Notes](#id1)
-      * [1.1.1. Updates in 2025.4.1](#updates-in-2025-4-1)
-      * [1.1.2. Updates in 2025.4](#updates-in-2025-4)
-      * [1.1.3. Updates in 2025.3.1](#updates-in-2025-3-1)
-      * [1.1.4. Updates in 2025.3](#updates-in-2025-3)
-      * [1.1.5. Updates in 2025.2.1](#updates-in-2025-2-1)
-      * [1.1.6. Updates in 2025.2](#updates-in-2025-2)
-      * [1.1.7. Updates in 2025.1.1](#updates-in-2025-1-1)
-      * [1.1.8. Updates in 2025.1](#updates-in-2025-1)
-      * [1.1.9. Updates in 2024.4](#updates-in-2024-4)
-      * [1.1.10. Updates in 2024.3.2](#updates-in-2024-3-2)
-      * [1.1.11. Updates in 2024.3.1](#updates-in-2024-3-1)
-      * [1.1.12. Updates in 2024.3](#updates-in-2024-3)
-      * [1.1.13. Updates in 2024.2.1](#updates-in-2024-2-1)
-      * [1.1.14. Updates in 2024.2](#updates-in-2024-2)
-      * [1.1.15. Updates in 2024.1.1](#updates-in-2024-1-1)
-      * [1.1.16. Updates in 2024.1](#updates-in-2024-1)
-      * [1.1.17. Updates in 2021.2.9](#updates-in-2021-2-9)
-      * [1.1.18. Older Versions](#older-versions)
+      * [1.1.1. Updates in 2026.1](#updates-in-2026-1)
+      * [1.1.2. Updates in 2025.4.1](#updates-in-2025-4-1)
+      * [1.1.3. Updates in 2025.4](#updates-in-2025-4)
+      * [1.1.4. Updates in 2025.3.1](#updates-in-2025-3-1)
+      * [1.1.5. Updates in 2025.3](#updates-in-2025-3)
+      * [1.1.6. Updates in 2025.2.1](#updates-in-2025-2-1)
+      * [1.1.7. Updates in 2021.2.9](#updates-in-2021-2-9)
+      * [1.1.8. Older Versions](#older-versions)
+        * [Updates in 2025.2](#updates-in-2025-2)
+        * [Updates in 2025.1.1](#updates-in-2025-1-1)
+        * [Updates in 2025.1](#updates-in-2025-1)
+        * [Updates in 2024.4](#updates-in-2024-4)
+        * [Updates in 2024.3.2](#updates-in-2024-3-2)
+        * [Updates in 2024.3.1](#updates-in-2024-3-1)
+        * [Updates in 2024.3](#updates-in-2024-3)
+        * [Updates in 2024.2.1](#updates-in-2024-2-1)
+        * [Updates in 2024.2](#updates-in-2024-2)
+        * [Updates in 2024.1.1](#updates-in-2024-1-1)
+        * [Updates in 2024.1](#updates-in-2024-1)
         * [Updates in 2023.3.1](#updates-in-2023-3-1)
         * [Updates in 2023.3](#updates-in-2023-3)
         * [Updates in 2023.2.2](#updates-in-2023-2-2)
@@ -112,7 +113,7 @@ __[NsightCompute](../index.html)
 
   * [](../index.html) »
   * 1\. Release Notes
-  *   * v2025.4.1 | [Archive](https://developer.nvidia.com/nsight-compute-history)
+  *   * v2026.1.0 | [Archive](https://developer.nvidia.com/nsight-compute-history)
 
 
 * * *
@@ -125,7 +126,79 @@ Release notes, including new features and important bug fixes. Supported platfor
 
 ## 1.1. Release Notes
 
-### 1.1.1. Updates in 2025.4.1
+### 1.1.1. Updates in 2026.1
+
+**General**
+
+  * Added support for CUDA 13.2.
+
+  * The minimum supported version of macOS is now 13.0.
+
+  * The [Python Report Interface](../PythonReportInterface/index.html#introduction) can now be installed as a standalone package from PyPI using `pip install ncu-report`.
+
+
+**NVIDIA Nsight Compute**
+
+  * Nsight Compute now supports profiling Linux (aarch64 sbsa) targets from macOS hosts.
+
+  * The [Start Activity Dialog](../NsightCompute/index.html#start-activity-dialog) now support editing multi-line command line arguments.
+
+  * Added the [Report Merge Tool](../NsightCompute/index.html#report-merge-tool). It enables you to combine multiple reports into one. It is particularly useful for multi-GPU systems and scenarios when comparing and analyzing several reports individually becomes impractical.
+
+  * Added the [Clustering Window](../NsightCompute/index.html#clustering-window). It helps you analyze and compare multiple profiling reports by grouping similar reports together. This makes it easier to identify performance patterns and find relationships between different profiling sessions.
+
+  * Added [Register Dependencies](../NsightCompute/index.html#profiler-report-source-page-additional-tables) analysis to the Source page. It helps you to identify general purpose register dependencies and occupancy issues due to live register pressure. Added _Attributed Live Registers_ and _Output Registers_ metric columns in the Source page views. Renamed _Instructions & Scoreboards_ to _Instructions & Dependencies_.
+
+  * The [Source](../NsightCompute/index.html#pre-defined-source-metrics) page now shows the [metric pipelines](../ProfilingGuide/index.html#pipelines) associated with each instruction.
+
+  * Added a [CUDA Graph Viewer](../NsightCompute/index.html#cuda-graph-viewer) tool window that dynamically visualizes CUDA Graphs during interactive profiling.
+
+  * [Timelines](../NsightCompute/index.html#timelines) on the Details page now overlay related metrics in a single row when possible. They now also show a max bar in the background to indicate the maximum value at any zoom level. Rows can be switched between theoretical peak and collected maximum value for the Y-axis scale.
+
+  * The Instruction Statistics section now has thread-level charts.
+
+  * Improved alignment of rule elements on the Details page.
+
+  * Moved the section body dropdowns to the left of the Details page section headers.
+
+  * Renamed “Kernel Analysis” to “SASS Analysis” in Options dialog.
+
+  * The Save As dialog now supports the `.ncu-repz` file extension for compressed reports.
+
+
+**NVIDIA Nsight Compute CLI**
+
+  * [Mandatory concurrent kernels](../NsightComputeCli/index.html#mandatory-concurrent-kernels) (e.g. NCCL communication kernels) can now be profiled across processes from the same process tree using the `--communicator shmem` option.
+
+  * The tool now generates a persisted log file in case of non-recoverable errors.
+
+  * The default value of `--clock-control` is now `boost`.
+
+
+**Resolved Issues**
+
+  * Fixed issues with OptiX command lists in interactive profiling mode.
+
+  * Added `occupancy` as an option to `--query-metrics-collection`.
+
+  * Fixed issues with the Active Clusters graph in the [occupancy calculator](../NsightCompute/index.html#graphs).
+
+  * Fixed that the inline functions table could show incorrect metrics values in some cases.
+
+  * Fixed issues with syntax highlighting on the Souce page.
+
+  * Improved the performance of the [Source Comparison](../NsightCompute/index.html#source-comparison) view for large SASS diffs.
+
+  * Fixed issues with alignment of multi-pass PM sampling [timelines](../NsightCompute/index.html#timelines) without context switch trace.
+
+  * Using an unknown metric in a PM sampling timeline section file is now an error.
+
+  * Fixed issues with opcode category tooltips in the Instruction Statistics charts.
+
+  * Fixed issues in node-level profiling of CUDA device launchable graphs.
+
+
+### 1.1.2. Updates in 2025.4.1
 
 **General**
 
@@ -155,7 +228,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed a crash when instantiating device-side graphs with memory nodes.
 
 
-### 1.1.2. Updates in 2025.4
+### 1.1.3. Updates in 2025.4
 
 **General**
 
@@ -180,7 +253,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Added support for collecting Warp sampling metrics with PM sampling allowing user to see function-level warp stalls for the selected time range in the timeline. See the [Function Stats tool window](../NsightCompute/index.html#tool-window-function-stats) for details.
 
 
-### 1.1.3. Updates in 2025.3.1
+### 1.1.4. Updates in 2025.3.1
 
 **General**
 
@@ -204,7 +277,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed several rules to not show non-actionable warnings for unsupported, missing metrics when profiling on mobile chips.
 
 
-### 1.1.4. Updates in 2025.3
+### 1.1.5. Updates in 2025.3
 
 **General**
 
@@ -262,7 +335,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed an error when profiling a CUDA graph kernel node doing a cluster launch on driver 580 or newer.
 
 
-### 1.1.5. Updates in 2025.2.1
+### 1.1.6. Updates in 2025.2.1
 
 **Resolved Issues**
 
@@ -271,7 +344,16 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed an issue that caused the Device Memory table of the Memory Workload Analysis section to show up empty for chips of type GB100 and GB102
 
 
-### 1.1.6. Updates in 2025.2
+### 1.1.7. Updates in 2021.2.9
+
+**NVIDIA Nsight Compute**
+
+  * Clarify when not all metrics for the roofline chart could be collected on the current chip.
+
+
+### 1.1.8. Older Versions
+
+#### Updates in 2025.2
 
 **General**
 
@@ -335,7 +417,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed that some metrics were not listed for collection in section files for GB20x GPUs.
 
 
-### 1.1.7. Updates in 2025.1.1
+#### Updates in 2025.1.1
 
 **General**
 
@@ -351,7 +433,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed the missing roofline ceilings in the Floating Point Operations Roofline for GB20x chips.
 
 
-### 1.1.8. Updates in 2025.1
+#### Updates in 2025.1
 
 **General**
 
@@ -413,7 +495,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Improved interactions between the [Metric Details](../NsightCompute/index.html#tool-window-metric-details) tool window and the memory chart.
 
 
-### 1.1.9. Updates in 2024.4
+#### Updates in 2024.4
 
 **General**
 
@@ -467,7 +549,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed several issues with [range replay](../ProfilingGuide/index.html#range-replay-supported-apis) when capturing CUDA memcpy APIs.
 
 
-### 1.1.10. Updates in 2024.3.2
+#### Updates in 2024.3.2
 
 **NVIDIA Nsight Compute**
 
@@ -481,7 +563,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Re-enabled the target-side data collection for the [Acceleration Structure Viewer](../NsightCompute/index.html#acceleration-structure-viewer) on Linux (aarch64 and aarch64 sbsa), which was disabled in 2024.3.1.
 
 
-### 1.1.11. Updates in 2024.3.1
+#### Updates in 2024.3.1
 
 **NVIDIA Nsight Compute**
 
@@ -508,7 +590,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed an issue that caused a failure when the request to save a partial profile report is canceled.
 
 
-### 1.1.12. Updates in 2024.3
+#### Updates in 2024.3
 
 **NVIDIA Nsight Compute**
 
@@ -536,7 +618,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * The –kernel-id option now supports regex for specifying the context id and stream id.
 
 
-### 1.1.13. Updates in 2024.2.1
+#### Updates in 2024.2.1
 
 **General**
 
@@ -571,7 +653,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed an issue with applications using `execlp`.
 
 
-### 1.1.14. Updates in 2024.2
+#### Updates in 2024.2
 
 **General**
 
@@ -629,7 +711,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed an issue that reports could not be saved to the expected file extension in certain cases.
 
 
-### 1.1.15. Updates in 2024.1.1
+#### Updates in 2024.1.1
 
 **General**
 
@@ -647,7 +729,7 @@ Release notes, including new features and important bug fixes. Supported platfor
   * Fixed a potential crash of the NVIDIA Nsight Compute UI when PM sampling data was requested, but no sample was collected.
 
 
-### 1.1.16. Updates in 2024.1
+#### Updates in 2024.1
 
 **General**
 
@@ -722,15 +804,6 @@ Release notes, including new features and important bug fixes. Supported platfor
 
   * Fixed an error in the metric compatibility documentation.
 
-
-### 1.1.17. Updates in 2021.2.9
-
-**NVIDIA Nsight Compute**
-
-  * Clarify when not all metrics for the roofline chart could be collected on the current chip.
-
-
-### 1.1.18. Older Versions
 
 #### Updates in 2023.3.1
 
@@ -2412,7 +2485,7 @@ For example, specifying only option `--quiet` extracts the installer archive wit
   * On the Tegra platforms, when profiling multi-process applications, the mcc_* metrics may sometimes fail to be collected.
 
 
-  * Profiling kernel nodes of a device-side graph can cause hang in some cases. Use [Graph Profiling](../NsightComputeCli/index.html#command-line-options-profile) mode instead.
+  * Profiling kernel nodes of a device-side graph can cause hang in some cases on drivers older than 595. Use [Graph Profiling](../NsightComputeCli/index.html#command-line-options-profile) mode instead.
 
   * Profiling in [Graph Profiling](../NsightComputeCli/index.html#command-line-options-profile) mode is performed on the context that is specified by the stream handle for the graph launch. Only kernel nodes executing on this context are profiled.
 
@@ -2430,8 +2503,6 @@ For example, specifying only option `--quiet` extracts the installer archive wit
   * For results which are collected with [Work ID/Cluster Launch Control](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#parallel-synchronization-and-communication-instructions-clusterlaunchcontrol-try-cancel) feature, the count of clusters, blocks, warps and threads launched on the device could be lower than configured. Metrics that depend on such counts would be affected accordingly.
 
   * On Windows, when in MCDM mode, changing access to GPU performance counters is not supported through the NVIDIA Control Panel. See [ERR_NVGPUCTRPERM](https://developer.nvidia.com/ERR_NVGPUCTRPERM) for further details.
-
-  * On QNX, `mcc_*` metrics are not supported.
 
 
 **Compatibility**
@@ -2473,7 +2544,7 @@ For example, specifying only option `--quiet` extracts the installer archive wit
 
   * Terminating or disconnecting an application in the _Interactive Profiling_ activity while the API Stream View is updated can lead to a crash.
 
-  * See the [OptiX library support section](index.html#library-support-optix) for limitations concerning the [Acceleration Structure Viewer](../NsightCompute/index.html#acceleration-structure-viewer).
+  * See the [OptiX library support section](index.html#optix) for limitations concerning the [Acceleration Structure Viewer](../NsightCompute/index.html#acceleration-structure-viewer).
 
   * After updating from a previous version of NVIDIA Nsight Compute on Linux, the file load dialog may not allow column resizing and sorting. As a workaround, the _~/.config/QtProject.conf_ file can be edited to remove the _treeViewHeader_ entry from the _[FileDialog]_ section.
 
@@ -2494,7 +2565,7 @@ Linux (x86_64) | Yes | Windows*, Linux (x86_64), Linux (aarch64 sbsa)
 Linux (ppc64le) | No | No  
 Linux (aarch64 sbsa) | Yes | Linux (aarch64 sbsa)  
 Linux (x86_64) (Drive SDK) | Yes | Windows*, Linux (x86_64), Linux (aarch64), QNX  
-macOS 12+ (x86_64, arm64) | Yes | Windows*, Linux (x86_64)  
+macOS 13+ (x86_64, arm64) | Yes | Windows*, Linux (x86_64), Linux (aarch64 sbsa)  
 Linux (aarch64 l4t, Drive OS Linux) | Yes | Linux (aarch64 l4t, Drive OS Linux)  
 QNX | No | QNX  
   

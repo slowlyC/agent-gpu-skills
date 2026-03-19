@@ -58,8 +58,3 @@ unsigned long long cudaExternalSemaphoreWaitParams::value
 Value of fence to be waited on
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

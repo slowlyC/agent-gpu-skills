@@ -46,7 +46,7 @@ __[NsightCompute](../index.html)
 
   * [](../index.html) »
   * 2\. Python Report Interface
-  *   * v2025.4.1 | [Archive](https://developer.nvidia.com/nsight-compute-history)
+  *   * v2026.1.0 | [Archive](https://developer.nvidia.com/nsight-compute-history)
 
 
 * * *
@@ -690,6 +690,31 @@ Return type
     
 
 [`tuple`](https://docs.python.org/3/library/stdtypes.html#tuple "\(in Python v3.14\)") of [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "\(in Python v3.14\)")
+
+timed_warp_samples()
+    
+
+Get the all the timed warp samples associated with this IAction
+
+Returns
+    
+
+A list of timed warp sample dictionaries. Each timed warp sample [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "\(in Python v3.14\)") contains the following key-value pairs:
+    
+
+  * ’timestamp’ : ([`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")) The GPU timestamp of the sample in nanoseconds.
+
+  * ’pc’ : ([`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")) The program counter value of the sample.
+
+  * ’stall_reason’ : ([`StallReason`](#ncu_report.StallReason "ncu_report.StallReason")) The stall reason code of the sample.
+
+  * ’not_issued’ : ([`bool`](https://docs.python.org/3/library/functions.html#bool "\(in Python v3.14\)")) True if no warp was issued on the SM else False.
+
+
+Return type
+    
+
+[`list`](https://docs.python.org/3/library/stdtypes.html#list "\(in Python v3.14\)") of [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "\(in Python v3.14\)")
 
 workload_type()
     
@@ -2236,6 +2261,201 @@ GLOBAL
     
 
 Value represents decrease in overall kernel runtime.
+
+_class _ncu_report.StallReason
+    
+
+Enum representing the stall reason code of a timed warp sample.
+
+INVALID
+    
+
+Invalid stall reason.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+BARRIER
+    
+
+Warp was stalled waiting for sibling warps at a CTA barrier.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+BRANCH_RESOLVING
+    
+
+Warp was stalled waiting for a branch to resolve.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+DISPATCH_STALL
+    
+
+Warp was stalled waiting on a dispatch stall.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+DRAIN
+    
+
+Warp was stalled waiting after EXIT for all memory instructions to complete so that warp resources can be freed.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+IMC_MISS
+    
+
+Warp was stalled waiting for an immediate constant cache (IMC) miss.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+LG_THROTTLE
+    
+
+Warp was stalled waiting for the L1 instruction queue for local and global memory operations to be not full.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+LONG_SCOREBOARD
+    
+
+Warp was stalled waiting for a scoreboard dependency on an L1TEX (local, global, surface, tex) operation.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+MIO_THROTTLE
+    
+
+Warp was stalled waiting for the MIO instruction queue to be not full.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+MATH_PIPE_THROTTLE
+    
+
+Warp was stalled waiting for the execution pipe to be available.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+MEMBAR
+    
+
+Warp was stalled on a memory barrier.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+MISC
+    
+
+Warp was stalled for a miscellaneous hardware reason.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+NO_INSTRUCTIONS
+    
+
+Warp was stalled waiting to be selected to fetch an instruction or waiting on an instruction cache miss.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+NOT_SELECTED
+    
+
+Warp was stalled waiting for the micro-scheduler to select the warp to issue.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+SELECTED
+    
+
+Warp was selected by the micro-scheduler and issued an instruction.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+SHORT_SCOREBOARD
+    
+
+Warp was stalled waiting for a scoreboard dependency on an MIO operation (not to L1TEX).
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+SLEEPING
+    
+
+Warp was stalled due to all threads in the warp being in the blocked, yielded, or sleep state.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+TEX_THROTTLE
+    
+
+Warp was stalled waiting for the TEX/L1 instruction queue to be not full.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
+
+WAIT
+    
+
+Warp was stalled waiting on a fixed latency execution dependency.
+
+Type
+    
+
+[`int`](https://docs.python.org/3/library/functions.html#int "\(in Python v3.14\)")
 
 ncu_report.load_report(_file_name_)
     

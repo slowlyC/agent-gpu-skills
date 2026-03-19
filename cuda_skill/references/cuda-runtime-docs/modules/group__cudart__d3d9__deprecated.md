@@ -42,15 +42,6 @@ This function provides the synchronization guarantee that any Direct3D calls iss
 
 If any of `ppResources` have not been registered for use with CUDA or if `ppResources` contains any duplicate entries then cudaErrorInvalidResourceHandle is returned. If any of `ppResources` are presently mapped for access by CUDA then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsMapResources
-
-__host__ cudaError_t cudaD3D9RegisterResource ( IDirect3DResource9* pResource, unsigned int  flags )
-
-
-Registers a Direct3D resource for access by CUDA.
-
 ######  Parameters
 
 `pResource`
@@ -105,15 +96,6 @@ Not all Direct3D resources of the above types may be used for interoperability w
 
 If Direct3D interoperability is not initialized on this context, then cudaErrorInvalidDevice is returned. If `pResource` is of incorrect type (e.g, is a non-stand-alone IDirect3DSurface9) or is already registered, then cudaErrorInvalidResourceHandle is returned. If `pResource` cannot be registered then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsD3D9RegisterResource
-
-__host__ cudaError_t cudaD3D9ResourceGetMappedArray ( cudaArray** ppArray, IDirect3DResource9* pResource, unsigned int  face, unsigned int  level )
-
-
-Get an array through which to access a subresource of a Direct3D resource which has been mapped for access by CUDA.
-
 ######  Parameters
 
 `ppArray`
@@ -140,15 +122,6 @@ Returns in `*pArray` an array through which the subresource of the mapped Direct
 If `pResource` is not registered then cudaErrorInvalidResourceHandle is returned. If `pResource` was not registered with usage flags cudaD3D9RegisterFlagsArray, then cudaErrorInvalidResourceHandle is returned. If `pResource` is not mapped, then cudaErrorUnknown is returned.
 
 For usage requirements of `face` and `level` parameters, see cudaD3D9ResourceGetMappedPointer().
-
-**See also:**
-
-cudaGraphicsSubResourceGetMappedArray
-
-__host__ cudaError_t cudaD3D9ResourceGetMappedPitch ( size_t* pPitch, size_t* pPitchSlice, IDirect3DResource9* pResource, unsigned int  face, unsigned int  level )
-
-
-Get the pitch of a subresource of a Direct3D resource which has been mapped for access by CUDA.
 
 ######  Parameters
 
@@ -191,15 +164,6 @@ If `pResource` is not of type IDirect3DBaseTexture9 or one of its sub-types or i
 
 For usage requirements of `face` and `level` parameters, see cudaD3D9ResourceGetMappedPointer().
 
-**See also:**
-
-cudaGraphicsResourceGetMappedPointer
-
-__host__ cudaError_t cudaD3D9ResourceGetMappedPointer ( void** pPointer, IDirect3DResource9* pResource, unsigned int  face, unsigned int  level )
-
-
-Get a pointer through which to access a subresource of a Direct3D resource which has been mapped for access by CUDA.
-
 ######  Parameters
 
 `pPointer`
@@ -229,15 +193,6 @@ If `pResource` is of type IDirect3DCubeTexture9, then `face` must one of the val
 
 If `pResource` is of type IDirect3DBaseTexture9, then `level` must correspond to a valid mipmap level. Only mipmap level 0 is supported for now. For all other types `level` must be 0. If `level` is invalid, then cudaErrorInvalidValue is returned.
 
-**See also:**
-
-cudaGraphicsResourceGetMappedPointer
-
-__host__ cudaError_t cudaD3D9ResourceGetMappedSize ( size_t* pSize, IDirect3DResource9* pResource, unsigned int  face, unsigned int  level )
-
-
-Get the size of a subresource of a Direct3D resource which has been mapped for access by CUDA.
-
 ######  Parameters
 
 `pSize`
@@ -264,15 +219,6 @@ Returns in `*pSize` the size of the subresource of the mapped Direct3D resource 
 If `pResource` has not been registered for use with CUDA then cudaErrorInvalidResourceHandle is returned. If `pResource` was not registered with usage flags cudaD3D9RegisterFlagsNone, then cudaErrorInvalidResourceHandle is returned. If `pResource` is not mapped for access by CUDA then cudaErrorUnknown is returned.
 
 For usage requirements of `face` and `level` parameters, see cudaD3D9ResourceGetMappedPointer().
-
-**See also:**
-
-cudaGraphicsResourceGetMappedPointer
-
-__host__ cudaError_t cudaD3D9ResourceGetSurfaceDimensions ( size_t* pWidth, size_t* pHeight, size_t* pDepth, IDirect3DResource9* pResource, unsigned int  face, unsigned int  level )
-
-
-Get the dimensions of a registered Direct3D surface.
 
 ######  Parameters
 
@@ -309,15 +255,6 @@ If `pResource` is not of type IDirect3DBaseTexture9 or IDirect3DSurface9 or if `
 
 For usage requirements of `face` and `level` parameters, see cudaD3D9ResourceGetMappedPointer.
 
-**See also:**
-
-cudaGraphicsSubResourceGetMappedArray
-
-__host__ cudaError_t cudaD3D9ResourceSetMapFlags ( IDirect3DResource9* pResource, unsigned int  flags )
-
-
-Set usage flags for mapping a Direct3D resource.
-
 ######  Parameters
 
 `pResource`
@@ -348,15 +285,6 @@ Changes to flags will take effect the next time `pResource` is mapped. The `flag
 
 If `pResource` has not been registered for use with CUDA, then cudaErrorInvalidResourceHandle is returned. If `pResource` is presently mapped for access by CUDA, then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaInteropResourceSetMapFlags
-
-__host__ cudaError_t cudaD3D9UnmapResources ( int  count, IDirect3DResource9** ppResources )
-
-
-Unmap Direct3D resources for access by CUDA.
-
 ######  Parameters
 
 `count`
@@ -380,15 +308,6 @@ This function provides the synchronization guarantee that any CUDA kernels issue
 
 If any of `ppResources` have not been registered for use with CUDA or if `ppResources` contains any duplicate entries, then cudaErrorInvalidResourceHandle is returned. If any of `ppResources` are not presently mapped for access by CUDA then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsUnmapResources
-
-__host__ cudaError_t cudaD3D9UnregisterResource ( IDirect3DResource9* pResource )
-
-
-Unregisters a Direct3D resource for access by CUDA.
-
 ######  Parameters
 
 `pResource`
@@ -408,13 +327,4 @@ Unregisters the Direct3D resource `pResource` so it is not accessible by CUDA un
 
 If `pResource` is not registered, then cudaErrorInvalidResourceHandle is returned.
 
-**See also:**
 
-cudaGraphicsUnregisterResource
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

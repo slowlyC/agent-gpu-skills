@@ -37,8 +37,3 @@ unsigned long long cudaExternalMemoryBufferDesc::size
 Size of the buffer
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

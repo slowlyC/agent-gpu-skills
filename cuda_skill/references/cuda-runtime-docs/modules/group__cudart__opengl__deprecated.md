@@ -36,15 +36,6 @@ Maps the buffer object of ID `bufObj` into the address space of CUDA and returns
 
 All streams in the current thread are synchronized with the current GL context.
 
-**See also:**
-
-cudaGraphicsMapResources
-
-__host__ cudaError_t cudaGLMapBufferObjectAsync ( void** devPtr, GLuint bufObj, cudaStream_t stream )
-
-
-Maps a buffer object for access by CUDA.
-
 ######  Parameters
 
 `devPtr`
@@ -68,15 +59,6 @@ Maps the buffer object of ID `bufObj` into the address space of CUDA and returns
 
 Stream /p stream is synchronized with the current GL context.
 
-**See also:**
-
-cudaGraphicsMapResources
-
-__host__ cudaError_t cudaGLRegisterBufferObject ( GLuint bufObj )
-
-
-Registers a buffer object for access by CUDA.
-
 ######  Parameters
 
 `bufObj`
@@ -93,15 +75,6 @@ This function is deprecated as of CUDA 3.0.
 ###### Description
 
 Registers the buffer object of ID `bufObj` for access by CUDA. This function must be called before CUDA can map the buffer object. The OpenGL context used to create the buffer, or another context from the same share group, must be bound to the current thread when this is called.
-
-**See also:**
-
-cudaGraphicsGLRegisterBuffer
-
-__host__ cudaError_t cudaGLSetBufferObjectMapFlags ( GLuint bufObj, unsigned int  flags )
-
-
-Set usage flags for mapping an OpenGL buffer.
 
 ######  Parameters
 
@@ -133,15 +106,6 @@ Changes to flags will take effect the next time `bufObj` is mapped. The `flags` 
 
 If `bufObj` has not been registered for use with CUDA, then cudaErrorInvalidResourceHandle is returned. If `bufObj` is presently mapped for access by CUDA, then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsResourceSetMapFlags
-
-__host__ cudaError_t cudaGLSetGLDevice ( int  device )
-
-
-Sets a CUDA device to use OpenGL interoperability.
-
 ######  Parameters
 
 `device`
@@ -161,15 +125,6 @@ This function is deprecated and should no longer be used. It is no longer necess
 
 This function will immediately initialize the primary context on `device` if needed.
 
-**See also:**
-
-cudaGraphicsGLRegisterBuffer, cudaGraphicsGLRegisterImage
-
-__host__ cudaError_t cudaGLUnmapBufferObject ( GLuint bufObj )
-
-
-Unmaps a buffer object for access by CUDA.
-
 ######  Parameters
 
 `bufObj`
@@ -188,15 +143,6 @@ This function is deprecated as of CUDA 3.0.
 Unmaps the buffer object of ID `bufObj` for access by CUDA. When a buffer is unmapped, the base address returned by cudaGLMapBufferObject() is invalid and subsequent references to the address result in undefined behavior. The OpenGL context used to create the buffer, or another context from the same share group, must be bound to the current thread when this is called.
 
 All streams in the current thread are synchronized with the current GL context.
-
-**See also:**
-
-cudaGraphicsUnmapResources
-
-__host__ cudaError_t cudaGLUnmapBufferObjectAsync ( GLuint bufObj, cudaStream_t stream )
-
-
-Unmaps a buffer object for access by CUDA.
 
 ######  Parameters
 
@@ -219,15 +165,6 @@ Unmaps the buffer object of ID `bufObj` for access by CUDA. When a buffer is unm
 
 Stream /p stream is synchronized with the current GL context.
 
-**See also:**
-
-cudaGraphicsUnmapResources
-
-__host__ cudaError_t cudaGLUnregisterBufferObject ( GLuint bufObj )
-
-
-Unregisters a buffer object for access by CUDA.
-
 ######  Parameters
 
 `bufObj`
@@ -245,13 +182,4 @@ This function is deprecated as of CUDA 3.0.
 
 Unregisters the buffer object of ID `bufObj` for access by CUDA and releases any CUDA resources associated with the buffer. Once a buffer is unregistered, it may no longer be mapped by CUDA. The GL context used to create the buffer, or another context from the same share group, must be bound to the current thread when this is called.
 
-**See also:**
 
-cudaGraphicsUnregisterResource
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

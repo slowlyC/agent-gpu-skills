@@ -23,15 +23,12 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorLaunchFailure, cudaErrorMemoryAlloc
 
 Creates an event object for the current device using cudaEventDefault.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaEventCreate ( C++ API), cudaEventCreateWithFlags, cudaEventRecord, cudaEventQuery, cudaEventSynchronize, cudaEventDestroy, cudaEventElapsedTime, cudaStreamWaitEvent, cuEventCreate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaEventCreateWithFlags ( cudaEvent_t* event, unsigned int  flags )
-
-
-Creates an event object with the specified flags.
 
 ######  Parameters
 
@@ -57,14 +54,12 @@ Creates an event object for the current device with the specified flags. Valid f
   * cudaEventInterprocess: Specifies that the created event may be used as an interprocess event by cudaIpcGetEventHandle(). cudaEventInterprocess must be specified along with cudaEventDisableTiming.
 
 
-**See also:**
+  *
 
-cudaEventCreate ( C API), cudaEventSynchronize, cudaEventDestroy, cudaEventElapsedTime, cudaStreamWaitEvent, cuEventCreate
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__  __device__ cudaError_t cudaEventDestroy ( cudaEvent_t event )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Destroys an event object.
 
 ######  Parameters
 
@@ -81,19 +76,16 @@ Destroys the event specified by `event`.
 
 An event may be destroyed before it is complete (i.e., while cudaEventQuery() would return cudaErrorNotReady). In this case, the call does not block on completion of the event, and any associated resources will automatically be released asynchronously at completion.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
   * Returns cudaErrorInvalidResourceHandle in the event of being passed NULL as the input event.
 
-
-**See also:**
-
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventQuery, cudaEventSynchronize, cudaEventRecord, cudaEventElapsedTime, cuEventDestroy
-
-__host__ cudaError_t cudaEventElapsedTime ( float* ms, cudaEvent_t start, cudaEvent_t end )
-
-
-Computes the elapsed time between events.
 
 ######  Parameters
 
@@ -116,17 +108,14 @@ If either event was last recorded in a non-NULL stream, the resulting time may b
 
 If cudaEventRecord() has not been called on either event, then cudaErrorInvalidResourceHandle is returned. If cudaEventRecord() has been called on both events but one or both of them has not yet been completed (that is, cudaEventQuery() would return cudaErrorNotReady on at least one of the events), cudaErrorNotReady is returned. If either event was created with the cudaEventDisableTiming flag, then this function will return cudaErrorInvalidResourceHandle.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Returns cudaErrorInvalidResourceHandle in the event of being passed NULL as the input event.
 
-
-**See also:**
-
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventQuery, cudaEventSynchronize, cudaEventDestroy, cudaEventRecord, cuEventElapsedTime
-
-__host__ cudaError_t cudaEventQuery ( cudaEvent_t event )
-
-
-Queries an event's status.
 
 ######  Parameters
 
@@ -145,17 +134,14 @@ Returns cudaSuccess if all captured work has been completed, or cudaErrorNotRead
 
 For the purposes of Unified Memory, a return value of cudaSuccess is equivalent to having called cudaEventSynchronize().
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Returns cudaErrorInvalidResourceHandle in the event of being passed NULL as the input event.
 
-
-**See also:**
-
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventRecord, cudaEventSynchronize, cudaEventDestroy, cudaEventElapsedTime, cuEventQuery
-
-__host__  __device__ cudaError_t cudaEventRecord ( cudaEvent_t event, cudaStream_t stream = 0 )
-
-
-Records an event.
 
 ######  Parameters
 
@@ -176,17 +162,14 @@ cudaEventRecord() can be called multiple times on the same event and will overwr
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Returns cudaErrorInvalidResourceHandle in the event of being passed NULL as the input event.
 
-
-**See also:**
-
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventQuery, cudaEventSynchronize, cudaEventDestroy, cudaEventElapsedTime, cudaStreamWaitEvent, cudaEventRecordWithFlags, cuEventRecord
-
-__host__ cudaError_t cudaEventRecordWithFlags ( cudaEvent_t event, cudaStream_t stream = 0, unsigned int  flags = 0 )
-
-
-Records an event.
 
 ######  Parameters
 
@@ -216,17 +199,14 @@ flags include:
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Returns cudaErrorInvalidResourceHandle in the event of being passed NULL as the input event.
 
-
-**See also:**
-
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventQuery, cudaEventSynchronize, cudaEventDestroy, cudaEventElapsedTime, cudaStreamWaitEvent, cudaEventRecord, cuEventRecord
-
-__host__ cudaError_t cudaEventSynchronize ( cudaEvent_t event )
-
-
-Waits for an event to complete.
 
 ######  Parameters
 
@@ -243,16 +223,11 @@ Waits until the completion of all work currently captured in `event`. See cudaEv
 
 Waiting for an event that was created with the cudaEventBlockingSync flag will cause the calling CPU thread to block until the event has been completed by the device. If the cudaEventBlockingSync flag has not been set, then the CPU thread will busy-wait until the event has been completed by the device.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Returns cudaErrorInvalidResourceHandle in the event of being passed NULL as the input event.
 
-
-**See also:**
-
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventRecord, cudaEventQuery, cudaEventDestroy, cudaEventElapsedTime, cuEventSynchronize
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

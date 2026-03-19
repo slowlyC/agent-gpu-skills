@@ -4,5 +4,3 @@
 
 
 ### Public Variables
-
-int id

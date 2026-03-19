@@ -36,15 +36,6 @@ Note: The API is not supported on 32-bit platforms.
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuDevResourceGenerateDesc, cudaDeviceGetDevResource, cudaExecutionCtxGetDevResource, cudaDevSmResourceSplit, cudaGreenCtxCreate
-
-__host__ cudaError_t cudaDevSmResourceSplit ( cudaDevResource* result, unsigned int  nbGroups, const cudaDevResource* input, cudaDevResource* remainder, unsigned int  flags, cudaDevSmResourceGroupParams* groupParams )
-
-
-Splits a `cudaDevResourceTypeSm` resource into structured groups.
-
 ######  Parameters
 
 `result`
@@ -136,15 +127,6 @@ Splitting an input into N groups, can be accomplished by repeatedly splitting of
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuDevSmResourceSplit, cudaDeviceGetDevResource, cudaExecutionCtxGetDevResource, cudaDevResourceGenerateDesc
-
-__host__ cudaError_t cudaDevSmResourceSplitByCount ( cudaDevResource* result, unsigned int* nbGroups, const cudaDevResource* input, cudaDevResource* remaining, unsigned int  flags, unsigned int  minCount )
-
-
-Splits `cudaDevResourceTypeSm` resources.
-
 ######  Parameters
 
 `result`
@@ -192,15 +174,6 @@ Note: The API is not supported on 32-bit platforms.
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuDevSmResourceSplitByCount, cudaDeviceGetDevResource, cudaExecutionCtxGetDevResource, cudaDevResourceGenerateDesc
-
-__host__ cudaError_t cudaDeviceGetDevResource ( int  device, cudaDevResource* resource, cudaDevResourceType type )
-
-
-Get device resources.
-
 ######  Parameters
 
 `device`
@@ -222,15 +195,6 @@ Note: The API is not supported on 32-bit platforms.
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuDeviceGetDevResource, cudaExecutionCtxGetDevResource, cudaDevSmResourceSplit, cudaDevResourceGenerateDesc
-
-__host__ cudaError_t cudaDeviceGetExecutionCtx ( cudaExecutionContext_t* ctx, int  device )
-
-
-Returns the execution context for a device.
-
 ######  Parameters
 
 `ctx`
@@ -247,15 +211,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
 Returns in `ctx` the execution context for the specified device. This is the device's primary context. The returned context can then be passed to APIs that take in a cudaExecutionContext_t enabling explicit context-based programming without relying on thread-local state.
 
 Passing the returned execution context to cudaExecutionCtxDestroy() is not allowed and will result in undefined behavior.
-
-**See also:**
-
-cudaExecutionCtxGetDevice, cudaExecutionCtxGetId
-
-__host__ cudaError_t cudaExecutionCtxDestroy ( cudaExecutionContext_t ctx )
-
-
-Destroy a execution context.
 
 ######  Parameters
 
@@ -281,17 +236,10 @@ Additionally, the API will invalidate all active captures on these streams.
 
 Passing in a `ctx` that was not explicitly created via CUDA Runtime APIs is not allowed and will result in undefined behavior.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-
-**See also:**
-
-cudaGreenCtxCreate
-
-__host__ cudaError_t cudaExecutionCtxGetDevResource ( cudaExecutionContext_t ctx, cudaDevResource* resource, cudaDevResourceType type )
-
-
-Get context resources.
 
 ######  Parameters
 
@@ -312,17 +260,12 @@ Get the `type` resources available to context represented by `ctx`.
 
 Note: The API is not supported on 32-bit platforms.
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-cudaDeviceGetDevResource, cudaDevSmResourceSplit, cudaDevResourceGenerateDesc, cudaGreenCtxCreate
-
-__host__ cudaError_t cudaExecutionCtxGetDevice ( int* device, cudaExecutionContext_t ctx )
-
-
-Returns the device handle for the execution context.
 
 ######  Parameters
 
@@ -339,17 +282,12 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `*device` the handle of the specified execution context's device. The execution context should not be NULL.
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-cudaGreenCtxCreate, cudaExecutionCtxDestroy, cuCtxGetDevice
-
-__host__ cudaError_t cudaExecutionCtxGetId ( cudaExecutionContext_t ctx, unsigned long long* ctxId )
-
-
-Returns the unique Id associated with the execution context supplied.
 
 ######  Parameters
 
@@ -366,17 +304,12 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `ctxId` the unique Id which is associated with a given context. The Id is unique for the life of the program for this instance of CUDA. The execution context should not be NULL.
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-cudaGreenCtxCreate, cudaExecutionCtxDestroy, cudaExecutionCtxGetDevice, cuCtxGetId
-
-__host__ cudaError_t cudaExecutionCtxRecordEvent ( cudaExecutionContext_t ctx, cudaEvent_t event )
-
-
-Records an event for the specified execution context.
 
 ######  Parameters
 
@@ -395,17 +328,12 @@ Captures in `event` all the activities of the execution context `ctx` at the tim
 
 The API will return cudaErrorStreamCaptureUnsupported if the specified execution context `ctx` has a stream in the capture mode. In such a case, the call will invalidate all the conflicting captures.
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-cudaEventRecord, cudaExecutionCtxWaitEvent, cuCtxRecordEvent, cuGreenCtxRecordEvent
-
-__host__ cudaError_t cudaExecutionCtxStreamCreate ( cudaStream_t* phStream, cudaExecutionContext_t ctx, unsigned int  flags, int  priority )
-
-
-Creates a stream and initializes it for the given execution context.
 
 ######  Parameters
 
@@ -435,19 +363,14 @@ The supported values for `flags` are:
 
 Specifying `priority` affects the scheduling priority of work in the stream. Priorities provide a hint to preferentially run work with higher priority when possible, but do not preempt already-running work or provide any other functional guarantee on execution order. `priority` follows a convention where lower numbers represent higher priorities. '0' represents default priority. The range of meaningful numerical priorities can be queried using cudaDeviceGetStreamPriorityRange. If the specified priority is outside the numerical range returned by cudaDeviceGetStreamPriorityRange, it will automatically be clamped to the lowest or the highest number in the range.
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
   * In the current implementation, only compute kernels launched in priority streams are affected by the stream's priority. Stream priorities have no effect on host-to-device and device-to-host memory operations.
 
-
-**See also:**
-
-cudaStreamDestroy, cudaGreenCtxCreate, cudaDeviceGetStreamPriorityRange, cudaStreamGetFlags, cudaStreamGetPriority, cudaStreamGetDevice, cudaStreamGetDevResource, cudaLaunchKernel, cudaEventRecord, cudaStreamWaitEvent, cudaStreamQuery, cudaStreamSynchronize, cudaStreamAddCallback
-
-__host__ cudaError_t cudaExecutionCtxSynchronize ( cudaExecutionContext_t ctx )
-
-
-Block for the specified execution context's tasks to complete.
 
 ######  Parameters
 
@@ -464,17 +387,12 @@ Blocks until the specified execution context has completed all preceding request
 
 The API returns an error if one of the preceding tasks failed.
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-cudaGreenCtxCreate, cudaExecutionCtxDestroy, cudaDeviceSynchronize, cuCtxSynchronize_v2
-
-__host__ cudaError_t cudaExecutionCtxWaitEvent ( cudaExecutionContext_t ctx, cudaEvent_t event )
-
-
-Make an execution context wait on an event.
 
 ######  Parameters
 
@@ -496,17 +414,12 @@ Makes all future work submitted to execution context `ctx` wait for all work cap
   * The API will return cudaErrorStreamCaptureUnsupported and invalidate the capture if the specified event `event` is part of an ongoing capture sequence or if the specified execution context `ctx` has a stream in the capture mode.
 
 
-  *   * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
+  *
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
+  * The context parameter is required and the API ignores the context that is current to the calling thread. This enables explicit context-based programming without relying on thread-local state. If no context is specified, the API will return cudaErrorInvalidValue.
 
-cudaExecutionCtxRecordEvent, cudaStreamWaitEvent, cuCtxWaitEvent, cuGreenCtxWaitEvent
-
-__host__ cudaError_t cudaGreenCtxCreate ( cudaExecutionContext_t* phCtx, cudaDevResourceDesc_t desc, int  device, unsigned int  flags )
-
-
-Creates a green context with a specified set of resources.
 
 ######  Parameters
 
@@ -535,15 +448,6 @@ Note: The API is not supported on 32-bit platforms.
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaDeviceGetDevResource, cudaDevSmResourceSplit, cudaDevResourceGenerateDesc, cudaExecutionCtxGetDevResource, cudaExecutionCtxDestroy, cudaInitDevice, cudaExecutionCtxStreamCreate
-
-__host__ cudaError_t cudaStreamGetDevResource ( cudaStream_t hStream, cudaDevResource* resource, cudaDevResourceType type )
-
-
-Get stream resources.
-
 ######  Parameters
 
 `hStream`
@@ -564,13 +468,6 @@ Get the `type` resources available to the `hStream` and store them in `resource`
 Note: The API will return cudaErrorInvalidResourceType is `type` is `cudaDevResourceTypeWorkqueueConfig` or `cudaDevResourceTypeWorkqueue`.
 
   *
-**See also:**
 
-cudaGreenCtxCreate, cudaExecutionCtxStreamCreate, cudaStreamCreate, cudaDevSmResourceSplit, cudaDevResourceGenerateDesc, cuStreamGetDevResource
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

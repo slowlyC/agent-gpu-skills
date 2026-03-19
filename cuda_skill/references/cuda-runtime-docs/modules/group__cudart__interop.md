@@ -35,15 +35,12 @@ If `resources` contains any duplicate entries then cudaErrorInvalidResourceHandl
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphicsResourceGetMappedPointer, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsUnmapResources, cuGraphicsMapResources
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphicsResourceGetMappedMipmappedArray ( cudaMipmappedArray_t* mipmappedArray, cudaGraphicsResource_t resource )
-
-
-Get a mipmapped array through which to access a mapped graphics resource.
 
 ######  Parameters
 
@@ -62,15 +59,12 @@ Returns in `*mipmappedArray` a mipmapped array through which the mapped graphics
 
 If `resource` is not a texture then it cannot be accessed via an array and cudaErrorUnknown is returned. If `resource` is not mapped then cudaErrorUnknown is returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphicsResourceGetMappedPointer, cuGraphicsResourceGetMappedMipmappedArray
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphicsResourceGetMappedPointer ( void** devPtr, size_t* size, cudaGraphicsResource_t resource )
-
-
-Get an device pointer through which to access a mapped graphics resource.
 
 ######  Parameters
 
@@ -91,15 +85,12 @@ Returns in `*devPtr` a pointer through which the mapped graphics resource `resou
 
 If `resource` is not a buffer then it cannot be accessed via a pointer and cudaErrorUnknown is returned. If `resource` is not mapped then cudaErrorUnknown is returned. *
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cuGraphicsResourceGetMappedPointer
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphicsResourceSetMapFlags ( cudaGraphicsResource_t resource, unsigned int  flags )
-
-
-Set usage flags for mapping a graphics resource.
 
 ######  Parameters
 
@@ -127,15 +118,12 @@ Changes to `flags` will take effect the next time `resource` is mapped. The `fla
 
 If `resource` is presently mapped for access by CUDA then cudaErrorUnknown is returned. If `flags` is not one of the above values then cudaErrorInvalidValue is returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphicsMapResources, cuGraphicsResourceSetMapFlags
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphicsSubResourceGetMappedArray ( cudaArray_t* array, cudaGraphicsResource_t resource, unsigned int  arrayIndex, unsigned int  mipLevel )
-
-
-Get an array through which to access a subresource of a mapped graphics resource.
 
 ######  Parameters
 
@@ -158,15 +146,12 @@ Returns in `*array` an array through which the subresource of the mapped graphic
 
 If `resource` is not a texture then it cannot be accessed via an array and cudaErrorUnknown is returned. If `arrayIndex` is not a valid array index for `resource` then cudaErrorInvalidValue is returned. If `mipLevel` is not a valid mipmap level for `resource` then cudaErrorInvalidValue is returned. If `resource` is not mapped then cudaErrorUnknown is returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphicsResourceGetMappedPointer, cuGraphicsSubResourceGetMappedArray
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphicsUnmapResources ( int  count, cudaGraphicsResource_t* resources, cudaStream_t stream = 0 )
-
-
-Unmap graphics resources.
 
 ######  Parameters
 
@@ -193,15 +178,12 @@ If `resources` contains any duplicate entries then cudaErrorInvalidResourceHandl
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphicsMapResources, cuGraphicsUnmapResources
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphicsUnregisterResource ( cudaGraphicsResource_t resource )
-
-
-Unregisters a graphics resource for access by CUDA.
 
 ######  Parameters
 
@@ -218,16 +200,11 @@ Unregisters the graphics resource `resource` so it is not accessible by CUDA unl
 
 If `resource` is invalid then cudaErrorInvalidResourceHandle is returned.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaGraphicsD3D9RegisterResource, cudaGraphicsD3D10RegisterResource, cudaGraphicsD3D11RegisterResource, cudaGraphicsGLRegisterBuffer, cudaGraphicsGLRegisterImage, cuGraphicsUnregisterResource
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

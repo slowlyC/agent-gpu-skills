@@ -27,15 +27,12 @@ cudaSuccess, cudaErrorInvalidDevice
 
 Returns in `*canAccessPeer` a value of 1 if device `device` is capable of directly accessing memory from `peerDevice` and 0 otherwise. If direct access of `peerDevice` from `device` is possible, then access may be enabled by calling cudaDeviceEnablePeerAccess().
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceEnablePeerAccess, cudaDeviceDisablePeerAccess, cuDeviceCanAccessPeer
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceDisablePeerAccess ( int  peerDevice )
-
-
-Disables direct access to memory allocations on a peer device.
 
 ######  Parameters
 
@@ -50,15 +47,12 @@ cudaSuccess, cudaErrorPeerAccessNotEnabled, cudaErrorInvalidDevice
 
 Returns cudaErrorPeerAccessNotEnabled if direct access to memory on `peerDevice` has not yet been enabled from the current device.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceCanAccessPeer, cudaDeviceEnablePeerAccess, cuCtxDisablePeerAccess
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceEnablePeerAccess ( int  peerDevice, unsigned int  flags )
-
-
-Enables direct access to memory allocations on a peer device.
 
 ######  Parameters
 
@@ -85,14 +79,9 @@ Returns cudaErrorPeerAccessAlreadyEnabled if direct access of `peerDevice` from 
 
 Returns cudaErrorInvalidValue if `flags` is not 0.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceCanAccessPeer, cudaDeviceDisablePeerAccess, cuCtxEnablePeerAccess
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -50,15 +50,6 @@ Valid values for `attr` are:
 
 The API has stricter locking requirements in comparison to its legacy counterpart cudaFuncSetAttribute() due to device-wide semantics. If multiple threads are trying to set the same attribute on the same device simultaneously, the attribute setting will depend on the interleavings chosen by the OS scheduler and memory consistency.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cudaLibraryGetKernel, cudaLaunchKernel, cudaFuncSetAttribute, cuKernelSetAttribute
-
-__host__ cudaError_t cudaLibraryEnumerateKernels ( cudaKernel_t* kernels, unsigned int  numKernels, cudaLibrary_t lib )
-
-
-Retrieve the kernel handles within a library.
-
 ######  Parameters
 
 `kernels`
@@ -75,15 +66,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 ###### Description
 
 Returns in `kernels` a maximum number of `numKernels` kernel handles within `lib`. The returned kernel handle becomes invalid when the library is unloaded.
-
-**See also:**
-
-cudaLibraryGetKernelCount, cuLibraryEnumerateKernels
-
-__host__ cudaError_t cudaLibraryGetGlobal ( void** dptr, size_t* bytes, cudaLibrary_t library, const char* name )
-
-
-Returns a global device pointer.
 
 ######  Parameters
 
@@ -104,15 +86,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `*dptr` and `*bytes` the base pointer and size of the global with name `name` for the requested library `library` and the current device. If no global for the requested name `name` exists, the call returns cudaErrorSymbolNotFound. One of the parameters `dptr` or `bytes` (not both) can be NULL in which case it is ignored. The returned `dptr` cannot be passed to the Symbol APIs such as cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaGetSymbolAddress, or cudaGetSymbolSize.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cudaLibraryGetManaged, cuLibraryGetGlobal
-
-__host__ cudaError_t cudaLibraryGetKernel ( cudaKernel_t* pKernel, cudaLibrary_t library, const char* name )
-
-
-Returns a kernel handle.
-
 ######  Parameters
 
 `pKernel`
@@ -130,15 +103,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `pKernel` the handle of the kernel with name `name` located in library `library`. If kernel handle is not found, the call returns cudaErrorSymbolNotFound.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cuLibraryGetKernel
-
-__host__ cudaError_t cudaLibraryGetKernelCount ( unsigned int* count, cudaLibrary_t lib )
-
-
-Returns the number of kernels within a library.
-
 ######  Parameters
 
 `count`
@@ -153,15 +117,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 ###### Description
 
 Returns in `count` the number of kernels in `lib`.
-
-**See also:**
-
-cudaLibraryEnumerateKernels, cudaLibraryLoadFromFile, cudaLibraryLoadData, cuLibraryGetKernelCount
-
-__host__ cudaError_t cudaLibraryGetManaged ( void** dptr, size_t* bytes, cudaLibrary_t library, const char* name )
-
-
-Returns a pointer to managed memory.
 
 ######  Parameters
 
@@ -182,15 +137,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `*dptr` and `*bytes` the base pointer and size of the managed memory with name `name` for the requested library `library`. If no managed memory with the requested name `name` exists, the call returns cudaErrorSymbolNotFound. One of the parameters `dptr` or `bytes` (not both) can be NULL in which case it is ignored. Note that managed memory for library `library` is shared across devices and is registered when the library is loaded. The returned `dptr` cannot be passed to the Symbol APIs such as cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaGetSymbolAddress, or cudaGetSymbolSize.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cudaLibraryGetGlobal, cuLibraryGetManaged
-
-__host__ cudaError_t cudaLibraryGetUnifiedFunction ( void** fptr, cudaLibrary_t library, const char* symbol )
-
-
-Returns a pointer to a unified function.
-
 ######  Parameters
 
 `fptr`
@@ -207,15 +153,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 ###### Description
 
 Returns in `*fptr` the function pointer to a unified function denoted by `symbol`. If no unified function with name `symbol` exists, the call returns cudaErrorSymbolNotFound. If there is no device with attribute cudaDeviceProp::unifiedFunctionPointers present in the system, the call may return cudaErrorSymbolNotFound.
-
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cuLibraryGetUnifiedFunction
-
-__host__ cudaError_t cudaLibraryLoadData ( cudaLibrary_t* library, const void* code, cudaJitOption ** jitOptions, void** jitOptionsValues, unsigned int  numJitOptions, cudaLibraryOption ** libraryOptions, void** libraryOptionValues, unsigned int  numLibraryOptions )
-
-
-Load a library with specified code and options.
 
 ######  Parameters
 
@@ -257,15 +194,6 @@ Options are passed as an array via `jitOptions` and any corresponding parameters
 
 Library load options are passed as an array via `libraryOptions` and any corresponding parameters are passed in `libraryOptionValues`. The number of total library load options is supplied via `numLibraryOptions`.
 
-**See also:**
-
-cudaLibraryLoadFromFile, cudaLibraryUnload, cuLibraryLoadData
-
-__host__ cudaError_t cudaLibraryLoadFromFile ( cudaLibrary_t* library, const char* fileName, cudaJitOption ** jitOptions, void** jitOptionsValues, unsigned int  numJitOptions, cudaLibraryOption ** libraryOptions, void** libraryOptionValues, unsigned int  numLibraryOptions )
-
-
-Load a library with specified file and options.
-
 ######  Parameters
 
 `library`
@@ -306,15 +234,6 @@ Options are passed as an array via `jitOptions` and any corresponding parameters
 
 Library load options are passed as an array via `libraryOptions` and any corresponding parameters are passed in `libraryOptionValues`. The number of total library load options is supplied via `numLibraryOptions`.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryUnload, cuLibraryLoadFromFile
-
-__host__ cudaError_t cudaLibraryUnload ( cudaLibrary_t library )
-
-
-Unloads a library.
-
 ######  Parameters
 
 `library`
@@ -327,14 +246,3 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 ###### Description
 
 Unloads the library specified with `library`
-
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cuLibraryUnload
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -15,7 +15,7 @@ Create a CUDA context.
 `pctx`
     \- Returned context handle of the new context
 `ctxCreateParams`
-    \- Context creation parameters
+    \- Context creation parameters. Can be NULL to create a regular CUDA context. See CUctxCreateParams for details.
 `flags`
     \- Context creation flags
 `dev`
@@ -29,12 +29,14 @@ CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_I
 
 Creates a new CUDA context and associates it with the calling thread. The `flags` parameter is described below. The context is created with a usage count of 1 and the caller of cuCtxCreate() must call cuCtxDestroy() when done using the context. If a context is already current to the thread, it is supplanted by the newly created context and may be restored by a subsequent call to cuCtxPopCurrent().
 
-CUDA context can be created with execution affinity. The type and the amount of execution resource the context can use is limited by `paramsArray` and `numExecAffinityParams` in `execAffinity`. The `paramsArray` is an array of `CUexecAffinityParam` and the `numExecAffinityParams` describes the size of the paramsArray. If two `CUexecAffinityParam` in the array have the same type, the latter execution affinity parameter overrides the former execution affinity parameter. The supported execution affinity types are:
+A regular CUDA context can be created by setting `ctxCreateParams` to NULL.
 
-  * CU_EXEC_AFFINITY_TYPE_SM_COUNT limits the portion of SMs that the context can use. The portion of SMs is specified as the number of SMs via `CUexecAffinitySmCount`. This limit will be internally rounded up to the next hardware-supported amount. Hence, it is imperative to query the actual execution affinity of the context via `cuCtxGetExecAffinity` after context creation. Currently, this attribute is only supported under Volta+ MPS.
+A CUDA context can be created with execution affinity. The type and the amount of execution resource the context can use is limited by `paramsArray` and `numExecAffinityParams` in `execAffinity`. The `paramsArray` is an array of `CUexecAffinityParam` and the `numExecAffinityParams` describes the size of the paramsArray. If two `CUexecAffinityParam` in the array have the same type, the latter execution affinity parameter overrides the former execution affinity parameter. The supported execution affinity types are:
+
+  * CU_EXEC_AFFINITY_TYPE_SM_COUNT limits the portion of SMs that the context can use. The portion of SMs is specified as the number of SMs via `CUexecAffinitySmCount`. This limit will be internally rounded up to the next hardware-supported amount. Hence, it is imperative to query the actual execution affinity of the context via cuCtxGetExecAffinity after context creation. Currently, this attribute is only supported under Volta+ MPS.
 
 
-CUDA context can be created in CIG(CUDA in Graphics) mode by setting `cigParams`. Data from graphics client is shared with CUDA via the `sharedData` in `cigParams`. Support for D3D12 graphics client can be determined using cuDeviceGetAttribute() with CU_DEVICE_ATTRIBUTE_D3D12_CIG_SUPPORTED. `sharedData` is a ID3D12CommandQueue handle. Support for Vulkan graphics client can be determined using cuDeviceGetAttribute() with CU_DEVICE_ATTRIBUTE_VULKAN_CIG_SUPPORTED. `sharedData` is a Nvidia specific data blob populated by calling vkGetExternalComputeQueueDataNV(). Either `execAffinityParams` or `cigParams` can be set to a non-null value. Setting both to a non-null value will result in an undefined behavior.
+A CUDA context can be created in CIG(CUDA in Graphics) mode by setting `cigParams`. Data from graphics client is shared with CUDA via the `sharedData` in `cigParams`. Support for D3D12 graphics client can be determined using cuDeviceGetAttribute() with CU_DEVICE_ATTRIBUTE_D3D12_CIG_SUPPORTED. `sharedData` is a ID3D12CommandQueue handle. Support for Vulkan graphics client can be determined using cuDeviceGetAttribute() with CU_DEVICE_ATTRIBUTE_VULKAN_CIG_SUPPORTED. `sharedData` is a Nvidia specific data blob populated by calling vkGetExternalComputeQueueDataNV(). `execAffinityParams` and `cigParams` are mutually exclusive and cannot both be non-NULL. Setting both to non-NULL values will result in undefined behavior. If both `execAffinityParams` and `cigParams` are NULL, the context will be created as a regular CUDA context.
 
 The three LSBs of the `flags` parameter can be used to control how the OS thread, which owns the CUDA context at the time of an API call, interacts with the OS scheduler when waiting for results from the GPU. Only one of the scheduling flags can be set when creating a context.
 
@@ -74,7 +76,7 @@ The three LSBs of the `flags` parameter can be used to control how the OS thread
 
 Context creation will fail with CUDA_ERROR_UNKNOWN if the compute mode of the device is CU_COMPUTEMODE_PROHIBITED. The function cuDeviceGetAttribute() can be used with CU_DEVICE_ATTRIBUTE_COMPUTE_MODE to determine the compute mode of the device. The nvidia-smi tool can be used to set the compute mode for * devices. Documentation for nvidia-smi can be obtained by passing a -h option to it.
 
-Context creation will fail with :: CUDA_ERROR_INVALID_VALUE if invalid parameter was passed by client to create the CUDA context.
+Context creation will fail with CUDA_ERROR_INVALID_VALUE if invalid parameter was passed by client to create the CUDA context.
 
 Context creation in CIG mode will fail with CUDA_ERROR_NOT_SUPPORTED if CIG is not supported by the device or the driver.
 

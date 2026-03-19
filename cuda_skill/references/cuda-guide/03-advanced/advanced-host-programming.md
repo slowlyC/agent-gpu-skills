@@ -280,7 +280,7 @@ The first few parameters to the `cudaMemcpyBatchAsync()` function seem immediate
 
 Turning to the attributes, in this instance the transfers are homogeneous. So we use only one attribute, which will apply to all the transfers. This is controlled by the attrIndex parameter. In principle this can be an array. Element _i_ of the array contains the index of the first transfer to which the _i_ -th element of the attribute array applies. In this case, attrIndex is treated as a single element array, with the value ‘0’ meaning that `attribute[0]` will apply to all transfers with index 0 and up, in other words all the transfers.
 
-Finally, we note that we have set the the `srcAccessOrder` attribute to `cudaMemcpySrcAccessOrderStream`. This means that the source data will be accessed in regular stream order. In other words, the memcpy will block until previous kernels dealing with the data from any of these source and destination pointers are completed.
+Finally, we note that we have set the `srcAccessOrder` attribute to `cudaMemcpySrcAccessOrderStream`. This means that the source data will be accessed in regular stream order. In other words, the memcpy will block until previous kernels dealing with the data from any of these source and destination pointers are completed.
 
 In the next example we will consider a more complex case of a heterogeneous batch transfer.
 

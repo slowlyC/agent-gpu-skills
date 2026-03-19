@@ -46,7 +46,7 @@ Streams and events created on the host have undefined behavior when used within 
 
 ### 4.18.2.4. Ordering and Concurrency
 
-The ordering of kernel launches from the device runtime follows CUDA Stream ordering semantics. Within a grid, all kernel launches into the same stream (with the exception of the [The Fire-and-Forget Stream](../05-appendices/device-callable-apis.html#fire-and-forget-stream)) are executed in-order. With multiple threads in the same grid launching into the same stream, the ordering within the stream is dependent on the thread scheduling within the grid, which may be controlled with synchronization primitives such as `__syncthreads()`.
+The ordering of kernel launches from the device runtime follows CUDA Stream ordering semantics. Within a grid, all kernel launches into the same stream (with the exception of [The Fire-and-Forget Stream](../05-appendices/device-callable-apis.html#fire-and-forget-stream)) are executed in-order. With multiple threads in the same grid launching into the same stream, the ordering within the stream is dependent on the thread scheduling within the grid, which may be controlled with synchronization primitives such as `__syncthreads()`.
 
 Note that while named streams are shared by all threads within a grid, the implicit _NULL_ stream is only shared by all threads within a thread block. If multiple threads in a thread block launch into the implicit stream, then these launches will be executed in-order. If threads in different thread blocks launch into the implicit stream, these launches may be executed concurrently. If concurrency is desired for launches from multiple threads within a thread block, explicit named streams should be used.
 

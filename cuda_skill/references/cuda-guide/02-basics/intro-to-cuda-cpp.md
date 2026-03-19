@@ -267,7 +267,7 @@ Explicitly managing memory allocation and data migration between memory spaces c
         // Launch the kernel
         int threads = 256;
         int blocks = cuda::ceil_div(vectorLength, threads);
-        vecAdd<<<blocks, threads>>>(devA, devB, devC);
+        vecAdd<<<blocks, threads>>>(devA, devB, devC, vectorLength);
         // wait for kernel execution to complete
         cudaDeviceSynchronize();
     
@@ -520,7 +520,7 @@ Explicit Memory Management
         // Launch the kernel
         int threads = 256;
         int blocks = cuda::ceil_div(vectorLength, threads);
-        vecAdd<<<blocks, threads>>>(devA, devB, devC);
+        vecAdd<<<blocks, threads>>>(devA, devB, devC, vectorLength);
         // wait for kernel execution to complete
         cudaDeviceSynchronize();
     

@@ -15,7 +15,7 @@ GPU 开发 Agent Skill 集合，适用于 Cursor / Claude Code / Codex / Gemini 
 git clone https://github.com/slowlyC/agent-gpu-skills.git
 cd agent-gpu-skills
 
-# 1. 获取外部源码 repo (sparse checkout, ~114MB)
+# 1. 获取外部源码 repo (sparse checkout, ~130MB)
 bash update-repos.sh
 
 # 2. 安装 skill (默认 Cursor，用 --agent claude/codex/gemini 安装到其他工具)
@@ -120,4 +120,4 @@ cuda-skill 的文档爬取方案受 [technillogue/ptx-isa-markdown](https://gith
 
 ## 许可
 
-CUDA 文档内容 (c) NVIDIA Corporation. Triton、CUTLASS、SGLang 源码遵循其各自原始许可.
+CUDA 文档内容 (c) NVIDIA Corporation. Triton、CUTLASS、SGLang 源码遵循各自原始许可.

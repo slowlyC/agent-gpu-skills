@@ -3,3 +3,6 @@
 **Source:** structCUctxCigParam.html#structCUctxCigParam
 
 
+### Public Variables
+
+void * sharedData

@@ -25,15 +25,12 @@ cudaSuccess, cudaErrorInvalidValue
 
 Returns in `*device` the device which has properties that best match `*prop`.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaGetDevice, cudaSetDevice, cudaGetDeviceProperties, cudaInitDevice
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceFlushGPUDirectRDMAWrites ( cudaFlushGPUDirectRDMAWritesTarget target, cudaFlushGPUDirectRDMAWritesScope scope )
-
-
-Blocks until remote writes are visible to the specified scope.
 
 ######  Parameters
 
@@ -54,15 +51,12 @@ If the scope equals or lies within the scope indicated by cudaDevAttrGPUDirectRD
 
 Users may query support for this API via cudaDevAttrGPUDirectRDMAFlushWritesOptions.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cuFlushGPUDirectRDMAWrites
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaDeviceGetAttribute ( int* value, cudaDeviceAttr attr, int  device )
-
-
-Returns information about the device.
 
 ######  Parameters
 
@@ -81,15 +75,12 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidValue
 
 Returns in `*value` the integer value of the attribute `attr` on device `device`.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaGetDevice, cudaSetDevice, cudaChooseDevice, cudaGetDeviceProperties, cudaInitDevice, cuDeviceGetAttribute
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGetByPCIBusId ( int* device, const char* pciBusId )
-
-
-Returns a handle to a compute device.
 
 ######  Parameters
 
@@ -106,15 +97,12 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
 
 Returns in `*device` a device ordinal given a PCI bus ID string.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceGetPCIBusId, cuDeviceGetByPCIBusId
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaDeviceGetCacheConfig ( cudaFuncCache ** pCacheConfig )
-
-
-Returns the preferred cache configuration for the current device.
 
 ######  Parameters
 
@@ -142,14 +130,12 @@ The supported cache configurations are:
   * cudaFuncCachePreferEqual: prefer equal size L1 cache and shared memory
 
 
-**See also:**
+  *
 
-cudaDeviceSetCacheConfig, cudaFuncSetCacheConfig ( C API), cudaFuncSetCacheConfig ( C++ API), cuCtxGetCacheConfig
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaDeviceGetDefaultMemPool ( cudaMemPool_t* memPool, int  device )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Returns the default mempool of a device.
 
 ###### Returns
 
@@ -159,15 +145,12 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidValuecudaErrorNotSupported
 
 The default mempool of a device contains device memory from that device.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cuDeviceGetDefaultMemPool, cudaMallocAsync, cudaMemPoolTrimTo, cudaMemPoolGetAttribute, cudaDeviceSetMemPool, cudaMemPoolSetAttribute, cudaMemPoolSetAccess
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGetHostAtomicCapabilities ( unsigned int* capabilities, const cudaAtomicOperation ** operations, unsigned int  count, int  device )
-
-
-Queries details about atomic operations supported between the device and host.
 
 ######  Parameters
 
@@ -193,15 +176,6 @@ For each cudaAtomicOperation in `*operations`, the corresponding result in `*cap
 Returns cudaErrorInvalidDevice if `dev` is not valid.
 
 Returns cudaErrorInvalidValue if `*capabilities` or `*operations` is NULL, if `count` is 0, or if any of `*operations` is not valid.
-
-**See also:**
-
-cudaDeviceGetAttribute, cudaDeviceGetP2PAtomicCapabilities, cuDeviceGeHostAtomicCapabilities
-
-__host__  __device__ cudaError_t cudaDeviceGetLimit ( size_t* pValue, cudaLimit limit )
-
-
-Return resource limits.
 
 ######  Parameters
 
@@ -233,14 +207,12 @@ Returns in `*pValue` the current size of `limit`. The following cudaLimit values
   * cudaLimitPersistingL2CacheSize is the persisting L2 cache size in bytes.
 
 
-**See also:**
+  *
 
-cudaDeviceSetLimit, cuCtxGetLimit
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaDeviceGetMemPool ( cudaMemPool_t* memPool, int  device )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Gets the current mempool for a device.
 
 ###### Returns
 
@@ -250,15 +222,12 @@ cudaSuccess, cudaErrorInvalidValuecudaErrorNotSupported
 
 Returns the last pool provided to cudaDeviceSetMemPool for this device or the device's default memory pool if cudaDeviceSetMemPool has never been called. By default the current mempool is the default mempool for a device, otherwise the returned pool must have been set with cuDeviceSetMemPool or cudaDeviceSetMemPool.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cuDeviceGetMemPool, cudaDeviceGetDefaultMemPool, cudaDeviceSetMemPool
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGetNvSciSyncAttributes ( void* nvSciSyncAttrList, int  device, int  flags )
-
-
-Return NvSciSync attributes that this device can support.
 
 ######  Parameters
 
@@ -303,15 +272,6 @@ Note that this API updates the input `nvSciSyncAttrList` with values equivalent 
 
 cudaSuccess, cudaErrorDeviceUninitialized, cudaErrorInvalidValue, cudaErrorInvalidHandle, cudaErrorInvalidDevice, cudaErrorNotSupported, cudaErrorMemoryAllocation
 
-**See also:**
-
-cudaImportExternalSemaphore, cudaDestroyExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
-
-__host__ cudaError_t cudaDeviceGetP2PAtomicCapabilities ( unsigned int* capabilities, const cudaAtomicOperation ** operations, unsigned int  count, int  srcDevice, int  dstDevice )
-
-
-Queries details about atomic operations supported between two devices.
-
 ######  Parameters
 
 `capabilities`
@@ -338,15 +298,6 @@ For each cudaAtomicOperation in `*operations`, the corresponding result in `*cap
 Returns cudaErrorInvalidDevice if `srcDevice` or `dstDevice` are not valid or if they represent the same device.
 
 Returns cudaErrorInvalidValue if `*capabilities` or `*operations` is NULL, if `count` is 0, or if any of `*operations` is not valid.
-
-**See also:**
-
-cudaDeviceGetP2PAttribute, cuDeviceGetP2PAttribute, cuDeviceGetP2PAtomicCapabilities
-
-__host__ cudaError_t cudaDeviceGetP2PAttribute ( int* value, cudaDeviceP2PAttr attr, int  srcDevice, int  dstDevice )
-
-
-Queries attributes of the link between two devices.
 
 ######  Parameters
 
@@ -382,15 +333,12 @@ Returns cudaErrorInvalidDevice if `srcDevice` or `dstDevice` are not valid or if
 
 Returns cudaErrorInvalidValue if `attrib` is not valid or if `value` is a null pointer.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceEnablePeerAccess, cudaDeviceDisablePeerAccess, cudaDeviceCanAccessPeer, cuDeviceGetP2PAttributecudaDeviceGetP2PAtomicCapabilities
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGetPCIBusId ( char* pciBusId, int  len, int  device )
-
-
-Returns a PCI Bus Id string for the device.
 
 ######  Parameters
 
@@ -409,15 +357,12 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
 
 Returns an ASCII string identifying the device `dev` in the NULL-terminated string pointed to by `pciBusId`. `len` specifies the maximum length of the string that may be returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceGetByPCIBusId, cuDeviceGetPCIBusId
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGetStreamPriorityRange ( int* leastPriority, int* greatestPriority )
-
-
-Returns numerical values that correspond to the least and greatest stream priorities.
 
 ######  Parameters
 
@@ -436,15 +381,12 @@ Returns in `*leastPriority` and `*greatestPriority` the numerical values that co
 
 This function will return '0' in both `*leastPriority` and `*greatestPriority` if the current context's device does not support stream priorities (see cudaDeviceGetAttribute).
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreateWithPriority, cudaStreamGetPriority, cuCtxGetStreamPriorityRange
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceGetTexture1DLinearMaxWidth ( size_t* maxWidthInElements, const cudaChannelFormatDesc* fmtDesc, int  device )
-
-
-Returns the maximum number of elements allocatable in a 1D linear texture for a given element size.
 
 ######  Parameters
 
@@ -463,15 +405,12 @@ cudaSuccess, cudaErrorUnsupportedLimit, cudaErrorInvalidValue
 
 Returns in `maxWidthInElements` the maximum number of elements allocatable in a 1D linear texture for given format descriptor `fmtDesc`.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cuDeviceGetTexture1DLinearMaxWidth
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceRegisterAsyncNotification ( int  device, cudaAsyncCallback callbackFunc, void* userData, cudaAsyncCallbackHandle_t* callback )
-
-
-Registers a callback function to receive async notifications.
 
 ######  Parameters
 
@@ -500,15 +439,6 @@ Callbacks may not call cudaDeviceRegisterAsyncNotification or cudaDeviceUnregist
 
 Returns in `*callback` a handle representing the registered callback instance.
 
-**See also:**
-
-cudaDeviceUnregisterAsyncNotification
-
-__host__ cudaError_t cudaDeviceReset ( void )
-
-
-Destroy all allocations and reset all state on the current device in the current process.
-
 ###### Returns
 
 cudaSuccess
@@ -524,14 +454,12 @@ Note that this function will reset the device immediately. It is the caller's re
   * If a non-primary CUcontext is current to the thread, cudaDeviceReset() will destroy only the internal CUDA RT state for that CUcontext.
 
 
-**See also:**
+  *
 
-cudaDeviceSynchronize
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaDeviceSetCacheConfig ( cudaFuncCache cacheConfig )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Sets the preferred cache configuration for the current device.
 
 ######  Parameters
 
@@ -561,14 +489,12 @@ The supported cache configurations are:
   * cudaFuncCachePreferEqual: prefer equal size L1 cache and shared memory
 
 
-**See also:**
+  *
 
-cudaDeviceGetCacheConfig, cudaFuncSetCacheConfig ( C API), cudaFuncSetCacheConfig ( C++ API), cuCtxSetCacheConfig
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaDeviceSetLimit ( cudaLimit limit, size_t value )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Set resource limits.
 
 ######  Parameters
 
@@ -608,14 +534,12 @@ Setting each cudaLimit has its own specific restrictions, so each is discussed h
   * cudaLimitPersistingL2CacheSize controls size in bytes available for persisting L2 cache. This is purely a performance hint and it can be ignored or clamped depending on the platform.
 
 
-**See also:**
+  *
 
-cudaDeviceGetLimit, cuCtxSetLimit
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaDeviceSetMemPool ( int  device, cudaMemPool_t memPool )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Sets the current memory pool of a device.
 
 ###### Returns
 
@@ -628,14 +552,9 @@ The memory pool must be local to the specified device. Unless a mempool is speci
 Use cudaMallocFromPoolAsync to specify asynchronous allocations from a device different than the one the stream runs on.
 
   *
-**See also:**
 
-cuDeviceSetMemPool, cudaDeviceGetMemPool, cudaDeviceGetDefaultMemPool, cudaMemPoolCreate, cudaMemPoolDestroy, cudaMallocFromPoolAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaDeviceSynchronize ( void )
-
-
-Wait for compute device to finish.
 
 ###### Returns
 
@@ -647,15 +566,12 @@ Blocks until the device has completed all preceding requested tasks. cudaDeviceS
 
   * Use of cudaDeviceSynchronize in device code was deprecated in CUDA 11.6 and removed for compute_90+ compilation. For compute capability < 9.0, compile-time opt-in by specifying -D CUDA_FORCE_CDP1_IF_SUPPORTED is required to continue using cudaDeviceSynchronize() in device code for now. Note that this is different from host-side cudaDeviceSynchronize, which is still supported.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDeviceReset, cuCtxSynchronize
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaDeviceUnregisterAsyncNotification ( int  device, cudaAsyncCallbackHandle_t callback )
-
-
-Unregisters an async notification callback.
 
 ######  Parameters
 
@@ -672,15 +588,6 @@ cudaSuccesscudaErrorNotSupportedcudaErrorInvalidDevicecudaErrorInvalidValuecudaE
 
 Unregisters `callback` so that the corresponding callback function will stop receiving async notifications.
 
-**See also:**
-
-cudaDeviceRegisterAsyncNotification
-
-__host__  __device__ cudaError_t cudaGetDevice ( int* device )
-
-
-Returns which device is currently being used.
-
 ######  Parameters
 
 `device`
@@ -694,15 +601,12 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorDeviceUnavailable
 
 Returns in `*device` the current device for the calling host thread.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaSetDevice, cudaGetDeviceProperties, cudaChooseDevice, cuCtxGetCurrent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaGetDeviceCount ( int* count )
-
-
-Returns the number of compute-capable devices.
 
 ######  Parameters
 
@@ -717,15 +621,12 @@ cudaSuccess
 
 Returns in `*count` the number of devices with compute capability greater or equal to 2.0 that are available for execution.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDevice, cudaSetDevice, cudaGetDeviceProperties, cudaChooseDevice, cudaInitDevice, cuDeviceGetCount
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGetDeviceFlags ( unsigned int* flags )
-
-
-Gets the flags for the current device.
 
 ######  Parameters
 
@@ -746,15 +647,12 @@ If a context has been created via the driver API and is current to the calling t
 
 Flags returned by this function may specifically include cudaDeviceMapHost even though it is not accepted by cudaSetDeviceFlags because it is implicit in runtime API flags. The reason for this is that the current context may have been created via the driver API in which case the flag is not implicit and may be unset.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDevice, cudaGetDeviceProperties, cudaSetDevice, cudaSetDeviceFlags, cudaInitDevice, cuCtxGetFlags, cuDevicePrimaryCtxGetState
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGetDeviceProperties ( cudaDeviceProp* prop, int  device )
-
-
-Returns information about the compute-device.
 
 ######  Parameters
 
@@ -771,15 +669,12 @@ cudaSuccess, cudaErrorInvalidDevice
 
 Returns in `*prop` the properties of device `dev`.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaGetDevice, cudaSetDevice, cudaChooseDevice, cudaDeviceGetAttribute, cudaInitDevice, cuDeviceGetAttribute, cuDeviceGetName
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaInitDevice ( int  device, unsigned int  deviceFlags, unsigned int  flags )
-
-
-Initialize device to be used for GPU executions.
 
 ######  Parameters
 
@@ -802,15 +697,12 @@ When cudaInitDeviceFlagsAreValid is set in `flags`, deviceFlags are applied to t
 
 This function will return an error if the device is in cudaComputeModeExclusiveProcess and is occupied by another process or if the device is in cudaComputeModeProhibited.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaGetDevice, cudaGetDeviceProperties, cudaChooseDevice, cudaSetDevicecuCtxSetCurrent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaIpcCloseMemHandle ( void* devPtr )
-
-
-Attempts to close memory mapped with cudaIpcOpenMemHandle.
 
 ######  Parameters
 
@@ -831,15 +723,8 @@ IPC functionality is restricted to devices with support for unified addressing o
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMalloc, cudaFree, cudaIpcGetEventHandle, cudaIpcOpenEventHandle, cudaIpcGetMemHandle, cudaIpcOpenMemHandle, cuIpcCloseMemHandle
-
-__host__ cudaError_t cudaIpcGetEventHandle ( cudaIpcEventHandle_t* handle, cudaEvent_t event )
-
-
-Gets an interprocess handle for a previously allocated event.
 
 ######  Parameters
 
@@ -862,15 +747,8 @@ IPC functionality is restricted to devices with support for unified addressing o
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaEventCreate, cudaEventDestroy, cudaEventSynchronize, cudaEventQuery, cudaStreamWaitEvent, cudaIpcOpenEventHandle, cudaIpcGetMemHandle, cudaIpcOpenMemHandle, cudaIpcCloseMemHandle, cuIpcGetEventHandle
-
-__host__ cudaError_t cudaIpcGetMemHandle ( cudaIpcMemHandle_t* handle, void* devPtr )
-
-
-Gets an interprocess memory handle for an existing device memory allocation.
 
 ######  Parameters
 
@@ -893,15 +771,8 @@ IPC functionality is restricted to devices with support for unified addressing o
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMalloc, cudaFree, cudaIpcGetEventHandle, cudaIpcOpenEventHandle, cudaIpcOpenMemHandle, cudaIpcCloseMemHandle, cuIpcGetMemHandle
-
-__host__ cudaError_t cudaIpcOpenEventHandle ( cudaEvent_t* event, cudaIpcEventHandle_t handle )
-
-
-Opens an interprocess event handle for use in the current process.
 
 ######  Parameters
 
@@ -924,15 +795,8 @@ IPC functionality is restricted to devices with support for unified addressing o
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaEventCreate, cudaEventDestroy, cudaEventSynchronize, cudaEventQuery, cudaStreamWaitEvent, cudaIpcGetEventHandle, cudaIpcGetMemHandle, cudaIpcOpenMemHandle, cudaIpcCloseMemHandle, cuIpcOpenEventHandle
-
-__host__ cudaError_t cudaIpcOpenMemHandle ( void** devPtr, cudaIpcMemHandle_t handle, unsigned int  flags )
-
-
-Opens an interprocess memory handle exported from another process and returns a device pointer usable in the local process.
 
 ######  Parameters
 
@@ -965,17 +829,10 @@ IPC functionality is restricted to devices with support for unified addressing o
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * No guarantees are made about the address returned in `*devPtr`. In particular, multiple processes may not receive the same address for the same `handle`.
 
-
-**See also:**
-
-cudaMalloc, cudaFree, cudaIpcGetEventHandle, cudaIpcOpenEventHandle, cudaIpcGetMemHandle, cudaIpcCloseMemHandle, cudaDeviceEnablePeerAccess, cudaDeviceCanAccessPeer, cuIpcOpenMemHandle
-
-__host__ cudaError_t cudaSetDevice ( int  device )
-
-
-Set device to be used for GPU executions.
 
 ######  Parameters
 
@@ -996,15 +853,12 @@ This call may be made from any host thread, to any device, and at any time. This
 
 It is not required to call cudaInitDevice before using this function.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaGetDevice, cudaGetDeviceProperties, cudaChooseDevice, cudaInitDevice, cuCtxSetCurrent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaSetDeviceFlags ( unsigned int  flags )
-
-
-Sets flags to be used for device executions.
 
 ######  Parameters
 
@@ -1042,14 +896,12 @@ Deprecated: This flag is deprecated and the behavior enabled by this flag is now
   * cudaDeviceSyncMemops: Ensures that synchronous memory operations initiated on this context will always synchronize. See further documentation in the section titled "API Synchronization behavior" to learn more about cases when synchronous memory operations can exhibit asynchronous behavior.
 
 
-**See also:**
+  *
 
-cudaGetDeviceFlags, cudaGetDeviceCount, cudaGetDevice, cudaGetDeviceProperties, cudaSetDevice, cudaSetValidDevices, cudaInitDevice, cudaChooseDevice, cuDevicePrimaryCtxSetFlags
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaSetValidDevices ( int* device_arr, int  len )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Set a list of devices that can be used for CUDA.
 
 ######  Parameters
 
@@ -1066,14 +918,9 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
 
 Sets a list of devices for CUDA execution in priority order using `device_arr`. The parameter `len` specifies the number of elements in the list. CUDA will try devices from the list sequentially until it finds one that works. If this function is not called, or if it is called with a `len` of 0, then CUDA will go back to its default behavior of trying devices sequentially from a default list containing all of the available CUDA devices in the system. If a specified device ID in the list does not exist, this function will return cudaErrorInvalidDevice. If `len` is not 0 and `device_arr` is NULL or if `len` exceeds the number of devices in the system, then cudaErrorInvalidValue is returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetDeviceCount, cudaSetDevice, cudaGetDeviceProperties, cudaSetDeviceFlags, cudaChooseDevice
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -1,4 +1,4 @@
-# 7.82. CUtensorMap
+# 7.84. CUtensorMap
 
 **Source:** structCUtensorMap.html#structCUtensorMap
 

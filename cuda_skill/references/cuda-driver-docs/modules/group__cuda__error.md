@@ -49,3 +49,4 @@ Sets `*pStr` to the address of a NULL-terminated string description of the error
 
 CUresult, cudaGetErrorString
 
+* * *

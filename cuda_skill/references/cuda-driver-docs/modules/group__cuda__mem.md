@@ -693,7 +693,7 @@ Allocates device memory.
 
 ###### Returns
 
-CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORYCUDA_ERROR_EXTERNAL_DEVICE
 
 ###### Description
 
@@ -713,7 +713,7 @@ Allocates page-locked host memory.
 
 ###### Returns
 
-CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORYCUDA_ERROR_EXTERNAL_DEVICE
 
 ###### Description
 
@@ -968,7 +968,7 @@ Allocates page-locked host memory.
 
 ###### Returns
 
-CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORYCUDA_ERROR_EXTERNAL_DEVICE
 
 ###### Description
 
@@ -1063,7 +1063,7 @@ Registers an existing host memory range for use by CUDA.
 
 ###### Returns
 
-CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY, CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED, CUDA_ERROR_NOT_PERMITTED, CUDA_ERROR_NOT_SUPPORTED
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY, CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED, CUDA_ERROR_NOT_PERMITTED, CUDA_ERROR_NOT_SUPPORTEDCUDA_ERROR_EXTERNAL_DEVICE
 
 ###### Description
 
@@ -1811,6 +1811,37 @@ Perform a 3D memory copy according to the parameters specified in `pCopy`. See t
   * This function uses standard default stream semantics.
 
 
+CUresult cuMemcpy3DWithAttributesAsync ( CUDA_MEMCPY3D_BATCH_OP* op, unsigned long long flags, CUstream hStream )
+
+
+######  Parameters
+
+`op`
+    \- Operation to perform
+`flags`
+    \- Flags for the copy, must be zero now.
+`hStream`
+    \- Stream to enqueue the operation in
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+Performs 3D memory copy with attributes asynchronously
+
+Performs the copy operation specified in `op`. `flags` specifies the flags for the copy and `hStream` specifies the stream to enqueue the operation in.
+
+For more information regarding the operation, please refer to CUDA_MEMCPY3D_BATCH_OP and it's usage desciption in::cuMemcpy3DBatchAsync
+
+  *
+
+  * This function exhibits asynchronous behavior for most use cases.
+
+  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+
 CUresult cuMemcpyAsync ( CUdeviceptr dst, CUdeviceptr src, size_t ByteCount, CUstream hStream )
 
 
@@ -2360,6 +2391,41 @@ Copies from device memory in one context to device memory in another context. `d
   * This function exhibits asynchronous behavior for most use cases.
 
   * This function uses standard default stream semantics.
+
+
+CUresult cuMemcpyWithAttributesAsync ( CUdeviceptr dst, CUdeviceptr src, size_t size, CUmemcpyAttributes* attr, CUstream hStream )
+
+
+######  Parameters
+
+`dst`
+    \- Destination device pointer
+`src`
+    \- Source device pointer
+`size`
+    \- Number of bytes to copy
+`attr`
+    \- Attributes for the copy
+`hStream`
+    \- Stream to enqueue the operation in
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+Performs asynchronous memory copy operation with the specified attributes.
+
+Performs asynchronous memory copy operation where `dst` and `src` are the destination and source pointers respectively. `size` specifies the number of bytes to copy. `attr` specifies the attributes for the copy and `hStream` specifies the stream to enqueue the operation in.
+
+For more information regarding the attributes, please refer to CUmemcpyAttributes and it's usage desciption in::cuMemcpyBatchAsync
+
+  *
+
+  * This function exhibits asynchronous behavior for most use cases.
+
+  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
 
 
 CUresult cuMemsetD16 ( CUdeviceptr dstDevice, unsigned short us, size_t N )

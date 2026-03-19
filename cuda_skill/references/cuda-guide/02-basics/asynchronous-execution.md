@@ -67,7 +67,7 @@ CUDA streams can be created using the `cudaStreamCreate()` function. The functio
     cudaStreamDestroy(stream);  // Destroy the stream
     
 
-If the the device is still doing work in stream `stream` when the application calls `cudaStreamDestroy()`, the stream will complete all the work in the stream before being destroyed.
+If the device is still doing work in stream `stream` when the application calls `cudaStreamDestroy()`, the stream will complete all the work in the stream before being destroyed.
 
 ### 2.3.2.2. Launching Kernels in CUDA Streams
 

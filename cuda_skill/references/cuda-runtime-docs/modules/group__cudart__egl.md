@@ -29,15 +29,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown, cudaErrorLaunchTimeout
 
 Acquire an image frame from EGLStreamKHR. cudaGraphicsResourceGetMappedEglFrame can be called on `pCudaResource` to get cudaEglFrame.
 
-**See also:**
-
-cudaEGLStreamConsumerConnect, cudaEGLStreamConsumerDisconnect, cudaEGLStreamConsumerReleaseFrame, cuEGLStreamConsumerAcquireFrame
-
-__host__ cudaError_t cudaEGLStreamConsumerConnect ( cudaEglStreamConnection* conn, EGLStreamKHR eglStream )
-
-
-Connect CUDA to EGLStream as a consumer.
-
 ######  Parameters
 
 `conn`
@@ -54,15 +45,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown
 Connect CUDA as a consumer to EGLStreamKHR specified by `eglStream`.
 
 The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
-
-**See also:**
-
-cudaEGLStreamConsumerDisconnect, cudaEGLStreamConsumerAcquireFrame, cudaEGLStreamConsumerReleaseFrame, cuEGLStreamConsumerConnect
-
-__host__ cudaError_t cudaEGLStreamConsumerConnectWithFlags ( cudaEglStreamConnection* conn, EGLStreamKHR eglStream, unsigned int  flags )
-
-
-Connect CUDA to EGLStream as a consumer with given flags.
 
 ######  Parameters
 
@@ -83,15 +65,6 @@ Connect CUDA as a consumer to EGLStreamKHR specified by `stream` with specified 
 
 The flags specify whether the consumer wants to access frames from system memory or video memory. Default is cudaEglResourceLocationVidmem.
 
-**See also:**
-
-cudaEGLStreamConsumerDisconnect, cudaEGLStreamConsumerAcquireFrame, cudaEGLStreamConsumerReleaseFrame, cuEGLStreamConsumerConnectWithFlags
-
-__host__ cudaError_t cudaEGLStreamConsumerDisconnect ( cudaEglStreamConnection* conn )
-
-
-Disconnect CUDA as a consumer to EGLStream .
-
 ######  Parameters
 
 `conn`
@@ -104,15 +77,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown
 ###### Description
 
 Disconnect CUDA as a consumer to EGLStreamKHR.
-
-**See also:**
-
-cudaEGLStreamConsumerConnect, cudaEGLStreamConsumerAcquireFrame, cudaEGLStreamConsumerReleaseFrame, cuEGLStreamConsumerDisconnect
-
-__host__ cudaError_t cudaEGLStreamConsumerReleaseFrame ( cudaEglStreamConnection* conn, cudaGraphicsResource_t pCudaResource, cudaStream_t* pStream )
-
-
-Releases the last frame acquired from the EGLStream.
 
 ######  Parameters
 
@@ -130,15 +94,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown
 ###### Description
 
 Release the acquired image frame specified by `pCudaResource` to EGLStreamKHR.
-
-**See also:**
-
-cudaEGLStreamConsumerConnect, cudaEGLStreamConsumerDisconnect, cudaEGLStreamConsumerAcquireFrame, cuEGLStreamConsumerReleaseFrame
-
-__host__ cudaError_t cudaEGLStreamProducerConnect ( cudaEglStreamConnection* conn, EGLStreamKHR eglStream, EGLint width, EGLint height )
-
-
-Connect CUDA to EGLStream as a producer.
 
 ######  Parameters
 
@@ -161,15 +116,6 @@ Connect CUDA as a producer to EGLStreamKHR specified by `stream`.
 
 The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
 
-**See also:**
-
-cudaEGLStreamProducerDisconnect, cudaEGLStreamProducerPresentFrame, cudaEGLStreamProducerReturnFrame, cuEGLStreamProducerConnect
-
-__host__ cudaError_t cudaEGLStreamProducerDisconnect ( cudaEglStreamConnection* conn )
-
-
-Disconnect CUDA as a producer to EGLStream .
-
 ######  Parameters
 
 `conn`
@@ -182,15 +128,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown
 ###### Description
 
 Disconnect CUDA as a producer to EGLStreamKHR.
-
-**See also:**
-
-cudaEGLStreamProducerConnect, cudaEGLStreamProducerPresentFrame, cudaEGLStreamProducerReturnFrame, cuEGLStreamProducerDisconnect
-
-__host__ cudaError_t cudaEGLStreamProducerPresentFrame ( cudaEglStreamConnection* conn, cudaEglFrame eglframe, cudaStream_t* pStream )
-
-
-Present a CUDA eglFrame to the EGLStream with CUDA as a producer.
 
 ######  Parameters
 
@@ -223,15 +160,6 @@ The cudaEglFrame is defined as:
 
 For cudaEglFrame of type cudaEglFrameTypePitch, the application may present sub-region of a memory allocation. In that case, cudaPitchedPtr::ptr will specify the start address of the sub-region in the allocation and cudaEglPlaneDesc will specify the dimensions of the sub-region.
 
-**See also:**
-
-cudaEGLStreamProducerConnect, cudaEGLStreamProducerDisconnect, cudaEGLStreamProducerReturnFrame, cuEGLStreamProducerPresentFrame
-
-__host__ cudaError_t cudaEGLStreamProducerReturnFrame ( cudaEglStreamConnection* conn, cudaEglFrame* eglframe, cudaStream_t* pStream )
-
-
-Return the CUDA eglFrame to the EGLStream last released by the consumer.
-
 ######  Parameters
 
 `conn`
@@ -248,15 +176,6 @@ cudaSuccess, cudaErrorLaunchTimeout, cudaErrorInvalidValue, cudaErrorUnknown
 ###### Description
 
 This API can potentially return cudaErrorLaunchTimeout if the consumer has not returned a frame to EGL stream. If timeout is returned the application can retry.
-
-**See also:**
-
-cudaEGLStreamProducerConnect, cudaEGLStreamProducerDisconnect, cudaEGLStreamProducerPresentFrame, cuEGLStreamProducerReturnFrame
-
-__host__ cudaError_t cudaEventCreateFromEGLSync ( cudaEvent_t* phEvent, EGLSyncKHR eglSync, unsigned int  flags )
-
-
-Creates an event from EGLSync object.
 
 ######  Parameters
 
@@ -283,15 +202,6 @@ Creates an event *phEvent from an EGLSyncKHR eglSync with the flages specified v
 cudaEventRecord and TimingData are not supported for events created from EGLSync.
 
 The EGLSyncKHR is an opaque handle to an EGL sync object. typedef void* EGLSyncKHR
-
-**See also:**
-
-cudaEventQuery, cudaEventSynchronize, cudaEventDestroy
-
-__host__ cudaError_t cudaGraphicsEGLRegisterImage ( cudaGraphicsResource** pCudaResource, EGLImageKHR image, unsigned int  flags )
-
-
-Registers an EGL image.
 
 ######  Parameters
 
@@ -322,15 +232,6 @@ The surface's intended usage is specified using `flags`, as follows:
 
 
 The EGLImageKHR is an object which can be used to create EGLImage target resource. It is defined as a void pointer. typedef void* EGLImageKHR
-
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsResourceGetMappedEglFrame, cuGraphicsEGLRegisterImage
-
-__host__ cudaError_t cudaGraphicsResourceGetMappedEglFrame ( cudaEglFrame* eglFrame, cudaGraphicsResource_t resource, unsigned int  index, unsigned int  mipLevel )
-
-
-Get an eglFrame through which to access a registered EGL graphics resource.
 
 ######  Parameters
 
@@ -366,14 +267,3 @@ The cudaEglFrame is defined as
            } cudaEglFrame;
 
 Note that in case of multiplanar `*eglFrame`, pitch of only first plane (unsigned int cudaEglPlaneDesc::pitch) is to be considered by the application.
-
-**See also:**
-
-cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuGraphicsResourceGetMappedEglFrame
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

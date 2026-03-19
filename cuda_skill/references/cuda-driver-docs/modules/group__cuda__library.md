@@ -126,6 +126,26 @@ Returns in `**name` the function name associated with the kernel handle `hfunc` 
 
 
 
+CUresult cuKernelGetParamCount ( CUkernel kernel, size_t* paramCount )
+
+
+Returns the number of parameters used by the kernel.
+
+######  Parameters
+
+`kernel`
+    \- The kernel to query
+`paramCount`
+    \- Returns the number of parameters used by the function
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+Queries the number of kernel parameters used by `kernel` and returns it in `paramCount`.
+
 CUresult cuKernelGetParamInfo ( CUkernel kernel, size_t paramIndex, size_t* paramOffset, size_t* paramSize )
 
 

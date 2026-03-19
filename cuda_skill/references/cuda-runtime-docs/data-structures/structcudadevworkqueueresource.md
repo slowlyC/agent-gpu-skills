@@ -16,8 +16,3 @@ unsigned char cudaDevWorkqueueResource::reserved[RESOURCE_ABI_BYTES]
 Reserved for future use
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

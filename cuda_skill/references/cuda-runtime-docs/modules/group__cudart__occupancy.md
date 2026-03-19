@@ -29,19 +29,16 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidDeviceFunction, cudaErrorIn
 
 Returns in `*dynamicSmemSize` the maximum size of dynamic shared memory to allow `numBlocks` blocks per SM.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags, cudaOccupancyMaxPotentialBlockSize ( C++ API), cudaOccupancyMaxPotentialBlockSizeWithFlags ( C++ API), cudaOccupancyMaxPotentialBlockSizeVariableSMem ( C++ API), cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags ( C++ API), cudaOccupancyAvailableDynamicSMemPerBlock
-
-__host__  __device__ cudaError_t cudaOccupancyMaxActiveBlocksPerMultiprocessor ( int* numBlocks, const void* func, int  blockSize, size_t dynamicSMemSize )
-
-
-Returns occupancy for a device function.
 
 ######  Parameters
 
@@ -62,19 +59,16 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidDeviceFunction, cudaErrorIn
 
 Returns in `*numBlocks` the maximum number of active blocks per streaming multiprocessor for the device function.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags, cudaOccupancyMaxPotentialBlockSize ( C++ API), cudaOccupancyMaxPotentialBlockSizeWithFlags ( C++ API), cudaOccupancyMaxPotentialBlockSizeVariableSMem ( C++ API), cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags ( C++ API), cudaOccupancyAvailableDynamicSMemPerBlock (C++ API), cuOccupancyMaxActiveBlocksPerMultiprocessor
-
-__host__ cudaError_t cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags ( int* numBlocks, const void* func, int  blockSize, size_t dynamicSMemSize, unsigned int  flags )
-
-
-Returns occupancy for a device function with the specified flags.
 
 ######  Parameters
 
@@ -105,19 +99,16 @@ The `flags` parameter controls how special cases are handled. Valid flags includ
   * cudaOccupancyDisableCachingOverride: This flag suppresses the default behavior on platform where global caching affects occupancy. On such platforms, if caching is enabled, but per-block SM resource usage would result in zero occupancy, the occupancy calculator will calculate the occupancy as if caching is disabled. Setting this flag makes the occupancy calculator to return 0 in such cases. More information can be found about this feature in the "Unified L1/Texture Cache" section of the Maxwell tuning guide.
 
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessor, cudaOccupancyMaxPotentialBlockSize ( C++ API), cudaOccupancyMaxPotentialBlockSizeWithFlags ( C++ API), cudaOccupancyMaxPotentialBlockSizeVariableSMem ( C++ API), cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags ( C++ API), cudaOccupancyAvailableDynamicSMemPerBlock (C++ API), cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-__host__ cudaError_t cudaOccupancyMaxActiveClusters ( int* numClusters, const void* func, const cudaLaunchConfig_t* launchConfig )
-
-
-Given the kernel function (`func`) and launch configuration (`config`), return the maximum number of clusters that could co-exist on the target device in `*numClusters`.
 
 ######  Parameters
 
@@ -138,19 +129,16 @@ If the function has required cluster size already set (see cudaFuncGetAttributes
 
 Note that various attributes of the kernel function may affect occupancy calculation. Runtime environment may affect how the hardware schedules the clusters, so the calculated occupancy is not guaranteed to be achievable.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaFuncGetAttributes cudaOccupancyMaxActiveClusters (C++ API), cuOccupancyMaxActiveClusters
-
-__host__ cudaError_t cudaOccupancyMaxPotentialClusterSize ( int* clusterSize, const void* func, const cudaLaunchConfig_t* launchConfig )
-
-
-Given the kernel function (`func`) and launch configuration (`config`), return the maximum cluster size in `*clusterSize`.
 
 ######  Parameters
 
@@ -173,18 +161,13 @@ By default this function will always return a value that's portable on future ha
 
 This function will respect the compile time launch bounds.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaFuncGetAttributes cudaOccupancyMaxPotentialClusterSize (C++ API), cuOccupancyMaxPotentialClusterSize
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

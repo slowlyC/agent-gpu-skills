@@ -20,15 +20,6 @@ Enables profile collection by the active profiling tool for the current context.
 
 cudaProfilerStart and cudaProfilerStop APIs are used to programmatically control the profiling granularity by allowing profiling to be done only on selective pieces of code.
 
-**See also:**
-
-cudaProfilerStop, cuProfilerStart
-
-__host__ cudaError_t cudaProfilerStop ( void )
-
-
-Disable profiling.
-
 ###### Returns
 
 cudaSuccess
@@ -39,13 +30,4 @@ Disables profile collection by the active profiling tool for the current context
 
 cudaProfilerStart and cudaProfilerStop APIs are used to programmatically control the profiling granularity by allowing profiling to be done only on selective pieces of code.
 
-**See also:**
 
-cudaProfilerStart, cuProfilerStop
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

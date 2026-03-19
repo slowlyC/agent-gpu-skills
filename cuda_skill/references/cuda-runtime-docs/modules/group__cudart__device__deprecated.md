@@ -32,14 +32,12 @@ The returned bank configurations can be either:
   * cudaSharedMemBankSizeEightByte - shared memory bank width is eight bytes.
 
 
-**See also:**
+  *
 
-cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaDeviceSetSharedMemConfig, cudaFuncSetCacheConfig, cuCtxGetSharedMemConfig
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaDeviceSetSharedMemConfig ( cudaSharedMemConfig config )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Sets the shared memory configuration for the current device.
 
 ######  Parameters
 
@@ -71,13 +69,9 @@ The supported bank configurations are:
   * cudaSharedMemBankSizeEightByte: set shared memory bank width to be eight bytes natively.
 
 
-**See also:**
+  *
 
-cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaDeviceGetSharedMemConfig, cudaFuncSetCacheConfig, cuCtxSetSharedMemConfig
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-* * *
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-!
-
-
-Copyright © 2025 NVIDIA Corporation

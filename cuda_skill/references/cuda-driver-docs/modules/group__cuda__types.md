@@ -382,6 +382,16 @@ CUstreamBatchMemOpParams_v1
 
 struct
 
+CUstreamCigCaptureParams
+
+
+struct
+
+CUstreamCigParam
+
+
+struct
+
 CUtensorMap
 
 
@@ -424,7 +434,7 @@ CUtensorMap
 
 #define CUDA_NVSCISYNC_ATTR_WAIT 0x2
 
-#define CUDA_VERSION 13010
+#define CUDA_VERSION 13020
 
 #define CU_ARRAY_SPARSE_PROPERTIES_SINGLE_MIPTAIL 0x1
 

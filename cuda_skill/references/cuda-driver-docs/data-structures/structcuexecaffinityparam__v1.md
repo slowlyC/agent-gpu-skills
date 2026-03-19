@@ -3,3 +3,4 @@
 **Source:** structCUexecAffinityParam__v1.html#structCUexecAffinityParam__v1
 
 
+### Public Variables

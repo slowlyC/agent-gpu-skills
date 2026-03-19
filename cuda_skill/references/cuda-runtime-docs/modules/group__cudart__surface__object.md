@@ -29,15 +29,8 @@ Surface objects are only supported on devices of compute capability 3.0 or highe
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaDestroySurfaceObject, cuSurfObjectCreate
-
-__host__ cudaError_t cudaDestroySurfaceObject ( cudaSurfaceObject_t surfObject )
-
-
-Destroys a surface object.
 
 ######  Parameters
 
@@ -54,17 +47,10 @@ Destroys the surface object specified by `surfObject`.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaCreateSurfaceObject, cuSurfObjectDestroy
-
-__host__ cudaError_t cudaGetSurfaceObjectResourceDesc ( cudaResourceDesc* pResDesc, cudaSurfaceObject_t surfObject )
-
-
-Returns a surface object's resource descriptor Returns the resource descriptor for the surface object specified by `surfObject`.
 
 ######  Parameters
 
@@ -81,14 +67,5 @@ cudaSuccess, cudaErrorInvalidValue
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaCreateSurfaceObject, cuSurfObjectGetResourceDesc
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

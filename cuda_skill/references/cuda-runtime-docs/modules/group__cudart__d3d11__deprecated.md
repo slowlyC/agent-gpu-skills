@@ -27,15 +27,6 @@ This function is deprecated as of CUDA 5.0.
 
 This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA device with a D3D11 device in order to achieve maximum interoperability performance.
 
-**See also:**
-
-cudaD3D11SetDirect3DDevice
-
-__host__ cudaError_t cudaD3D11SetDirect3DDevice ( ID3D11Device* pD3D11Device, int  device = -1 )
-
-
-Sets the Direct3D 11 device to use for interoperability with a CUDA device.
-
 ######  Parameters
 
 `pD3D11Device`
@@ -57,13 +48,4 @@ This function is deprecated and should no longer be used. It is no longer necess
 
 This function will immediately initialize the primary context on `device` if needed.
 
-**See also:**
 
-cudaD3D11GetDevice, cudaGraphicsD3D11RegisterResource, cudaDeviceReset
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -236,3 +236,4 @@ If Direct3D interoperability is not initialized for this context using cuD3D9Ctx
 
 ### Direct3D 9 Interoperability [DEPRECATED]
 
+* * *

@@ -30,8 +30,3 @@ size_t cudaPos::z
 z
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

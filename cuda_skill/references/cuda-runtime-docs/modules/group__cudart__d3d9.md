@@ -30,15 +30,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorUnknown
 
 Returns in `*device` the CUDA-compatible device corresponding to the adapter name `pszAdapterName` obtained from EnumDisplayDevices or IDirect3D9::GetAdapterIdentifier(). If no device on the adapter with name `pszAdapterName` is CUDA-compatible then the call will fail.
 
-**See also:**
-
-cudaD3D9SetDirect3DDevice, cudaGraphicsD3D9RegisterResource, cuD3D9GetDevice
-
-__host__ cudaError_t cudaD3D9GetDevices ( unsigned int* pCudaDeviceCount, int* pCudaDevices, unsigned int  cudaDeviceCount, IDirect3DDevice9* pD3D9Device, cudaD3D9DeviceList deviceList )
-
-
-Gets the CUDA devices corresponding to a Direct3D 9 device.
-
 ######  Parameters
 
 `pCudaDeviceCount`
@@ -62,15 +53,6 @@ Returns in `*pCudaDeviceCount` the number of CUDA-compatible devices correspondi
 
 If any of the GPUs being used to render `pDevice` are not CUDA capable then the call will return cudaErrorNoDevice.
 
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuD3D9GetDevices
-
-__host__ cudaError_t cudaD3D9GetDirect3DDevice ( IDirect3DDevice9** ppD3D9Device )
-
-
-Gets the Direct3D device against which the current CUDA context was created.
-
 ######  Parameters
 
 `ppD3D9Device`
@@ -83,15 +65,6 @@ cudaSuccess, cudaErrorInvalidGraphicsContext, cudaErrorUnknown
 ###### Description
 
 Returns in `*ppD3D9Device` the Direct3D device against which this CUDA context was created in cudaD3D9SetDirect3DDevice().
-
-**See also:**
-
-cudaD3D9SetDirect3DDevice, cuD3D9GetDirect3DDevice
-
-__host__ cudaError_t cudaD3D9SetDirect3DDevice ( IDirect3DDevice9* pD3D9Device, int  device = -1 )
-
-
-Sets the Direct3D 9 device to use for interoperability with a CUDA device.
 
 ######  Parameters
 
@@ -115,15 +88,6 @@ If `device` has already been initialized then this call will fail with the error
 Successfully initializing CUDA interoperability with `pD3D9Device` will increase the internal reference count on `pD3D9Device`. This reference count will be decremented when `device` is reset using cudaDeviceReset().
 
 Note that this function is never required for correct functionality. Use of this function will result in accelerated interoperability only when the operating system is Windows Vista or Windows 7, and the device `pD3DDdevice` is not an IDirect3DDevice9Ex. In all other cirumstances, this function is not necessary.
-
-**See also:**
-
-cudaD3D9GetDevice, cudaGraphicsD3D9RegisterResource, cudaDeviceReset
-
-__host__ cudaError_t cudaGraphicsD3D9RegisterResource ( cudaGraphicsResource** resource, IDirect3DResource9* pD3DResource, unsigned int  flags )
-
-
-Register a Direct3D 9 resource for access by CUDA.
 
 ######  Parameters
 
@@ -216,13 +180,4 @@ A complete list of supported formats is as follows:
 
 If `pD3DResource` is of incorrect type or is already registered, then cudaErrorInvalidResourceHandle is returned. If `pD3DResource` cannot be registered, then cudaErrorUnknown is returned.
 
-**See also:**
 
-cudaD3D9SetDirect3DDevice, cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuGraphicsD3D9RegisterResource
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

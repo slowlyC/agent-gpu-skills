@@ -27,23 +27,18 @@ This function obtains the attributes of a function specified via `func`. `func` 
 
 Note that some function attributes such as maxThreadsPerBlock may vary based on the device that is currently being used.
 
-  *   * Use of a string naming a function as the `func` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+  *
+
+  * Use of a string naming a function as the `func` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaFuncSetCacheConfig ( C API), cudaFuncGetAttributes ( C++ API), cudaLaunchKernel ( C API), cuFuncGetAttribute
-
-__host__ cudaError_t cudaFuncGetName ( const char** name, const void* func )
-
-
-Returns the function name for a device entry function pointer.
 
 ######  Parameters
 
@@ -60,12 +55,45 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDeviceFunction
 
 Returns in `**name` the function name associated with the symbol `func` . The function name is returned as a null-terminated string. This API may return a mangled name if the function is not declared as having C linkage. If `**name` is NULL, cudaErrorInvalidValue is returned. If `func` is not a device entry function, then it is assumed to be a cudaKernel_t and used as is.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
 
 cudaFuncGetName (C++ API)
+
+__host__ cudaError_t cudaFuncGetParamCount ( const void* func, size_t* paramCount )
+
+
+Returns the number of parameters used by the function.
+
+######  Parameters
+
+`func`
+    \- The function to query
+`paramCount`
+    \- Returns the number of parameters used by the function
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+Queries the number of kernel parameters used by `func` and returns it in `paramCount`.
+
+  *
+
+  * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
+
+  * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
+
 
 __host__ cudaError_t cudaFuncGetParamInfo ( const void* func, size_t paramIndex, size_t* paramOffset, size_t* paramSize )
 
@@ -91,7 +119,9 @@ CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE
 
 Queries the kernel parameter at `paramIndex` in `func's` list of parameters and returns parameter information via `paramOffset` and `paramSize`. `paramOffset` returns the offset of the parameter in the device-side parameter layout. `paramSize` returns the size in bytes of the parameter. This information can be used to update kernel node parameters from the device via cudaGraphKernelNodeSetParam() and cudaGraphKernelNodeUpdatesApply(). `paramIndex` must be less than the number of parameters that `func` takes.
 
-  *   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
+  *
+
+  * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
@@ -134,6 +164,12 @@ Valid values for `attr` are:
 
   * cudaFuncAttributeClusterSchedulingPolicyPreference: The block scheduling policy of a function. The value type is cudaClusterSchedulingPolicy.
 
+
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
@@ -179,21 +215,16 @@ The supported cache configurations are:
   * cudaFuncCachePreferEqual: prefer equal size L1 cache and shared memory
 
 
-  *   * Use of a string naming a function as the `func` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+  *
+
+  * Use of a string naming a function as the `func` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * This API does not accept a cudaKernel_t casted as void*. If cache config modification is required for a cudaKernel_t (or a __global__ function), it can be replaced with a call to cudaFuncSetAttributes with the attribute cudaFuncAttributePreferredSharedMemoryCarveout to specify a more granular L1 cache and shared memory split configuration.
 
-
-**See also:**
-
-cudaFuncSetCacheConfig ( C++ API), cudaFuncGetAttributes ( C API), cudaLaunchKernel ( C API), cuFuncSetCacheConfig
-
-__device__  void* cudaGetParameterBuffer ( size_t alignment, size_t size )
-
-
-Obtains a parameter buffer.
 
 ######  Parameters
 
@@ -211,15 +242,6 @@ Returns pointer to the allocated parameterBuffer
 Obtains a parameter buffer which can be filled with parameters for a kernel launch. Parameters passed to cudaLaunchDevice must be allocated via this function.
 
 This is a low level API and can only be accessed from Parallel Thread Execution (PTX). CUDA user code should use <<< >>> to launch kernels.
-
-**See also:**
-
-cudaLaunchDevice
-
-__device__  void cudaGridDependencySynchronize ( void ) [inline]
-
-
-Programmatic grid dependency synchronization.
 
 ###### Description
 
@@ -269,19 +291,16 @@ For templated functions, pass the function symbol as follows: func_name<template
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaLaunchCooperativeKernel (C++ API), cuLaunchCooperativeKernel
-
-__device__ cudaError_t cudaLaunchDevice ( void* func, void* parameterBuffer, dim3 gridDimension, dim3 blockDimension, unsigned int  sharedMemSize, cudaStream_t stream )
-
-
-Launches a specified kernel.
 
 ######  Parameters
 
@@ -308,16 +327,9 @@ Launches a specified kernel with the specified parameter buffer. A parameter buf
 
 This is a low level API and can only be accessed from Parallel Thread Execution (PTX). CUDA user code should use <<< >>> to launch the kernels.
 
+
+
 Please refer to Execution Configuration and Parameter Buffer Layout from the CUDA Programming Guide for the detailed descriptions of launch configuration and parameter layout respectively.
-
-**See also:**
-
-cudaGetParameterBuffer
-
-__host__ cudaError_t cudaLaunchHostFunc ( cudaStream_t stream, cudaHostFn_t fn, void* userData )
-
-
-Enqueues a host function call in a stream.
 
 ######  Parameters
 
@@ -353,15 +365,55 @@ Note that, in constrast to cuStreamAddCallback, the function will not be called 
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamQuery, cudaStreamSynchronize, cudaStreamWaitEvent, cudaStreamDestroy, cudaMallocManaged, cudaStreamAttachMemAsync, cudaStreamAddCallback, cuLaunchHostFunc
-
-__host__ cudaError_t cudaLaunchKernel ( const void* func, dim3 gridDim, dim3 blockDim, void** args, size_t sharedMem, cudaStream_t stream )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
 
-Launches a device function.
+######  Parameters
+
+`stream`
+
+`fn`
+    \- The function to call once preceding stream operations are complete
+`userData`
+    \- User-specified data to be passed to the function
+`syncMode`
+    \- Sync mode for the host function
+
+###### Returns
+
+cudaSuccess, cudaErrorInvalidResourceHandle, cudaErrorInvalidValue, cudaErrorNotSupported
+
+###### Description
+
+Enqueues a host function to run in a stream. The function will be called after currently enqueued work and will block work added after it.
+
+The host function must not make any CUDA API calls. Attempting to use a CUDA API may result in cudaErrorNotPermitted, but this is not required. The host function must not perform any synchronization that may depend on outstanding CUDA work not mandated to run earlier. Host functions without a mandated order (such as in independent streams) execute in undefined order and may be serialized.
+
+For the purposes of Unified Memory, execution makes a number of guarantees:
+
+  * The stream is considered idle for the duration of the function's execution. Thus, for example, the function may always use memory attached to the stream it was enqueued in.
+
+  * The start of execution of the function has the same effect as synchronizing an event recorded in the same stream immediately prior to the function. It thus synchronizes streams which have been "joined" prior to the function.
+
+  * Adding device work to any stream does not have the effect of making the stream active until all preceding host functions and stream callbacks have executed. Thus, for example, a function might use global attached memory even if work has been added to another stream, if the work has been ordered behind the function call with an event.
+
+  * Completion of the function does not cause a stream to become active except as described above. The stream will remain idle if no device work follows the function, and will remain idle across consecutive host functions or stream callbacks without device work in between. Thus, for example, stream synchronization can be done by signaling from a host function at the end of the stream.
+
+
+Note that, in constrast to cuStreamAddCallback, the function will not be called in the event of an error in the CUDA context.
+
+  * This function uses standard default stream semantics.
+
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
 
 ######  Parameters
 
@@ -396,19 +448,16 @@ For templated functions, pass the function symbol as follows: func_name<template
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaLaunchKernel (C++ API), cuLaunchKernel
-
-__host__ cudaError_t cudaLaunchKernelExC ( const cudaLaunchConfig_t* config, const void* func, void** args )
-
-
-Launches a CUDA function with launch-time configuration.
 
 ######  Parameters
 
@@ -443,27 +492,19 @@ N.B. This function is so named to avoid unintentionally invoking the templated v
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaLaunchKernelEx(const cudaLaunchConfig_t *config, void (*kernel)(ExpTypes...), ActTypes &&... args) "cudaLaunchKernelEx (C++ API)", cuLaunchKernelEx
-
-__device__  void cudaTriggerProgrammaticLaunchCompletion ( void ) [inline]
-
-
-Programmatic dependency trigger.
 
 ###### Description
 
 This device function ensures the programmatic launch completion edges / events are fulfilled. See cudaLaunchAttributeID::cudaLaunchAttributeProgrammaticStreamSerialization and cudaLaunchAttributeID::cudaLaunchAttributeProgrammaticEvent for more information. The event / edge kick off only happens when every CTAs in the grid has either exited or called this function at least once, otherwise the kick off happens automatically after all warps finishes execution but before the grid completes. The kick off only enables scheduling of the secondary kernel. It provides no memory visibility guarantee itself. The user could enforce memory visibility by inserting a memory fence of the correct scope.
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

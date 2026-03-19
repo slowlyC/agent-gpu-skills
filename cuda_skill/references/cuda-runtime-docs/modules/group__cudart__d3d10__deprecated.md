@@ -34,15 +34,6 @@ This function is deprecated as of CUDA 5.0.
 
 This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA device with a D3D10 device in order to achieve maximum interoperability performance.
 
-**See also:**
-
-cudaD3D10SetDirect3DDevice
-
-__host__ cudaError_t cudaD3D10MapResources ( int  count, ID3D10Resource** ppResources )
-
-
-Maps Direct3D Resources for access by CUDA.
-
 ######  Parameters
 
 `count`
@@ -67,15 +58,6 @@ The resources in `ppResources` may be accessed in CUDA kernels until they are un
 This function provides the synchronization guarantee that any Direct3D calls issued before cudaD3D10MapResources() will complete before any CUDA kernels issued after cudaD3D10MapResources() begin.
 
 If any of `ppResources` have not been registered for use with CUDA or if `ppResources` contains any duplicate entries then cudaErrorInvalidResourceHandle is returned. If any of `ppResources` are presently mapped for access by CUDA then cudaErrorUnknown is returned.
-
-**See also:**
-
-cudaGraphicsMapResources
-
-__host__ cudaError_t cudaD3D10RegisterResource ( ID3D10Resource* pResource, unsigned int  flags )
-
-
-Registers a Direct3D 10 resource for access by CUDA.
 
 ######  Parameters
 
@@ -131,15 +113,6 @@ Not all Direct3D resources of the above types may be used for interoperability w
 
 If Direct3D interoperability is not initialized on this context then cudaErrorInvalidDevice is returned. If `pResource` is of incorrect type or is already registered then cudaErrorInvalidResourceHandle is returned. If `pResource` cannot be registered then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsD3D10RegisterResource
-
-__host__ cudaError_t cudaD3D10ResourceGetMappedArray ( cudaArray** ppArray, ID3D10Resource* pResource, unsigned int  subResource )
-
-
-Gets an array through which to access a subresource of a Direct3D resource which has been mapped for access by CUDA.
-
 ######  Parameters
 
 `ppArray`
@@ -164,15 +137,6 @@ Returns in `*ppArray` an array through which the subresource of the mapped Direc
 If `pResource` is not registered, then cudaErrorInvalidResourceHandle is returned. If `pResource` was not registered with usage flags cudaD3D10RegisterFlagsArray, then cudaErrorInvalidResourceHandle is returned. If `pResource` is not mapped then cudaErrorUnknown is returned.
 
 For usage requirements of the `subResource` parameter, see cudaD3D10ResourceGetMappedPointer().
-
-**See also:**
-
-cudaGraphicsSubResourceGetMappedArray
-
-__host__ cudaError_t cudaD3D10ResourceGetMappedPitch ( size_t* pPitch, size_t* pPitchSlice, ID3D10Resource* pResource, unsigned int  subResource )
-
-
-Gets the pitch of a subresource of a Direct3D resource which has been mapped for access by CUDA.
 
 ######  Parameters
 
@@ -213,15 +177,6 @@ If `pResource` is not of type ID3D10Texture1D, ID3D10Texture2D, or ID3D10Texture
 
 For usage requirements of the `subResource` parameter see cudaD3D10ResourceGetMappedPointer().
 
-**See also:**
-
-cudaGraphicsSubResourceGetMappedArray
-
-__host__ cudaError_t cudaD3D10ResourceGetMappedPointer ( void** pPointer, ID3D10Resource* pResource, unsigned int  subResource )
-
-
-Gets a pointer through which to access a subresource of a Direct3D resource which has been mapped for access by CUDA.
-
 ######  Parameters
 
 `pPointer`
@@ -247,15 +202,6 @@ If `pResource` is not registered, then cudaErrorInvalidResourceHandle is returne
 
 If `pResource` is of type ID3D10Buffer then `subResource` must be 0. If `pResource` is of any other type, then the value of `subResource` must come from the subresource calculation in D3D10CalcSubResource().
 
-**See also:**
-
-cudaGraphicsResourceGetMappedPointer
-
-__host__ cudaError_t cudaD3D10ResourceGetMappedSize ( size_t* pSize, ID3D10Resource* pResource, unsigned int  subResource )
-
-
-Gets the size of a subresource of a Direct3D resource which has been mapped for access by CUDA.
-
 ######  Parameters
 
 `pSize`
@@ -280,15 +226,6 @@ Returns in `*pSize` the size of the subresource of the mapped Direct3D resource 
 If `pResource` has not been registered for use with CUDA then cudaErrorInvalidHandle is returned. If `pResource` was not registered with usage flags cudaD3D10RegisterFlagsNone, then cudaErrorInvalidResourceHandle is returned. If `pResource` is not mapped for access by CUDA then cudaErrorUnknown is returned.
 
 For usage requirements of the `subResource` parameter see cudaD3D10ResourceGetMappedPointer().
-
-**See also:**
-
-cudaGraphicsResourceGetMappedPointer
-
-__host__ cudaError_t cudaD3D10ResourceGetSurfaceDimensions ( size_t* pWidth, size_t* pHeight, size_t* pDepth, ID3D10Resource* pResource, unsigned int  subResource )
-
-
-Gets the dimensions of a registered Direct3D surface.
 
 ######  Parameters
 
@@ -323,15 +260,6 @@ If `pResource` is not of type ID3D10Texture1D, ID3D10Texture2D, or ID3D10Texture
 
 For usage requirements of `subResource` parameters see cudaD3D10ResourceGetMappedPointer().
 
-**See also:**
-
-cudaGraphicsSubResourceGetMappedArray
-
-__host__ cudaError_t cudaD3D10ResourceSetMapFlags ( ID3D10Resource* pResource, unsigned int  flags )
-
-
-Set usage flags for mapping a Direct3D resource.
-
 ######  Parameters
 
 `pResource`
@@ -362,15 +290,6 @@ Changes to flags will take effect the next time `pResource` is mapped. The `flag
 
 If `pResource` has not been registered for use with CUDA then cudaErrorInvalidHandle is returned. If `pResource` is presently mapped for access by CUDA then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsResourceSetMapFlags
-
-__host__ cudaError_t cudaD3D10SetDirect3DDevice ( ID3D10Device* pD3D10Device, int  device = -1 )
-
-
-Sets the Direct3D 10 device to use for interoperability with a CUDA device.
-
 ######  Parameters
 
 `pD3D10Device`
@@ -391,15 +310,6 @@ This function is deprecated as of CUDA 5.0.
 This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA device with a D3D10 device in order to achieve maximum interoperability performance.
 
 This function will immediately initialize the primary context on `device` if needed.
-
-**See also:**
-
-cudaD3D10GetDevice, cudaGraphicsD3D10RegisterResource, cudaDeviceReset
-
-__host__ cudaError_t cudaD3D10UnmapResources ( int  count, ID3D10Resource** ppResources )
-
-
-Unmaps Direct3D resources.
 
 ######  Parameters
 
@@ -424,15 +334,6 @@ This function provides the synchronization guarantee that any CUDA kernels issue
 
 If any of `ppResources` have not been registered for use with CUDA or if `ppResources` contains any duplicate entries, then cudaErrorInvalidResourceHandle is returned. If any of `ppResources` are not presently mapped for access by CUDA then cudaErrorUnknown is returned.
 
-**See also:**
-
-cudaGraphicsUnmapResources
-
-__host__ cudaError_t cudaD3D10UnregisterResource ( ID3D10Resource* pResource )
-
-
-Unregisters a Direct3D resource.
-
 ######  Parameters
 
 `pResource`
@@ -452,13 +353,4 @@ Unregisters the Direct3D resource `resource` so it is not accessible by CUDA unl
 
 If `pResource` is not registered, then cudaErrorInvalidResourceHandle is returned.
 
-**See also:**
 
-cudaGraphicsUnregisterResource
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

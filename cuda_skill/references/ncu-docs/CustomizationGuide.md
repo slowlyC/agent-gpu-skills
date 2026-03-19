@@ -60,7 +60,7 @@ __[NsightCompute](../index.html)
 
   * [](../index.html) »
   * 1\. Customization Guide
-  *   * v2025.4.1 | [Archive](https://developer.nvidia.com/nsight-compute-history)
+  *   * v2026.1.0 | [Archive](https://developer.nvidia.com/nsight-compute-history)
 
 
 * * *

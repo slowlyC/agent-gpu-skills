@@ -1,6 +1,6 @@
-# 6.15. Stream Ordered Memory Allocator
+# 6.15.
 
-**Source:** group__CUDA__MALLOC__ASYNC.html#group__CUDA__MALLOC__ASYNC
+**Source:** group__CUDA__MALLOC__ASYNC.html
 
 
 ### Functions

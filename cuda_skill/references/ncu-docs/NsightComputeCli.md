@@ -15,6 +15,9 @@ Nsight Compute
     * [4.3. Usage](#usage)
       * [4.3.1. Modes](#modes)
       * [4.3.2. Multi-Process Support](#multi-process-support)
+        * [Platform Support](#platform-support)
+        * [MPI Support](#mpi-support)
+        * [Mandatory Concurrent Kernels](#mandatory-concurrent-kernels)
       * [4.3.3. Output Pages](#output-pages)
       * [4.3.4. Profile Import](#profile-import)
       * [4.3.5. Filtered Profile Export](#filtered-profile-export)
@@ -66,7 +69,7 @@ __[NsightCompute](../index.html)
 
   * [](../index.html) »
   * 4\. Nsight Compute CLI
-  *   * v2025.4.1 | [Archive](https://developer.nvidia.com/nsight-compute-history)
+  *   * v2026.1.0 | [Archive](https://developer.nvidia.com/nsight-compute-history)
 
 
 * * *
@@ -151,11 +154,13 @@ This is the default, and the only mode that supports profiling of child processe
 
 ### 4.3.2. Multi-Process Support
 
-NVIDIA Nsight Compute CLI supports profiling multi-process applications on the following platforms: x86_64 Windows, x86_64 Linux, DRIVE OS Linux, DRIVE OS QNX, PowerPC. See the [Launch](index.html#command-line-options-launch) options on how to enable this feature.
+The NVIDIA Nsight Compute CLI supports profiling multi-process applications. See [Launch](index.html#command-line-options-launch) for which command line options are available.
 
-On x86_64 Windows, NVIDIA Nsight Compute CLI supports profiling 64-bit processes launched from 32-bit applications by default. On x86_64 Linux, launching from 32-bit applications requires you to enable the `support-32bit` option, and the required 32-bit libraries must be installed on your system. On DRIVE OS Linux, DRIVE OS QNX and PowerPC, tracking of 32-bit applications is not supported. Profiling of 32-bit processes is not supported on any platform.
+#### Platform Support
 
-**Profiling MPI applications is a special case of multi-process profiling.**
+On x86_64 Windows, NVIDIA Nsight Compute CLI supports profiling 64-bit processes launched from 32-bit applications by default. On x86_64 Linux, launching from 32-bit applications requires you to enable the `support-32bit` option, and the required 32-bit libraries must be installed on your system. On DRIVE OS Linux and DRIVE OS QNX, tracking of 32-bit applications is not supported. Profiling of 32-bit processes is not supported on any platform.
+
+#### MPI Support
 
 NVIDIA Nsight Compute CLI can be used to profile applications launched with the `mpirun` command.
 
@@ -190,14 +195,18 @@ and then execute:
         
 
 
-**Profiling mandatory concurrent kernels across processes**
+See below for profiling mandatory concurrent kernels across MPI processes.
 
-Multi-process/multi-GPU applications that contain mandatory concurrent kernels (for instance, NCCL and NVSHMEM) may be unable to make forward progress when profiled with NCU due to multi-pass data collection. To make the tool synchronize kernel launch and teardowns across processes, launch option `--lockstep-kernel-launch` can be specified.
+#### Mandatory Concurrent Kernels
 
-The option requires the multiprocess communicator to be enabled.
+Multi-process/multi-GPU applications that contain mandatory concurrent kernels (e.g., NCCL and NVSHMEM communication kernels) may be unable to make forward progress when profiled with default settings due to multi-pass data collection and serialization across processes within the same process tree.
+
+**For communication kernels launched from different process trees, use --communicator tcp**
+
+To make the tool synchronize launchs and replays across processes, use `--lockstep-kernel-launch`.
 
 > 
->     mpirun -np 4 ncu --communicator=tcp --communicator-num-peers=4 --lockstep-kernel-launch -o report <app>
+>     mpirun -np 4 ncu --communicator tcp --communicator-num-peers 4 --lockstep-kernel-launch -o report <app>
 >     
 
 Additionally, `--lockstep-nvtx-include` and `--lockstep-nvtx-exclude` options can be set to limit synchronization to specific kernel ranges. See [NVTX Filtering](index.html#nvtx-filtering) for additional information.
@@ -206,7 +215,7 @@ Additionally, `--lockstep-nvtx-include` and `--lockstep-nvtx-exclude` options ca
 >     mpirun <args> ncu <args> --lockstep-kernel-launch --lockstep-nvtx-include nccl/ -o report <app>
 >     
 
-The communicator internally uses TCP sockets in a client-server architecture to send and receive message. One process at random is selected as the server process to manage sockets. In a multi-node system, the option `--communicator-tcp-hostname` must be set to manually select one host as the server. Below is an example slurm script that can be used to automate the process
+[\--communicator tcp](index.html#launch) internally uses TCP sockets in a client-server architecture to send and receive message. One process at random is selected as the server process to manage sockets. In a multi-node system, the option `--communicator-tcp-hostname` must be set to manually select one host as the server. Below is an example slurm script that can be used to automate the process
 
 > 
 >     #!/bin/bash
@@ -222,6 +231,22 @@ The communicator internally uses TCP sockets in a client-server architecture to 
 >         --lockstep-kernel-launch                     \
 >         ./application
 >     
+
+You can use the [Report Merge Tool](../NsightCompute/index.html#report-merge-tool) and [Clustering Window](../NsightCompute/index.html#clustering-window) to aggregate and/or compare these results.
+
+**For communication kernels launched from the same process tree, use --communicator shmem**
+
+In single-node scenarios where the entire process tree is profiled by the same instance of `ncu`, the [\--communicator shmem](index.html#launch) option can be used. The processes must be able to communicate with each other using shared memory on the target system.
+
+> 
+>     ncu --communicator shmem --communicator-shmem-num-peers 2 -f -o report -k regex:nccl.* torchrun --nnodes=1 --nproc_per_node=2 pytorch_app.py
+>     
+
+This mode only supports _kernel_ and _range_ replay modes and has limited filter options. If your app launches different types of kernels, select the concurrent ones using a name filter like `-k regex:nccl.*`. A single report is generated for all profile results. By default, the first CUDA context of each group is profiled. The `--devices` option can be used to select the primary GPU device(s) to profile.
+
+Setting `--communicator-shmem-num-peers` to the number of processes participating in the concurrent workload `-k ...` is not required but recommended. If the number of processes is not specified, the communicator will use all available processes per workload. If processes don’t reach the same workload at the same time, and since the number of processes per workload is unknown to the tool, Nsight Compute may try to profile a workload with insufficient participants.
+
+Launcher processes like `mpirun` or `torchrun` are auto-excluded from profiling. You can manually exclude others using the [–target-processes-filter](index.html#launch) option.
 
 ### 4.3.3. Output Pages
 
@@ -634,7 +659,8 @@ Note that Python call stack collection requires CPython version 3.9 or later. | 
 communicator | Enable Multiprocess Communicator.
 
   * **none:** Disables the communicator.
-  * **tcp:** Enables communicator using TCP sockets.
+  * **tcp:** TCP-based inter-process tree communication for multiple ncu instances.
+  * **shmem:** Shared memory-based intra-process tree communication for one ncu instance.
 
 | none  
 communicator-tcp-num-peers | Set number of expected communicator peers (number of NCU instances). | 2  
@@ -661,7 +687,7 @@ target-processes-filter | Set the comma separated expressions to filter which pr
   * `<process name>` Set the exact process name to include for profiling.
   * `regex:<expression>` Set the regex to filter matching process name profiling. On shells that recognize regular expression symbols as special characters (e.g. Linux bash), the expression needs to be escaped with quotes, e.g. `--target-processes-filter regex:".*Process"`. When using `regex:`, the expression must not include any commas.
   * `exclude:<process name>` Set the exact process name to exclude for profiling.
-  * exclude-tree:<process name> Set the exact process name to exclude for profiling and further process tracking. None of its child processes will be profiled, even if they match a positive filter. This option is not available on Windows.
+  * `exclude-tree:<process name>` Set the exact process name to exclude for profiling and further process tracking. None of its child processes will be profiled, even if they match a positive filter. This option is not available on Windows.
 
 The executable name part of the process will be considered in the match. Processing of filters stops at the first match. If any positive filter is specified, no process that is not matching a positive filter is profiled. | **Examples** `--target-processes-filter MatrixMul` Filter all processes having executable name exactly as “MatrixMul”. `--target-processes-filter regex:Matrix`Filter all processes that include the string “Matrix” in their executable name, e.g. “MatrixMul” and “MatrixAdd”. `--target-processes-filter MatrixMul,MatrixAdd`Filter all processes having executable name exactly as “MatrixMul” or “MatrixAdd”. `--target-processes-filter exclude:MatrixMul.exe` Exclude only “MatrixMul.exe”. `--target-processes-filter exclude-tree:ChildLauncher,ParentProcess` Exclude “ChildLauncher” and all its sub-processes. Include (only) “ParentProcess”, but not if it’s a child of “ChildLauncher”.  
 support-32bit | Support profiling processes launched from 32-bit applications. This option is only available on x86_64 Linux. On Windows, tracking 32-bit applications is enabled by default. | no  
@@ -816,6 +842,7 @@ query-metrics-collection | Set which metric collection kind to query. Implies `-
   * **launch:** Query launch attributes.
   * **numa:** Query NUMA topology metrics.
   * **nvlink:** Query NVLink topology metrics.
+  * **occupancy:** Query occupancy calculation metrics.
   * **pmsampling:** Query metrics available for [PM sampling](../ProfilingGuide/index.html#pm-sampling).
   * **profiling:** Query metrics available for profiling.
   * **source:** Query source metrics available for profiling.
@@ -858,7 +885,7 @@ clock-control | Control the behavior of the GPU clocks during profiling. Allowed
   * **none:** No GPC or memory frequencies are changed during profiling.
   * **reset:** Reset GPC and memory clocks for all or the selected devices and exit. Use if a previous, killed execution of ncu left the GPU clocks in a locked state.
 
-This has no impact on thermal throttling. Note that actual clocks might still vary, depending on the level of driver support for this feature. As an alternative, use `nvidia-smi` to lock the clocks externally and set this option to `none`. | base  
+This has no impact on thermal throttling. Note that actual clocks might still vary, depending on the level of driver support for this feature. As an alternative, use `nvidia-smi` to lock the clocks externally and set this option to `none`. | boost  
 pipeline-boost-state | Control the Tensor Core boost state. Setting stable Tensor Core boosting is recommended for application performance profiling ensuring predictive run to run performance. Allowed values:
 
   * **stable:** Set the Tensor Core boost state to stable.

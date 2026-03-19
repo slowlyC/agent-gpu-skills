@@ -343,7 +343,18 @@ It is relevant for GPUs that support persistent L2 cache, specifically devices w
 
 * * *
 
-### 5.2.3.8. `CUDA_AUTO_BOOST` [[deprecated]]
+### 5.2.3.8. `CUDA_DISABLE_PERF_BOOST`
+
+On Linux hosts, setting this environment variable to 1 prevents boosting the device performance state, instead pstate can be selected implicitly based on various heuristics. This option can potentially be used to reduce power consumption, but may result in higher latency in certain scenarios due to dynamic performance state selection.
+
+**Example** :
+    
+    
+    CUDA_DISABLE_PERF_BOOST=1 # perf boost disabled, Linux only.
+    CUDA_DISABLE_PERF_BOOST=0 # default behavior
+    
+
+### 5.2.3.9. `CUDA_AUTO_BOOST` [[deprecated]]
 
 The environment variable affects the GPU clock “auto boost” behavior, namely dynamic clock boosting. It overrides the “auto boost” option of the `nvidia-smi` tool, namely `nvidia-smi --auto-boost-default=0`.
 

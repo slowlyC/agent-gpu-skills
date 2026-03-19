@@ -23,17 +23,14 @@ cudaSuccess, cudaErrorInvalidResourceHandle
 
 Destroys the specified external memory object. Any existing buffers and CUDA mipmapped arrays mapped onto this object must no longer be used and must be explicitly freed using cudaFree and cudaFreeMipmappedArray respectively.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaImportExternalMemory, cudaExternalMemoryGetMappedBuffer, cudaExternalMemoryGetMappedMipmappedArray
-
-__host__ cudaError_t cudaDestroyExternalSemaphore ( cudaExternalSemaphore_t extSem )
-
-
-Destroys an external semaphore.
 
 ######  Parameters
 
@@ -48,17 +45,14 @@ cudaSuccess, cudaErrorInvalidResourceHandle
 
 Destroys an external semaphore object and releases any references to the underlying resource. Any outstanding signals or waits must have completed before the semaphore is destroyed.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaImportExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
-
-__host__ cudaError_t cudaExternalMemoryGetMappedBuffer ( void** devPtr, cudaExternalMemory_t extMem, const cudaExternalMemoryBufferDesc* bufferDesc )
-
-
-Maps a buffer onto an imported memory object.
 
 ######  Parameters
 
@@ -92,15 +86,12 @@ The offset and size have to be suitably aligned to match the requirements of the
 
 The returned pointer `devPtr` must be freed using cudaFree.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaImportExternalMemory, cudaDestroyExternalMemory, cudaExternalMemoryGetMappedMipmappedArray
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaExternalMemoryGetMappedMipmappedArray ( cudaMipmappedArray_t* mipmap, cudaExternalMemory_t extMem, const cudaExternalMemoryMipmappedArrayDesc* mipmapDesc )
-
-
-Maps a CUDA mipmapped array onto an external memory object.
 
 ######  Parameters
 
@@ -134,17 +125,12 @@ where cudaExternalMemoryMipmappedArrayDesc::offset is the offset in the memory o
 
 The returned CUDA mipmapped array must be freed using cudaFreeMipmappedArray.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaImportExternalMemory, cudaDestroyExternalMemory, cudaExternalMemoryGetMappedBuffer
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-If cudaExternalMemoryHandleDesc::type is cudaExternalMemoryHandleTypeNvSciBuf, then cudaExternalMemoryMipmappedArrayDesc::numLevels must not be greater than 1.
-
-__host__ cudaError_t cudaImportExternalMemory ( cudaExternalMemory_t* extMem_out, const cudaExternalMemoryHandleDesc* memHandleDesc )
-
-
-Imports an external memory object.
 
 ######  Parameters
 
@@ -212,17 +198,14 @@ The size of the memory object must be specified in cudaExternalMemoryHandleDesc:
 
 Specifying the flag cudaExternalMemoryDedicated in cudaExternalMemoryHandleDesc::flags indicates that the resource is a dedicated resource. The definition of what a dedicated resource is outside the scope of this extension. This flag must be set if cudaExternalMemoryHandleDesc::type is one of the following: cudaExternalMemoryHandleTypeD3D12ResourcecudaExternalMemoryHandleTypeD3D11ResourcecudaExternalMemoryHandleTypeD3D11ResourceKmt
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * If the Vulkan memory imported into CUDA is mapped on the CPU then the application must use vkInvalidateMappedMemoryRanges/vkFlushMappedMemoryRanges as well as appropriate Vulkan pipeline barriers to maintain coherence between CPU and GPU. For more information on these APIs, please refer to "Synchronization and Cache Control" chapter from Vulkan specification.
 
-
-**See also:**
-
-cudaDestroyExternalMemory, cudaExternalMemoryGetMappedBuffer, cudaExternalMemoryGetMappedMipmappedArray
-
-__host__ cudaError_t cudaImportExternalSemaphore ( cudaExternalSemaphore_t* extSem_out, const cudaExternalSemaphoreHandleDesc* semHandleDesc )
-
-
-Imports an external semaphore.
 
 ######  Parameters
 
@@ -291,15 +274,12 @@ If cudaExternalSemaphoreHandleDesc::type is cudaExternalSemaphoreHandleTypeTimel
 
 If cudaExternalSemaphoreHandleDesc::type is cudaExternalSemaphoreHandleTypeTimelineSemaphoreWin32, then exactly one of cudaExternalSemaphoreHandleDesc::handle::win32::handle and cudaExternalSemaphoreHandleDesc::handle::win32::name must not be NULL. If cudaExternalSemaphoreHandleDesc::handle::win32::handle is not NULL, then it must represent a valid shared NT handle that references a synchronization object. Ownership of this handle is not transferred to CUDA after the import operation, so the application must release the handle using the appropriate system call. If cudaExternalSemaphoreHandleDesc::handle::win32::name is not NULL, then it must name a valid synchronization object.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaDestroyExternalSemaphore, cudaSignalExternalSemaphoresAsync, cudaWaitExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaSignalExternalSemaphoresAsync ( const cudaExternalSemaphore_t* extSemArray, const cudaExternalSemaphoreSignalParams* paramsArray, unsigned int  numExtSems, cudaStream_t stream = 0 )
-
-
-Signals a set of external semaphore objects.
 
 ######  Parameters
 
@@ -332,15 +312,12 @@ cudaExternalSemaphoreSignalParams::params::nvSciSync::fence associated with sema
 
 If the semaphore object is any one of the following types: cudaExternalSemaphoreHandleTypeKeyedMutex, cudaExternalSemaphoreHandleTypeKeyedMutexKmt, then the keyed mutex will be released with the key specified in cudaExternalSemaphoreSignalParams::params::keyedmutex::key.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaImportExternalSemaphore, cudaDestroyExternalSemaphore, cudaWaitExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaWaitExternalSemaphoresAsync ( const cudaExternalSemaphore_t* extSemArray, const cudaExternalSemaphoreWaitParams* paramsArray, unsigned int  numExtSems, cudaStream_t stream = 0 )
-
-
-Waits on a set of external semaphore objects.
 
 ######  Parameters
 
@@ -371,14 +348,9 @@ If the semaphore object is of the type cudaExternalSemaphoreHandleTypeNvSciSync 
 
 If the semaphore object is any one of the following types: cudaExternalSemaphoreHandleTypeKeyedMutex, cudaExternalSemaphoreHandleTypeKeyedMutexKmt, then the keyed mutex will be acquired when it is released with the key specified in cudaExternalSemaphoreSignalParams::params::keyedmutex::key or until the timeout specified by cudaExternalSemaphoreSignalParams::params::keyedmutex::timeoutMs has lapsed. The timeout interval can either be a finite value specified in milliseconds or an infinite value. In case an infinite value is specified the timeout never elapses. The windows INFINITE macro must be used to specify infinite timeout
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaImportExternalSemaphore, cudaDestroyExternalSemaphore, cudaSignalExternalSemaphoresAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

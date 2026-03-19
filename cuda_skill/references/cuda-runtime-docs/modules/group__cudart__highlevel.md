@@ -10,6 +10,7 @@ class
 __cudaOccupancyB2DHelper
 
 
+
 ### Functions
 
 template < class T >
@@ -42,15 +43,6 @@ The template function specializes for the following scalar types: char, signed c
 
 Invoking the function on a type without a specialization defaults to creating a channel format of kind cudaChannelFormatKindNone
 
-**See also:**
-
-cudaCreateChannelDesc ( Low level), cudaGetChannelDesc
-
-__host__ cudaError_t cudaEventCreate ( cudaEvent_t* event, unsigned int  flags )
-
-
-[C++ API] Creates an event object with the specified flags
-
 ######  Parameters
 
 `event`
@@ -73,16 +65,12 @@ Creates an event object with the specified flags. Valid flags include:
   * cudaEventDisableTiming: Specifies that the created event does not need to record timing data. Events created with this flag specified and the cudaEventBlockingSync flag not specified will provide the best performance when used with cudaStreamWaitEvent() and cudaEventQuery().
 
 
-**See also:**
+  *
 
-cudaEventCreate ( C API), cudaEventCreateWithFlags, cudaEventRecord, cudaEventQuery, cudaEventSynchronize, cudaEventDestroy, cudaEventElapsedTime, cudaStreamWaitEvent
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-template < class T >
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaFuncGetAttributes ( cudaFuncAttributes* attr, T* entry ) [inline]
-
-
-[C++ API] Find out attributes for a given function
 
 ######  Parameters
 
@@ -100,6 +88,12 @@ cudaSuccess, cudaErrorInvalidDeviceFunction
 This function obtains the attributes of a function specified via `entry`. The parameter `entry` must be a pointer to a function that executes on the device. The parameter specified by `entry` must be declared as a `__global__` function. The fetched attributes are placed in `attr`. If the specified function does not exist, then cudaErrorInvalidDeviceFunction is returned.
 
 Note that some function attributes such as maxThreadsPerBlock may vary based on the device that is currently being used.
+
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
@@ -129,6 +123,12 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDeviceFunction
 ###### Description
 
 Returns in `**name` the function name associated with the symbol `func` . The function name is returned as a null-terminated string. This API may return a mangled name if the function is not declared as having C linkage. If `**name` is NULL, cudaErrorInvalidValue is returned. If `func` is not a device entry function, cudaErrorInvalidDeviceFunction is returned.
+
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
@@ -178,6 +178,12 @@ Valid values for `attr` are:
   * cudaFuncAttributeClusterSchedulingPolicyPreference: The block scheduling policy of a function. The value type is cudaClusterSchedulingPolicy.
 
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
@@ -222,6 +228,13 @@ The supported cache configurations are:
   * cudaFuncCachePreferL1: prefer larger L1 cache and smaller shared memory
 
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+
 cudaLaunchKernel ( C++ API), cudaFuncSetCacheConfig ( C API), cudaFuncGetAttributes ( C++ API), cudaSetDoubleForDevice, cudaSetDoubleForHost, cudaThreadGetCacheConfig, cudaThreadSetCacheConfig
 
 template < class T >
@@ -246,17 +259,6 @@ cudaSuccess
 
 Returns in `kernelPtr` the device kernel corresponding to the entry function `entryFuncAddr`.
 
-**See also:**
-
-cudaGetKernel ( C API)
-
-template < class T >
-
-__host__ cudaError_t cudaGetSymbolAddress ( void** devPtr, const T& symbol ) [inline]
-
-
-[C++ API] Finds the address associated with a CUDA symbol
-
 ######  Parameters
 
 `devPtr`
@@ -272,17 +274,12 @@ cudaSuccess, cudaErrorInvalidSymbol, cudaErrorNoKernelImageForDevice
 
 Returns in `*devPtr` the address of symbol `symbol` on the device. `symbol` can either be a variable that resides in global or constant memory space. If `symbol` cannot be found, or if `symbol` is not declared in the global or constant memory space, `*devPtr` is unchanged and the error cudaErrorInvalidSymbol is returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetSymbolAddress ( C API), cudaGetSymbolSize ( C++ API)
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGetSymbolSize ( size_t* size, const T& symbol ) [inline]
-
-
-[C++ API] Finds the size of the object associated with a CUDA symbol
 
 ######  Parameters
 
@@ -299,17 +296,12 @@ cudaSuccess, cudaErrorInvalidSymbol, cudaErrorNoKernelImageForDevice
 
 Returns in `*size` the size of symbol `symbol`. `symbol` must be a variable that resides in global or constant memory space. If `symbol` cannot be found, or if `symbol` is not declared in global or constant memory space, `*size` is unchanged and the error cudaErrorInvalidSymbol is returned.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGetSymbolAddress ( C++ API), cudaGetSymbolSize ( C API)
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGraphAddMemcpyNodeFromSymbol ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, void* dst, const T& symbol, size_t count, size_t offset, cudaMemcpyKind kind ) [inline]
-
-
-Creates a memcpy node to copy from a symbol on the device and adds it to a graph.
 
 ######  Parameters
 
@@ -346,17 +338,12 @@ Memcpy nodes have some additional restrictions with regards to managed memory, i
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyFromSymbol, cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeToSymbol, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGraphAddMemcpyNodeToSymbol ( cudaGraphNode_t* pGraphNode, cudaGraph_t graph, const cudaGraphNode_t* pDependencies, size_t numDependencies, const T& symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind ) [inline]
-
-
-Creates a memcpy node to copy to a symbol on the device and adds it to a graph.
 
 ######  Parameters
 
@@ -393,17 +380,12 @@ Memcpy nodes have some additional restrictions with regards to managed memory, i
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyToSymbol, cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeFromSymbol, cudaGraphMemcpyNodeGetParams, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphCreate, cudaGraphDestroyNode, cudaGraphAddChildGraphNode, cudaGraphAddEmptyNode, cudaGraphAddKernelNode, cudaGraphAddHostNode, cudaGraphAddMemsetNode
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGraphExecMemcpyNodeSetParamsFromSymbol ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, void* dst, const T& symbol, size_t count, size_t offset, cudaMemcpyKind kind ) [inline]
-
-
-Sets the parameters for a memcpy node in the given graphExec to copy from a symbol on the device.
 
 ######  Parameters
 
@@ -438,17 +420,12 @@ Returns cudaErrorInvalidValue if the memory operands' mappings changed or the or
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeFromSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphInstantiate, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemcpyNodeSetParamsToSymbol, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGraphExecMemcpyNodeSetParamsToSymbol ( cudaGraphExec_t hGraphExec, cudaGraphNode_t node, const T& symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind ) [inline]
-
-
-Sets the parameters for a memcpy node in the given graphExec to copy to a symbol on the device.
 
 ######  Parameters
 
@@ -483,15 +460,12 @@ Returns cudaErrorInvalidValue if the memory operands' mappings changed or the or
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphAddMemcpyNode, cudaGraphAddMemcpyNodeToSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphInstantiate, cudaGraphExecMemcpyNodeSetParams, cudaGraphExecMemcpyNodeSetParamsFromSymbol, cudaGraphExecKernelNodeSetParams, cudaGraphExecMemsetNodeSetParams, cudaGraphExecHostNodeSetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaGraphInstantiate ( cudaGraphExec_t* pGraphExec, cudaGraph_t graph, cudaGraphNode_t* pErrorNode, char* pLogBuffer, size_t bufferSize )
-
-
-Creates an executable graph from a graph.
 
 ######  Parameters
 
@@ -518,17 +492,12 @@ If there are any errors, diagnostic information may be returned in `pErrorNode` 
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaGraphInstantiateWithFlags, cudaGraphCreate, cudaGraphUpload, cudaGraphLaunch, cudaGraphExecDestroy
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGraphMemcpyNodeSetParamsFromSymbol ( cudaGraphNode_t node, void* dst, const T& symbol, size_t count, size_t offset, cudaMemcpyKind kind ) [inline]
-
-
-Sets a memcpy node's parameters to copy from a symbol on the device.
 
 ######  Parameters
 
@@ -557,17 +526,12 @@ When the graph is launched, the node will copy `count` bytes from the memory are
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyFromSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsToSymbol, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaGraphMemcpyNodeSetParamsToSymbol ( cudaGraphNode_t node, const T& symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind ) [inline]
-
-
-Sets a memcpy node's parameters to copy to a symbol on the device.
 
 ######  Parameters
 
@@ -596,17 +560,12 @@ When the graph is launched, the node will copy `count` bytes from the memory are
 
   * Graph objects are not threadsafe. More here.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaMemcpyToSymbol, cudaGraphMemcpyNodeSetParams, cudaGraphMemcpyNodeSetParamsFromSymbol, cudaGraphAddMemcpyNode, cudaGraphMemcpyNodeGetParams
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaLaunchCooperativeKernel ( T* func, dim3 gridDim, dim3 blockDim, void** args, size_t sharedMem = 0, cudaStream_t stream = 0 ) [inline]
-
-
-Launches a device function.
 
 ######  Parameters
 
@@ -643,11 +602,15 @@ If the kernel has N parameters the `args` should point to array of N pointers. E
 
 `stream` specifies a stream the invocation is associated to.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+  *
+
+  * This function exhibits asynchronous behavior for most use cases.
 
   * This function uses standard default stream semantics.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
@@ -692,11 +655,15 @@ If the kernel has N parameters the `args` should point to array of N pointers. E
 
 `stream` specifies a stream the invocation is associated to.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+  *
+
+  * This function exhibits asynchronous behavior for most use cases.
 
   * This function uses standard default stream semantics.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
@@ -743,17 +710,12 @@ The C API version of this function, `cudaLaunchKernelExC`, is also available for
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaLaunchKernelEx ( C API), cuLaunchKernelEx
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < typename... ExpTypes, typename... ActTypes >
-
-__host__ cudaError_t cudaLaunchKernelEx ( const cudaLaunchConfig_t* config, void(*)(ExpTypes...) kernel, ActTypes &&... args ) [inline]
-
-
-Launches a CUDA function with launch-time configuration.
 
 ######  Parameters
 
@@ -786,21 +748,16 @@ The C API version of this function, `cudaLaunchKernelExC`, is also available for
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaLaunchKernelEx ( C API), cuLaunchKernelEx
-
-template < class T >
-
-__host__ cudaError_t cudaLibraryGetGlobal ( T** dptr, size_t* bytes, cudaLibrary_t library, const char* name ) [inline]
-
-
-Returns a global device pointer.
 
 ######  Parameters
 
@@ -821,17 +778,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `*dptr` and `*bytes` the base pointer and size of the global with name `name` for the requested library `library` and the current device. If no global for the requested name `name` exists, the call returns cudaErrorSymbolNotFound. One of the parameters `dptr` or `bytes` (not both) can be NULL in which case it is ignored.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cudaLibraryGetManaged
-
-template < class T >
-
-__host__ cudaError_t cudaLibraryGetManaged ( T** dptr, size_t* bytes, cudaLibrary_t library, const char* name ) [inline]
-
-
-Returns a pointer to managed memory.
-
 ######  Parameters
 
 `dptr`
@@ -851,17 +797,6 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `*dptr` and `*bytes` the base pointer and size of the managed memory with name `name` for the requested library `library`. If no managed memory with the requested name `name` exists, the call returns cudaErrorSymbolNotFound. One of the parameters `dptr` or `bytes` (not both) can be NULL in which case it is ignored. Note that managed memory for library `library` is shared across devices and is registered when the library is loaded.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload, cudaLibraryGetGlobal
-
-template < class T >
-
-__host__ cudaError_t cudaLibraryGetUnifiedFunction ( T** fptr, cudaLibrary_t library, const char* symbol ) [inline]
-
-
-Returns a pointer to a unified function.
-
 ######  Parameters
 
 `fptr`
@@ -879,27 +814,9 @@ cudaSuccess, cudaErrorCudartUnloading, cudaErrorInitializationError, cudaErrorIn
 
 Returns in `*fptr` the function pointer to a unified function denoted by `symbol`. If no unified function with name `symbol` exists, the call returns cudaErrorSymbolNotFound. If there is no device with attribute cudaDeviceProp::unifiedFunctionPointers present in the system, the call may return cudaErrorSymbolNotFound.
 
-**See also:**
-
-cudaLibraryLoadData, cudaLibraryLoadFromFile, cudaLibraryUnload
-
-__host__ cudaError_t cudaMallocAsync ( void** ptr, size_t size, cudaMemPool_t memPool, cudaStream_t stream )
-
-
-Allocate from a pool.
-
 ###### Description
 
 This is an alternate spelling for cudaMallocFromPoolAsync made available through function overloading.
-
-**See also:**
-
-cudaMallocFromPoolAsync, cudaMallocAsync ( C API)
-
-__host__ cudaError_t cudaMallocHost ( void** ptr, size_t size, unsigned int  flags )
-
-
-[C++ API] Allocates page-locked memory on the host
 
 ######  Parameters
 
@@ -937,17 +854,12 @@ The cudaHostAllocMapped flag may be specified on CUDA contexts for devices that 
 
 Memory allocated by this function must be freed with cudaFreeHost().
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaSetDeviceFlags, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-template < class T >
-
-__host__ cudaError_t cudaMallocManaged ( T** devPtr, size_t size, unsigned int  flags = cudaMemAttachGlobal ) [inline]
-
-
-Allocates memory that will be automatically managed by the Unified Memory system.
 
 ######  Parameters
 
@@ -989,17 +901,8 @@ In a multi-GPU system where not all GPUs have peer-to-peer support with each oth
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMalloc3D, cudaMalloc3DArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, cudaDeviceGetAttribute, cudaStreamAttachMemAsync
-
-template < typename T >
-
-__host__ cudaError_t cudaMemDiscardAndPrefetchBatchAsync ( T** dptrs, size_t* sizes, size_t count, cudaMemLocation prefetchLocs, unsigned long long flags, cudaStream_t stream ) [inline]
-
-
-Performs a batch of memory discard and prefetches asynchronously.
 
 ###### Description
 
@@ -1007,31 +910,9 @@ This is an alternate spelling for cudaMemDiscardAndPrefetchBatchAsync made avail
 
 The cudaMemLocation specified by `prefetchLocs` are applicable for all the operations in the batch.
 
-**See also:**
-
-cudaMemDiscardAndPrefetchBatchAsync
-
-template < typename T >
-
-__host__ cudaError_t cudaMemDiscardAndPrefetchBatchAsync ( T** dptrs, size_t* sizes, size_t count, cudaMemLocation* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, cudaStream_t stream ) [inline]
-
-
-Performs a batch of memory discard and prefetches asynchronously.
-
 ###### Description
 
 This is an alternate spelling for cudaMemDiscardAndPrefetchBatchAsync made available through function overloading.
-
-**See also:**
-
-cudaMemDiscardAndPrefetchBatchAsync
-
-template < typename T >
-
-__host__ cudaError_t cudaMemPrefetchBatchAsync ( T** dptrs, size_t* sizes, size_t count, cudaMemLocation prefetchLocs, unsigned long long flags, cudaStream_t stream ) [inline]
-
-
-Performs a batch of memory prefetches asynchronously.
 
 ###### Description
 
@@ -1039,31 +920,13 @@ This is an alternate spelling for cudaMemPrefetchBatchAsync made available throu
 
 The cudaMemLocation specified by `prefetchLocs` are applicable for all the prefetches specified in the batch.
 
-**See also:**
-
-cudaMemPrefetchBatchAsync
-
-template < typename T >
-
-__host__ cudaError_t cudaMemPrefetchBatchAsync ( T** dptrs, size_t* sizes, size_t count, cudaMemLocation* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, cudaStream_t stream ) [inline]
-
-
-Performs a batch of memory prefetches asynchronously.
-
 ###### Description
 
 This is an alternate spelling for cudaMemPrefetchBatchAsync made available through function overloading.
 
-**See also:**
+###### Description
 
-cudaMemPrefetchBatchAsync
-
-template < typename T, typename U >
-
-__host__ cudaError_t cudaMemcpyBatchAsync ( const T** dsts, const U** srcs, const size_t* sizes, size_t count, cudaMemcpyAttributes attr, cudaStream_t hStream ) [inline]
-
-
-Performs a batch of memory copies asynchronously.
+This is an alternate spelling for cudaMemcpyAsync made available through function overloading.
 
 ###### Description
 
@@ -1071,31 +934,9 @@ This is an alternate spelling for cudaMemcpyBatchAsync made available through fu
 
 The cudaMemcpyAttributes specified by `attr` are applicable for all the copies specified in the batch.
 
-**See also:**
-
-cudaMemcpyBatchAsync
-
-template < typename T, typename U >
-
-__host__ cudaError_t cudaMemcpyBatchAsync ( const T** dsts, const U** srcs, const size_t* sizes, size_t count, cudaMemcpyAttributes* attrs, size_t* attrsIdxs, size_t numAttrs, cudaStream_t hStream ) [inline]
-
-
-Performs a batch of memory copies asynchronously.
-
 ###### Description
 
 This is an alternate spelling for cudaMemcpyBatchAsync made available through function overloading.
-
-**See also:**
-
-cudaMemcpyBatchAsync
-
-template < class T >
-
-__host__ cudaError_t cudaMemcpyFromSymbol ( void* dst, const T& symbol, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyDeviceToHost ) [inline]
-
-
-[C++ API] Copies data from the given symbol on the device
 
 ######  Parameters
 
@@ -1118,23 +959,16 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemc
 
 Copies `count` bytes from the memory area `offset` bytes from the start of symbol `symbol` to the memory area pointed to by `dst`. The memory areas may not overlap. `symbol` is a variable that resides in global or constant memory space. `kind` can be either cudaMemcpyDeviceToHost or cudaMemcpyDeviceToDevice.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+  *
+
+  * This function exhibits synchronous behavior for most use cases.
 
   * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync
-
-template < class T >
-
-__host__ cudaError_t cudaMemcpyFromSymbolAsync ( void* dst, const T& symbol, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyDeviceToHost, cudaStream_t stream = 0 ) [inline]
-
-
-[C++ API] Copies data from the given symbol on the device
 
 ######  Parameters
 
@@ -1161,23 +995,16 @@ Copies `count` bytes from the memory area `offset` bytes from the start of symbo
 
 cudaMemcpyFromSymbolAsync() is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero `stream` argument. If `kind` is cudaMemcpyDeviceToHost and `stream` is non-zero, the copy may overlap with operations in other streams.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+  *
+
+  * This function exhibits asynchronous behavior for most use cases.
 
   * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync
-
-template < class T >
-
-__host__ cudaError_t cudaMemcpyToSymbol ( const T& symbol, const void* src, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyHostToDevice ) [inline]
-
-
-[C++ API] Copies data to the given symbol on the device
 
 ######  Parameters
 
@@ -1200,23 +1027,16 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemc
 
 Copies `count` bytes from the memory area pointed to by `src` to the memory area `offset` bytes from the start of symbol `symbol`. The memory areas may not overlap. `symbol` is a variable that resides in global or constant memory space. `kind` can be either cudaMemcpyHostToDevice or cudaMemcpyDeviceToDevice.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+  *
+
+  * This function exhibits synchronous behavior for most use cases.
 
   * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync
-
-template < class T >
-
-__host__ cudaError_t cudaMemcpyToSymbolAsync ( const T& symbol, const void* src, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyHostToDevice, cudaStream_t stream = 0 ) [inline]
-
-
-[C++ API] Copies data to the given symbol on the device
 
 ######  Parameters
 
@@ -1243,23 +1063,16 @@ Copies `count` bytes from the memory area pointed to by `src` to the memory area
 
 cudaMemcpyToSymbolAsync() is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero `stream` argument. If `kind` is cudaMemcpyHostToDevice and `stream` is non-zero, the copy may overlap with operations in other streams.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+  *
+
+  * This function exhibits asynchronous behavior for most use cases.
 
   * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyFromSymbolAsync
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyAvailableDynamicSMemPerBlock ( size_t* dynamicSmemSize, T* func, int  numBlocks, int  blockSize ) [inline]
-
-
-Returns dynamic shared memory available per block when launching `numBlocks` blocks on SM.
 
 ######  Parameters
 
@@ -1280,31 +1093,16 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidDeviceFunction, cudaErrorIn
 
 Returns in `*dynamicSmemSize` the maximum size of dynamic shared memory to allow `numBlocks` blocks per SM.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaOccupancyMaxPotentialBlockSize
-
-cudaOccupancyMaxPotentialBlockSizeWithFlags
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessor
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyMaxActiveBlocksPerMultiprocessor ( int* numBlocks, T func, int  blockSize, size_t dynamicSMemSize ) [inline]
-
-
-Returns occupancy for a device function.
 
 ######  Parameters
 
@@ -1325,31 +1123,16 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidDeviceFunction, cudaErrorIn
 
 Returns in `*numBlocks` the maximum number of active blocks per streaming multiprocessor for the device function.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-cudaOccupancyMaxPotentialBlockSize
-
-cudaOccupancyMaxPotentialBlockSizeWithFlags
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags
-
-cudaOccupancyAvailableDynamicSMemPerBlock
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags ( int* numBlocks, T func, int  blockSize, size_t dynamicSMemSize, unsigned int  flags ) [inline]
-
-
-Returns occupancy for a device function with the specified flags.
 
 ######  Parameters
 
@@ -1380,31 +1163,16 @@ The `flags` parameter controls how special cases are handled. Valid flags includ
   * cudaOccupancyDisableCachingOverride: suppresses the default behavior on platform where global caching affects occupancy. On such platforms, if caching is enabled, but per-block SM resource usage would result in zero occupancy, the occupancy calculator will calculate the occupancy as if caching is disabled. Setting this flag makes the occupancy calculator to return 0 in such cases. More information can be found about this feature in the "Unified L1/Texture Cache" section of the Maxwell tuning guide.
 
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessor
-
-cudaOccupancyMaxPotentialBlockSize
-
-cudaOccupancyMaxPotentialBlockSizeWithFlags
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags
-
-cudaOccupancyAvailableDynamicSMemPerBlock
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyMaxActiveClusters ( int* numClusters, T* func, const cudaLaunchConfig_t* config ) [inline]
-
-
-Given the kernel function (`func`) and launch configuration (`config`), return the maximum number of clusters that could co-exist on the target device in `*numClusters`.
 
 ######  Parameters
 
@@ -1425,21 +1193,16 @@ If the function has required cluster size already set (see cudaFuncGetAttributes
 
 Note that various attributes of the kernel function may affect occupancy calculation. Runtime environment may affect how the hardware schedules the clusters, so the calculated occupancy is not guaranteed to be achievable.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaFuncGetAttributes
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyMaxPotentialBlockSize ( int* minGridSize, int* blockSize, T func, size_t dynamicSMemSize = 0, int  blockSizeLimit = 0 ) [inline]
-
-
-Returns grid and block size that achieves maximum potential occupancy for a device function.
 
 ######  Parameters
 
@@ -1464,32 +1227,6 @@ Returns in `*minGridSize` and `*blocksize` a suggested grid / block size pair th
 
 Use
 
-**See also:**
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem if the amount of per-block dynamic shared memory changes with different block sizes.
-
-
-**See also:**
-
-cudaOccupancyMaxPotentialBlockSizeWithFlags
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessor
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags
-
-cudaOccupancyAvailableDynamicSMemPerBlock
-
-template < typename UnaryFunction, class T >
-
-__host__ cudaError_t cudaOccupancyMaxPotentialBlockSizeVariableSMem ( int* minGridSize, int* blockSize, T func, UnaryFunction blockSizeToDynamicSMemSize, int  blockSizeLimit = 0 ) [inline]
-
-
-Returns grid and block size that achieves maximum potential occupancy for a device function.
-
 ######  Parameters
 
 `minGridSize`
@@ -1511,27 +1248,12 @@ cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidDeviceFunction, cudaErrorIn
 
 Returns in `*minGridSize` and `*blocksize` a suggested grid / block size pair that achieves the best potential occupancy (i.e. the maximum number of active warps with the smallest number of blocks).
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-cudaOccupancyMaxActiveBlocksPerMultiprocessor
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-cudaOccupancyMaxPotentialBlockSize
-
-cudaOccupancyMaxPotentialBlockSizeWithFlags
-
-cudaOccupancyAvailableDynamicSMemPerBlock
-
-template < typename UnaryFunction, class T >
-
-__host__ cudaError_t cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags ( int* minGridSize, int* blockSize, T func, UnaryFunction blockSizeToDynamicSMemSize, int  blockSizeLimit = 0, unsigned int  flags = 0 ) [inline]
-
-
-Returns grid and block size that achieves maximum potential occupancy for a device function.
 
 ######  Parameters
 
@@ -1564,26 +1286,12 @@ The `flags` parameter controls how special cases are handled. Valid flags includ
   * cudaOccupancyDisableCachingOverride: This flag suppresses the default behavior on platform where global caching affects occupancy. On such platforms, if caching is enabled, but per-block SM resource usage would result in zero occupancy, the occupancy calculator will calculate the occupancy as if caching is disabled. Setting this flag makes the occupancy calculator to return 0 in such cases. More information can be found about this feature in the "Unified L1/Texture Cache" section of the Maxwell tuning guide.
 
 
-**See also:**
+  *
 
-cudaOccupancyMaxPotentialBlockSizeVariableSMem
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaOccupancyMaxActiveBlocksPerMultiprocessor
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-cudaOccupancyMaxPotentialBlockSize
-
-cudaOccupancyMaxPotentialBlockSizeWithFlags
-
-cudaOccupancyAvailableDynamicSMemPerBlock
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyMaxPotentialBlockSizeWithFlags ( int* minGridSize, int* blockSize, T func, size_t dynamicSMemSize = 0, int  blockSizeLimit = 0, unsigned int  flags = 0 ) [inline]
-
-
-Returns grid and block size that achived maximum potential occupancy for a device function with the specified flags.
 
 ######  Parameters
 
@@ -1618,32 +1326,6 @@ The `flags` parameter controls how special cases are handle. Valid flags include
 
 Use
 
-**See also:**
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem if the amount of per-block dynamic shared memory changes with different block sizes.
-
-
-**See also:**
-
-cudaOccupancyMaxPotentialBlockSize
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessor
-
-cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMem
-
-cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags
-
-cudaOccupancyAvailableDynamicSMemPerBlock
-
-template < class T >
-
-__host__ cudaError_t cudaOccupancyMaxPotentialClusterSize ( int* clusterSize, T* func, const cudaLaunchConfig_t* config ) [inline]
-
-
-Given the kernel function (`func`) and launch configuration (`config`), return the maximum cluster size in `*clusterSize`.
-
 ######  Parameters
 
 `clusterSize`
@@ -1665,21 +1347,16 @@ By default this function will always return a value that's portable on future ha
 
 This function will respect the compile time launch bounds.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * The API can also be used with a kernel cudaKernel_t by querying the handle using cudaLibraryGetKernel() or cudaGetKernel and then passing it to the API by casting to void*. The symbol `entryFuncAddr` passed to cudaGetKernel should be a symbol that is registered with the same CUDA Runtime instance.
 
   * Passing a symbol that belongs that belongs to a different runtime instance will result in undefined behavior. The only type that can be reliably passed to a different runtime instance is cudaKernel_t
 
-
-**See also:**
-
-cudaFuncGetAttributes
-
-template < class T >
-
-__host__ cudaError_t cudaStreamAttachMemAsync ( cudaStream_t stream, T* devPtr, size_t length = 0, unsigned int  flags = cudaMemAttachSingle ) [inline]
-
-
-Attach memory to a stream asynchronously.
 
 ######  Parameters
 
@@ -1721,14 +1398,9 @@ It is a program's responsibility to order calls to cudaStreamAttachMemAsync via 
 
 If `stream` is destroyed while data is associated with it, the association is removed and the association reverts to the default visibility of the allocation as specified at cudaMallocManaged. For __managed__ variables, the default association is always cudaMemAttachGlobal. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamWaitEvent, cudaStreamSynchronize, cudaStreamAddCallback, cudaStreamDestroy, cudaMallocManaged
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

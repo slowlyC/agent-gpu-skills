@@ -27,19 +27,14 @@ Inserts a free operation into `hStream`. The allocation must not be accessed aft
 
 During stream capture, this function results in the creation of a free node and must therefore be passed the address of a graph allocation.
 
-  *   * This function uses standard default stream semantics.
+  *
+
+  * This function uses standard default stream semantics.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuMemFreeAsync, cudaMallocAsync
-
-__host__ cudaError_t cudaMallocAsync ( void** devPtr, size_t size, cudaStream_t hStream )
-
-
-Allocates memory with stream ordered semantics.
 
 ######  Parameters
 
@@ -65,19 +60,14 @@ Inserts an allocation operation into `hStream`. A pointer to the allocated memor
   * During stream capture, this function results in the creation of an allocation node. In this case, the allocation is owned by the graph instead of the memory pool. The memory pool's properties are used to set the node's creation parameters.
 
 
-  *   * This function uses standard default stream semantics.
+  *
+
+  * This function uses standard default stream semantics.
 
   * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuMemAllocAsync, cudaMallocAsync ( C++ API), cudaMallocFromPoolAsync, cudaFreeAsync, cudaDeviceSetMemPool, cudaDeviceGetDefaultMemPool, cudaDeviceGetMemPool, cudaMemPoolSetAccess, cudaMemPoolSetAttribute, cudaMemPoolGetAttribute
-
-__host__ cudaError_t cudaMallocFromPoolAsync ( void** ptr, size_t size, cudaMemPool_t memPool, cudaStream_t stream )
-
-
-Allocates memory from a specified pool with stream ordered semantics.
 
 ######  Parameters
 
@@ -106,15 +96,6 @@ Inserts an allocation operation into `hStream`. A pointer to the allocated memor
 
 During stream capture, this function results in the creation of an allocation node. In this case, the allocation is owned by the graph instead of the memory pool. The memory pool's properties are used to set the node's creation parameters.
 
-**See also:**
-
-cuMemAllocFromPoolAsync, cudaMallocAsync ( C++ API), cudaMallocAsync, cudaFreeAsync, cudaDeviceGetDefaultMemPool, cudaMemPoolCreate, cudaMemPoolSetAccess, cudaMemPoolSetAttribute
-
-__host__ cudaError_t cudaMemGetDefaultMemPool ( cudaMemPool_t* memPool, cudaMemLocation* location, cudaMemAllocationType type )
-
-
-Returns the default memory pool for a given location and allocation type.
-
 ###### Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorNotSupported
@@ -122,15 +103,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorNotSupported
 ###### Description
 
 The memory location can be of one of cudaMemLocationTypeDevice, cudaMemLocationTypeHost or cudaMemLocationTypeHostNuma. The allocation type can be one of cudaMemAllocationTypePinned or cudaMemAllocationTypeManaged. When the allocation type is cudaMemAllocationTypeManaged, the location type can also be cudaMemLocationTypeNone to indicate no preferred location for the managed memory pool. In all other cases, the call return cudaErrorInvalidValue
-
-**See also:**
-
-cuMemAllocAsync, cuMemPoolTrimTo, cuMemPoolGetAttribute, cuMemPoolSetAttribute, cuMemPoolSetAccess, cuMemGetMemPool, cuMemPoolCreate
-
-__host__ cudaError_t cudaMemGetMemPool ( cudaMemPool_t* memPool, cudaMemLocation* location, cudaMemAllocationType type )
-
-
-Gets the current memory pool for a given memory location and allocation type.
 
 ###### Returns
 
@@ -141,15 +113,6 @@ cudaSuccess, cudaErrorInvalidValue
 The memory location can be of one of cudaMemLocationTypeDevice, cudaMemLocationTypeHost or cudaMemLocationTypeHostNuma. The allocation type can be one of cudaMemAllocationTypePinned or cudaMemAllocationTypeManaged. When the allocation type is cudaMemAllocationTypeManaged, the location type can also be cudaMemLocationTypeNone to indicate no preferred location for the managed memory pool. In all other cases, the call return cudaErrorInvalidValue
 
 Returns the last pool provided to cudaMemSetMemPool or cudaDeviceSetMemPool for this location and allocation type or the location's default memory pool if cudaMemSetMemPool or cudaDeviceSetMemPool for that allocType and location has never been called. By default the current mempool of a location is the default mempool for a device that can be obtained via cudaMemGetDefaultMemPool Otherwise the returned pool must have been set with cudaDeviceSetMemPool.
-
-**See also:**
-
-cuDeviceGetDefaultMemPool, cuMemPoolCreate, cuDeviceSetMemPool, cuMemSetMemPool
-
-__host__ cudaError_t cudaMemPoolCreate ( cudaMemPool_t* memPool, const cudaMemPoolProps* poolProps )
-
-
-Creates a memory pool.
 
 ###### Returns
 
@@ -173,15 +136,6 @@ To create a managed memory pool, applications must set cudaMemPoolProps:cudaMemA
 
 Specifying cudaMemHandleTypeNone creates a memory pool that will not support IPC.
 
-**See also:**
-
-cuMemPoolCreate, cudaDeviceSetMemPool, cudaMallocFromPoolAsync, cudaMemPoolExportToShareableHandle, cudaDeviceGetDefaultMemPool, cudaDeviceGetMemPool
-
-__host__ cudaError_t cudaMemPoolDestroy ( cudaMemPool_t memPool )
-
-
-Destroys the specified memory pool.
-
 ###### Returns
 
 cudaSuccess, cudaErrorInvalidValue
@@ -193,15 +147,6 @@ If any pointers obtained from this pool haven't been freed or the pool has free 
 Destroying the current mempool of a device sets the default mempool of that device as the current mempool for that device.
 
 A device's default memory pool cannot be destroyed.
-
-**See also:**
-
-cuMemPoolDestroy, cudaFreeAsync, cudaDeviceSetMemPool, cudaDeviceGetDefaultMemPool, cudaDeviceGetMemPool, cudaMemPoolCreate
-
-__host__ cudaError_t cudaMemPoolExportPointer ( cudaMemPoolPtrExportData* exportData, void* ptr )
-
-
-Export data to share a memory pool allocation between processes.
 
 ######  Parameters
 
@@ -217,15 +162,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorOutOfMemory
 ###### Description
 
 Constructs `shareData_out` for sharing a specific allocation from an already shared memory pool. The recipient process can import the allocation with the cudaMemPoolImportPointer api. The data is not a handle and may be shared through any IPC mechanism.
-
-**See also:**
-
-cuMemPoolExportPointer, cudaMemPoolExportToShareableHandle, cudaMemPoolImportFromShareableHandle, cudaMemPoolImportPointer
-
-__host__ cudaError_t cudaMemPoolExportToShareableHandle ( void* shareableHandle, cudaMemPool_t memPool, cudaMemAllocationHandleType handleType, unsigned int  flags )
-
-
-Exports a memory pool to the requested handle type.
 
 ######  Parameters
 
@@ -248,15 +184,6 @@ Given an IPC capable mempool, create an OS handle to share the pool with another
 
 : To create an IPC capable mempool, create a mempool with a CUmemAllocationHandleType other than cudaMemHandleTypeNone.
 
-**See also:**
-
-cuMemPoolExportToShareableHandle, cudaMemPoolImportFromShareableHandle, cudaMemPoolExportPointer, cudaMemPoolImportPointer
-
-__host__ cudaError_t cudaMemPoolGetAccess ( cudaMemAccessFlags ** flags, cudaMemPool_t memPool, cudaMemLocation* location )
-
-
-Returns the accessibility of a pool from a device.
-
 ######  Parameters
 
 `flags`
@@ -269,15 +196,6 @@ Returns the accessibility of a pool from a device.
 ###### Description
 
 Returns the accessibility of the pool's memory from the specified location.
-
-**See also:**
-
-cuMemPoolGetAccess, cudaMemPoolSetAccess
-
-__host__ cudaError_t cudaMemPoolGetAttribute ( cudaMemPool_t memPool, cudaMemPoolAttr attr, void* value )
-
-
-Gets attributes of a memory pool.
 
 ######  Parameters
 
@@ -313,16 +231,22 @@ Supported attributes are:
   * cudaMemPoolAttrUsedMemHigh: (value type = cuuint64_t) High watermark of the amount of memory from the pool that was in use by the application since the last time it was reset.
 
 
+The following properties can be also be queried on imported and default pools:
+
+  * cudaMemPoolAttrAllocationType: (value type = cudaMemAllocationType) The allocation type of the mempool
+
+  * cudaMemPoolAttrExportHandleTypes: (value type = cudaMemAllocationHandleType) Available export handle types for the mempool. For imported pools this value is always cudaMemHandleTypeNone as an imported pool cannot be re-exported
+
+  * cudaMemPoolAttrLocationId: (value type = int) The location id for the mempool. If the location type for this pool is cudaMemLocationTypeInvisible then ID will be cudaInvalidDeviceId.
+
+  * cudaMemPoolAttrLocationType: (value type = cudaMemLocationType) The location type for the mempool. For imported memory pools where the device is not directly visible to the importing process or pools imported via fabric handles across nodes this will be cudaMemlocataionTypeInvisible.
+
+  * cudaMemPoolAttrMaxPoolSize: (value type = cuuint64_t) Maximum size of the pool in bytes, this value may be higher than what was initially passed to cuMemPoolCreate due to alignment requirements. A value of 0 indicates no maximum size. For cudaMemAllocationTypeManaged and IPC imported pools this value will be system dependent.
+
+  * cudaMemPoolAttrHwDecompressEnabled: (value type = int) Indicates whether the pool has hardware compresssion enabled
+
+
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
-
-**See also:**
-
-cuMemPoolGetAttribute, cudaMallocAsync, cudaFreeAsync, cudaDeviceGetDefaultMemPool, cudaDeviceGetMemPool, cudaMemPoolCreate
-
-__host__ cudaError_t cudaMemPoolImportFromShareableHandle ( cudaMemPool_t* memPool, void* shareableHandle, cudaMemAllocationHandleType handleType, unsigned int  flags )
-
-
-imports a memory pool from a shared handle.
 
 ######  Parameters
 
@@ -345,15 +269,6 @@ Specific allocations can be imported from the imported pool with cudaMemPoolImpo
 
 Imported memory pools do not support creating new allocations. As such imported memory pools may not be used in cudaDeviceSetMemPool or cudaMallocFromPoolAsync calls.
 
-**See also:**
-
-cuMemPoolImportFromShareableHandle, cudaMemPoolExportToShareableHandle, cudaMemPoolExportPointer, cudaMemPoolImportPointer
-
-__host__ cudaError_t cudaMemPoolImportPointer ( void** ptr, cudaMemPool_t memPool, cudaMemPoolPtrExportData* exportData )
-
-
-Import a memory pool allocation from another process.
-
 ###### Returns
 
 CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_OUT_OF_MEMORY
@@ -363,15 +278,6 @@ CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_O
 Returns in `ptr_out` a pointer to the imported memory. The imported memory must not be accessed before the allocation operation completes in the exporting process. The imported memory must be freed from all importing processes before being freed in the exporting process. The pointer may be freed with cudaFree or cudaFreeAsync. If cudaFreeAsync is used, the free must be completed on the importing process before the free operation on the exporting process.
 
 The cudaFreeAsync api may be used in the exporting process before the cudaFreeAsync operation completes in its stream as long as the cudaFreeAsync in the exporting process specifies a stream with a stream dependency on the importing process's cudaFreeAsync.
-
-**See also:**
-
-cuMemPoolImportPointer, cudaMemPoolExportToShareableHandle, cudaMemPoolImportFromShareableHandle, cudaMemPoolExportPointer
-
-__host__ cudaError_t cudaMemPoolSetAccess ( cudaMemPool_t memPool, const cudaMemAccessDesc* descList, size_t count )
-
-
-Controls visibility of pools between devices.
 
 ######  Parameters
 
@@ -387,15 +293,6 @@ Controls visibility of pools between devices.
 cudaSuccess, cudaErrorInvalidValue
 
 ###### Description
-
-**See also:**
-
-cuMemPoolSetAccess, cudaMemPoolGetAccess, cudaMallocAsync, cudaFreeAsync
-
-__host__ cudaError_t cudaMemPoolSetAttribute ( cudaMemPool_t memPool, cudaMemPoolAttr attr, void* value )
-
-
-Sets attributes of a memory pool.
 
 ######  Parameters
 
@@ -429,15 +326,6 @@ Supported attributes are:
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuMemPoolSetAttribute, cudaMallocAsync, cudaFreeAsync, cudaDeviceGetDefaultMemPool, cudaDeviceGetMemPool, cudaMemPoolCreate
-
-__host__ cudaError_t cudaMemPoolTrimTo ( cudaMemPool_t memPool, size_t minBytesToKeep )
-
-
-Tries to release memory back to the OS.
-
 ######  Parameters
 
 `memPool`
@@ -460,15 +348,6 @@ Releases memory back to the OS until the pool contains fewer than minBytesToKeep
 
 Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-**See also:**
-
-cuMemPoolTrimTo, cudaMallocAsync, cudaFreeAsync, cudaDeviceGetDefaultMemPool, cudaDeviceGetMemPool, cudaMemPoolCreate
-
-__host__ cudaError_t cudaMemSetMemPool ( cudaMemLocation* location, cudaMemAllocationType type, cudaMemPool_t memPool )
-
-
-Sets the current memory pool for a memory location and allocation type.
-
 ###### Returns
 
 cudaSuccess, cudaErrorInvalidValue
@@ -480,14 +359,3 @@ The memory location can be of one of cudaMemLocationTypeDevice, cudaMemLocationT
 When a memory pool is set as the current memory pool, the location parameter should be the same as the location of the pool. If the location type or index don't match, the call returns cudaErrorInvalidValue. The type of memory pool should also match the parameter allocType. Else the call returns cudaErrorInvalidValue. By default, a memory location's current memory pool is its default memory pool. If the location type is cudaMemLocationTypeDevice and the allocation type is cudaMemAllocationTypePinned, then this API is the equivalent of calling cudaDeviceSetMemPool with the location id as the device. For further details on the implications, please refer to the documentation for cudaDeviceSetMemPool.
 
 Use cudaMallocFromPoolAsync to specify asynchronous allocations from a device different than the one the stream runs on.
-
-**See also:**
-
-cuDeviceGetDefaultMemPool, cuDeviceGetMemPool, cuMemGetMemPool, cuMemPoolCreate, cuMemPoolDestroy, cuMemAllocFromPoolAsync
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

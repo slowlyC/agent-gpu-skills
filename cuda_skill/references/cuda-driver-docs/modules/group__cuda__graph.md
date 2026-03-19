@@ -1343,7 +1343,7 @@ The modifications only affect future launches of `hGraphExec`. Already enqueued 
 CUresult cuGraphExecNodeSetParams ( CUgraphExec hGraphExec, CUgraphNode hNode, CUgraphNodeParams* nodeParams )
 
 
-Update's a graph node's parameters in an instantiated graph.
+Update a graph node's parameters in an instantiated graph.
 
 ######  Parameters
 
@@ -2302,6 +2302,33 @@ CUDA_SUCCESSCUDA_ERROR_INVALID_VALUE
 
 Returns the node id of `hNode` in `*nodeId`. The nodeId matches that referenced by cuGraphDebugDotPrint. The local nodeId and graphId together can uniquely identify the node.
 
+CUresult cuGraphNodeGetParams ( CUgraphNode hNode, CUgraphNodeParams* nodeParams )
+
+
+Return a graph node's parameters.
+
+######  Parameters
+
+`hNode`
+    \- Node to get the parameters for
+`nodeParams`
+    \- Pointer to return the parameters
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+Returns the parameters of graph node `hNode` in `*nodeParams`.
+
+Any pointers returned in `*nodeParams` point to driver-owned memory associated with the node. This memory remains valid until the node is destroyed. Any memory pointed to from `*nodeParams` must not be modified.
+
+The returned parameters are a description of the node, but may not be identical to the struct provided at creation and may not be suitable for direct creation of identical nodes. This is because parameters may be partially unspecified and filled in by the driver at creation, may reference non-copyable handles, or may describe ownership semantics or other parameters that govern behavior of node creation but are not part of the final functional descriptor.
+
+  * Graph objects are not threadsafe. More here.
+
+  *
 CUresult cuGraphNodeGetToolsId ( CUgraphNode hNode, unsigned long long* toolsNodeId )
 
 
@@ -2381,7 +2408,7 @@ Currently only kernel, memset and memcpy nodes are supported.
 CUresult cuGraphNodeSetParams ( CUgraphNode hNode, CUgraphNodeParams* nodeParams )
 
 
-Update's a graph node's parameters.
+Update a graph node's parameters.
 
 ######  Parameters
 

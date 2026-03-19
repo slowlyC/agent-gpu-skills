@@ -5,6 +5,4 @@
 
 ### Public Variables
 
-CUmemcpy3DOperand_v1::@37::@39 array
-
-size_t layerHeight
+CUmemcpy3DOperand_v1::@39::@41 array

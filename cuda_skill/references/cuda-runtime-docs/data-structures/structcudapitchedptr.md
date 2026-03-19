@@ -37,8 +37,3 @@ size_t cudaPitchedPtr::ysize
 Logical height of allocation in elements
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

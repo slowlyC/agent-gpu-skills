@@ -1,7 +1,7 @@
 # CUDA Driver API Documentation Index
 
-**Total modules:** 49  
-**Total data structures:** 79  
+**Modules:** 49  
+**Data structures:** 81  
 
 ## Modules
 
@@ -135,4 +135,6 @@
 - [Structcumempoolptrexportdata__V1](data-structures/structcumempoolptrexportdata__v1.md)
 - [Structcumulticastobjectprop__V1](data-structures/structcumulticastobjectprop__v1.md)
 - [Structcuoffset3D__V1](data-structures/structcuoffset3d__v1.md)
+- [Structcustreamcigcaptureparams](data-structures/structcustreamcigcaptureparams.md)
+- [Structcustreamcigparam](data-structures/structcustreamcigparam.md)
 - [Structcutensormap](data-structures/structcutensormap.md)

@@ -154,3 +154,4 @@ If `pD3DResource` is of incorrect type or is already registered then CUDA_ERROR_
 
 ### Direct3D 11 Interoperability [DEPRECATED]
 
+* * *

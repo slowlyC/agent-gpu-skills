@@ -155,3 +155,4 @@ Returns in `*pDevice` the CUDA device associated with a `hGpu`, if applicable.
 
 ### OpenGL Interoperability [DEPRECATED]
 
+* * *

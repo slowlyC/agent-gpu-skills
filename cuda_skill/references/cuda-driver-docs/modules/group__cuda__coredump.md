@@ -1,7 +1,14 @@
-# 6.34. Coredump Attributes Control API
+# Coredump Attributes Control API
 
-**Source:** group__CUDA__COREDUMP.html#group__CUDA__COREDUMP
+**Source:** group__CUDA__COREDUMP.html
 
+
+### Typedefs
+
+typedef CUcoredumpCallbackEntry_st * CUcoredumpCallbackHandle
+     Opaque handle representing a registered coredump status callback.
+typedef void(CUDA_CB* CUcoredumpStatusCallback )( void*  userData,  int pid,  CUdevice dev )
+     Callback function prototype for GPU coredump status notifications.
 
 ### Enumerations
 
@@ -11,6 +18,46 @@ enum CUcoredumpSettings
 
 
 ### Functions
+
+CUresult cuCoredumpDeregisterCompleteCallback ( CUcoredumpCallbackHandle callback )
+
+
+Deregister a previously registered coredump complete callback.
+
+######  Parameters
+
+`callback`
+    \- The callback handle to deregister
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+This function removes a callback that was registered with cuCoredumpRegisterCompleteCallback. The callback handle becomes invalid after this call.
+
+It is the caller's responsibility to deregister callbacks before they go out of scope.
+
+CUresult cuCoredumpDeregisterStartCallback ( CUcoredumpCallbackHandle callback )
+
+
+Deregister a previously registered coredump start callback.
+
+######  Parameters
+
+`callback`
+    \- The callback handle to deregister
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE
+
+###### Description
+
+This function removes a callback that was registered with cuCoredumpRegisterStartCallback. The callback handle becomes invalid after this call.
+
+It is the caller's responsibility to deregister callbacks before they go out of scope.
 
 CUresult cuCoredumpGetAttribute ( CUcoredumpSettings attrib, void* value, size_t* size )
 
@@ -93,6 +140,54 @@ The supported attributes are:
 
   * CU_COREDUMP_GENERATION_FLAGS: An integer with values to allow granular control the data contained in a coredump specified as a bitwise OR combination of the following values: + CU_COREDUMP_DEFAULT_FLAGS - if set by itself, coredump generation returns to its default settings of including all memory regions that it is able to access + CU_COREDUMP_SKIP_NONRELOCATED_ELF_IMAGES \- Coredump will not include the data from CUDA source modules that are not relocated at runtime. + CU_COREDUMP_SKIP_GLOBAL_MEMORY \- Coredump will not include device-side global data that does not belong to any context. + CU_COREDUMP_SKIP_SHARED_MEMORY \- Coredump will not include grid-scale shared memory for the warp that the dumped kernel belonged to. + CU_COREDUMP_SKIP_LOCAL_MEMORY \- Coredump will not include local memory from the kernel. + CU_COREDUMP_LIGHTWEIGHT_FLAGS - Enables all of the above options. Equiavlent to setting the CU_COREDUMP_LIGHTWEIGHT attribute to true. + CU_COREDUMP_SKIP_ABORT - If set, GPU exceptions will not raise an abort() in the host CPU process. Same functional goal as CU_COREDUMP_TRIGGER_HOST but better reflects the default behavior.
 
+
+CUresult cuCoredumpRegisterCompleteCallback ( CUcoredumpStatusCallback callback, void* userData, CUcoredumpCallbackHandle* callbackOut )
+
+
+Register a callback to be invoked when a GPU coredump completes.
+
+######  Parameters
+
+`callback`
+    \- The callback function to register
+`userData`
+    \- User data pointer to pass to the callback
+`callbackOut`
+    \- Location to store the callback handle (optional, may be NULL)
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY
+
+###### Description
+
+This function registers a callback that will be called when a GPU coredump has been fully collected and written to disk. Callbacks are executed in the order they were registered. The same callback function can be registered multiple times with different userData, and each registration will receive a unique handle.
+
+Callbacks execute synchronously during the coredump process and will block coredump progress while running.
+
+CUresult cuCoredumpRegisterStartCallback ( CUcoredumpStatusCallback callback, void* userData, CUcoredumpCallbackHandle* callbackOut )
+
+
+Register a callback to be invoked when a GPU coredump begins.
+
+######  Parameters
+
+`callback`
+    \- The callback function to register
+`userData`
+    \- User data pointer to pass to the callback
+`callbackOut`
+    \- Location to store the callback handle (optional, may be NULL)
+
+###### Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_OUT_OF_MEMORY
+
+###### Description
+
+This function registers a callback that will be called when a GPU coredump is initiated, before any coredump data is collected. Callbacks are executed in the order they were registered. The same callback function can be registered multiple times with different userData, and each registration will receive a unique handle.
+
+Callbacks execute synchronously during the coredump process and will block coredump progress while running.
 
 CUresult cuCoredumpSetAttribute ( CUcoredumpSettings attrib, void* value, size_t* size )
 

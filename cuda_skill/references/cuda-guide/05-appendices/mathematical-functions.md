@@ -20,7 +20,7 @@ The standard mandates that binary floating-point data be encoded on three fields
 
   * **Sign** : one bit to indicate a positive or negative number.
 
-  * **Exponent** : encodes the exponent offset by a numeric bias in base 2.
+  * **Exponent** : encodes the base 2 exponent offset by a numeric bias.
 
   * **Significand** (also called _mantissa_ or _fraction_): encodes the fractional value of the number.
 
@@ -46,21 +46,23 @@ The numeric value associated with floating-point encoding for [normal](#normal-s
 
 \\[(-1)^\mathrm{sign} \times 1.\mathrm{mantissa} \times 2^{\mathrm{exponent} - \mathrm{bias}}\\]
 
-for [subnormal](#normal-subnormal) values, the leading `1` in the formula is absent.
+For [subnormal](#normal-subnormal) values, the formula is modified to:
+
+\\[(-1)^\mathrm{sign} \times 0.\mathrm{mantissa} \times 2^{1-\mathrm{bias}}\\]
 
 The exponents are biased by \\(127\\) and \\(1023\\) for single- and double-precision, respectively. The integral part of \\(1.\\) is implicit in the fraction.
 
-For example, the value \\(-192 = (-1)^1 \times 2^7 \times 1.5\\), and is encoded as a negative sign, an exponent of \\(7\\), and a fractional part \\(0.5\\). Hence the exponent \\(7\\) is represented by bit strings with values `7 + 127 = 134 = 10000110` for `float` and `7 + 1023 = 1030 = 10000111110` for `double`. The mantissa `0.5 = 2^-1` is represented by a binary value with `1` in the first position. The binary encoding of \\(-192\\) in single-precision and double-precision is shown in the following figure:
+For example, the value \\(-192 = (-1)^1 \times 2^7 \times 1.5\\), and is encoded as a negative sign, an exponent of \\(7\\), and a fractional part \\(0.5\\). Hence the exponent \\(7\\) is represented by bit strings with values `7 + 127 = 134 = 10000110` for `float` and `7 + 1023 = 1030 = 10000000110` for `double`. The mantissa `0.5 = 2^-1` is represented by a binary value with `1` in the first position. The binary encodings of \\(-192\\) in single-precision and double-precision are shown in the following figure:
 
 [![Floating-Point Representation for ``-192``](https://docs.nvidia.com/cuda/cuda-programming-guide/_images/floating-point-192.drawio.png) ](../_images/floating-point-192.drawio.png)
 
-Since the fraction field uses a limited number of bits, not all real numbers can be represented exactly. For instance, the binary representation of the mathematical value of the fraction \\(2 / 3\\) is `0.10101010...`, which has an infinite number of bits after the binary point. Therefore, \\(2 / 3\\) must be rounded before it can be represented as a floating-point number with limited precision. The rounding rules and modes are specified in IEEE-754. The most frequently used mode is _round-to-nearest-or-even_ , abbreviated round-to-nearest.
+Since the fraction field uses a limited number of bits, not all real numbers can be represented exactly. For instance, the binary representation of the mathematical value of the fraction \\(2 / 3\\) is `0.10101010...`, which has an infinite number of bits after the binary point. Therefore, \\(2 / 3\\) must be rounded before it can be represented as a floating-point number with limited precision. The rounding rules and modes are specified in IEEE-754. The most frequently used mode is _round-to-nearest-ties-to-even_ , abbreviated round-to-nearest.
 
 ### 5.5.1.2. Normal and Subnormal Values
 
-Any floating-point value that can be represented with at least one bit set in the exponent is called _normal_.
+Any floating-point value with an exponent field that is neither all zeros nor all ones is called _normal_.
 
-An important aspect of floating-point normal values is the wide gap between the smallest representable non-zero floating-point number, `FLT_MIN`, and zero. This gap is much wider than the gap between `FLT_MIN` and the second-smallest representable non-zero floating-point number.
+An important aspect of floating-point values is the wide gap between the smallest representable positive normal number, `FLT_MIN`, and zero. This gap is much wider than the gap between `FLT_MIN` and the second-smallest normal number.
 
 Floating-point _subnormal_ numbers, also called _denormals_ , were introduced to address this issue. A subnormal floating-point value is represented with all bits in the exponent set to zero and at least one bit set in the significand. Subnormals are a required part of the IEEE-754 floating-point standard.
 
@@ -84,7 +86,7 @@ The IEEE-754 standard defines three special values for floating-point numbers:
 
   * `+0 == -0` evaluates to `true`.
 
-  * `0` is encoded with all bits set to `0` in the exponent and significand.
+  * Zero is encoded with all bits set to `0` in the exponent and significand.
 
 
 **Infinity:**
@@ -93,7 +95,7 @@ The IEEE-754 standard defines three special values for floating-point numbers:
 
   * Infinity is encoded with all bits in the exponent set to `1` and all bits in the significand set to `0`. There are exactly two encodings for infinity values.
 
-  * Any arithmetic operation that applies a finite number to infinity will result in infinity, except for division by zero and multiplication by zero, which result in NaN.
+  * Arithmetic operations involving infinity and finite nonzero values typically result in infinity. Indeterminate forms such as `Inf * 0.0`, `Inf - Inf`, `Inf / Inf`, and `0.0 / 0.0` result in NaN.
 
 
 **Not-a-Number (NaN):**
@@ -104,7 +106,7 @@ The IEEE-754 standard defines three special values for floating-point numbers:
 
   * Any arithmetic operation involving a NaN will result in NaN.
 
-  * Any comparison operation involving a NaN will result in `false`, including `NaN == NaN` (non-reflexive).
+  * Any ordered comparison (`<`, `<=`, `>`, `>=`, `==`) involving a NaN will result in `false`, including `NaN == NaN` (non-reflexive). The unordered comparison `NaN != NaN` returns `true`.
 
   * NaNs are provided in two forms:
 
@@ -162,7 +164,7 @@ Rounding the multiply and add separately yields a result that is off by \\(0.000
 
 Below is another example, using binary single precision values:
 
-\\[\begin{split}\begin{aligned} A &= 2^{0} \times 1.00000000000000000000001 \\\ B &= -2^{0} \times 1.00000000000000000000010 && \text{fused multiply-add} \\\ \mathrm{rn}\big(A \times A + B\big) &= 2^{-46} \times 1.00000000000000000000000 && \text{multiply, then add} \\\ \mathrm{rn}\big(\mathrm{rn}(A \times A) + B\big) &= 0 \end{aligned}\end{split}\\]
+\\[\begin{split}\begin{aligned} A &= 2^{0} \times 1.00000000000000000000001 \\\ B &= -2^{0} \times 1.00000000000000000000010 \\\ \mathrm{rn}\big(A \times A + B\big) &= 2^{-46} \times 1.00000000000000000000000 && \text{fused multiply-add} \\\ \mathrm{rn}\big(\mathrm{rn}(A \times A) + B\big) &= 0 && \text{multiply, then add} \end{aligned}\end{split}\\]
 
   * Computing multiplication and addition separately results in the loss of all bits of precision, yielding \\(0\\).
 
@@ -260,7 +262,7 @@ These aspects are also important when comparing the results between CPU and GPU.
 
 **Precision** :
 
-> Increasing the floating-point precision can potentially improve the accuracy of the results. Higher precision reduces loss of significance and enables the representation of a wider range of values. However, higher precision types have lower throughput and consumes more registers. Additionally, using them to explicitly store input and output increases memory usage and data movement.
+> Increasing the floating-point precision can potentially improve the accuracy of the results. Higher precision reduces loss of significance and enables the representation of a wider range of values. However, higher precision types have lower throughput and consume more registers. Additionally, using them to explicitly store input and output increases memory usage and data movement.
 
 **Compiler Flags and Optimizations** :
 
@@ -269,6 +271,8 @@ These aspects are also important when comparing the results between CPU and GPU.
 >   * The highest optimization level for GCC (`-O3`), Clang (`-O3`), nvcc (`-O3`), and Microsoft Visual Studio (`/O2`) does not affect floating-point semantics. However, inlining, loop unrolling, vectorization, and common subexpression elimination could affect the results. The NVC++ compiler also requires the flags `-Kieee -Mnofma` for IEEE-754-compliant semantics.
 > 
 >   * Refer to the [GCC](https://gcc.gnu.org/wiki/FloatingPointMath), [Clang](https://clang.llvm.org/docs/UsersManual.html#controlling-floating-point-behavior), [Microsoft Visual Studio Compiler](https://learn.microsoft.com/en-us/cpp/build/reference/fp-specify-floating-point-behavior), [nvc++](https://docs.nvidia.com/hpc-sdk/compilers/hpc-compilers-user-guide/index.html#gpu), and [Arm C/C++ compiler](https://developer.arm.com/documentation/101458/2404/Compiler-options?lang=en) documentation for detailed information about options that affect floating-point behavior.
+> 
+>   * See also the `nvcc` [User Manual](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#use-fast-math-use-fast-math) for detailed descriptions of compiler flags that specifically affect floating-point behavior in CUDA device code: `-ftz`, `-prec-div`, `-prec-sqrt`, `-fmad`, `--use_fast_math`. Besides these floating-point options, it is also important to verify the effects of other compiler optimizations in the context of the user program. Users are encouraged to verify the correctness of their results with extensive testing and compare results obtained with optimizations enabled versus all device code optimizations disabled; see also the `-G` compiler flag.
 > 
 > 
 
@@ -283,7 +287,7 @@ These aspects are also important when comparing the results between CPU and GPU.
 > 
 >   * Hardware dependencies, such as execution on the same CPU processor or GPU device.
 > 
->   * Compiler aspects, such as the version of the compiler and the compiler flags.
+>   * Compiler aspects, such as the version of the compiler and the [Compiler Flags and Optimizations](#compiler-flags-and-optimizations).
 > 
 >   * Run-time conditions that affect the computation, such as [rounding mode](#floating-point-rounding) or environment variables.
 > 
@@ -324,9 +328,9 @@ Table 44 Supported Floating-Point Types Properties Precision / Name | Largest Va
 ---|---|---|---|---  
 Bfloat16 | \\(\approx 2^{128}\\) | \\(\approx 3.39 \cdot 10^{38}\\) | \\(2^{-126}\\) | \\(\approx 1.18 \cdot 10^{-38}\\) | \\(2^{-133}\\) | \\(2^{-7}\\)  
 Half Precision | \\(\approx 2^{16}\\) | \\(65504\\) | \\(2^{-14}\\) | \\(\approx 6.1 \cdot 10^{-5}\\) | \\(2^{-24}\\) | \\(2^{-10}\\)  
-Single Precision | \\(\approx 2^{128}\\) | \\(\approx 3.39 \cdot 10^{38}\\) | \\(2^{-126}\\) | \\(\approx 1.18 \cdot 10^{-38}\\) | \\(2^{-149}\\) | \\(2^{-23}\\)  
+Single Precision | \\(\approx 2^{128}\\) | \\(\approx 3.40 \cdot 10^{38}\\) | \\(2^{-126}\\) | \\(\approx 1.18 \cdot 10^{-38}\\) | \\(2^{-149}\\) | \\(2^{-23}\\)  
 Double Precision | \\(\approx 2^{1024}\\) | \\(\approx 1.8 \cdot 10^{308}\\) | \\(2^{-1022}\\) | \\(\approx 2.22 \cdot 10^{-308}\\) | \\(2^{-1074}\\) | \\(2^{-52}\\)  
-Quad Precision | \\(\approx 2^{16384}\\) | \\(\approx 1.19 \cdot 10^{4932}\\) | \\(2^{-16382}\\) | \\(\approx 3.36 \cdot 10^{-4032}\\) | \\(2^{-16494}\\) | \\(2^{-112}\\)  
+Quad Precision | \\(\approx 2^{16384}\\) | \\(\approx 1.19 \cdot 10^{4932}\\) | \\(2^{-16382}\\) | \\(\approx 3.36 \cdot 10^{-4932}\\) | \\(2^{-16494}\\) | \\(2^{-112}\\)  
   
 Hint
 
@@ -410,7 +414,7 @@ According to the [C++ standard rules](https://eel.is/c++draft/lex.fcon#3), hexad
 
 The run-time and compile-time evaluations of the same floating-point expression are subject to the following portability issues:
 
-  * The run-time evaluation of a floating-point expression may be affected by the selected rounding mode, floating-point contraction (FMA) and reassociation compiler settings, as well as floating-point exceptions. Note that CUDA does not support floating-point exceptions and the [rounding mode](#floating-point-rounding) is always _round-to-nearest-ties-to-even_.
+  * The run-time evaluation of a floating-point expression may be affected by the selected rounding mode, floating-point contraction (FMA) and reassociation compiler settings, as well as floating-point exceptions. Note that CUDA does not support floating-point exceptions and the [rounding mode](#floating-point-rounding) is set to _round-to-nearest-ties-to-even_ by default. Other rounding modes can be selected using [intrinsic functions](#mathematical-functions-appendix-intrinsic-functions).
 
   * The compiler may use a higher-precision internal representation for constant expressions.
 
@@ -436,7 +440,7 @@ The mathematical functions supported by CUDA are exposed through the following m
 
 [Built-in C/C++ language arithmetic operators](#builtin-math-operators):
 
-  * `x + y`, `x - y`, `x * y`, `x / y`, `x++`, `x--`, `+=`, `-=`, `*=`, `/=`.
+  * `x + y`, `x - y`, `x * y`, `x / y`, `x++`, `x--`, `x += y`, `x -= y`, `x *= y`, `x /= y`.
 
   * Support single-, double-, and quad-precision types, `float`, `double`, and `__float128/_Float128` respectively.
 
@@ -451,7 +455,7 @@ The mathematical functions supported by CUDA are exposed through the following m
 
 [CUDA C++ Standard Library Mathematical functions](#mathematical-functions-appendix-cxx-standard-functions):
 
-  * Expose the full set of C++ `<cmath>` [header functions](https://en.cppreference.com/w/cpp/header/cmath) exposed through the `<cuda/std/cmath>` header and the `cuda::std::` namespace.
+  * Expose the full set of C++ `<cmath>` [header functions](https://en.cppreference.com/w/cpp/header/cmath) through the `<cuda/std/cmath>` header and the `cuda::std::` namespace.
 
   * Support IEEE-754 standard floating-point types, `__half`, `float`, `double`, `__float128`, as well as Bfloat16 `__nv_bfloat16`.
 
@@ -463,7 +467,7 @@ The mathematical functions supported by CUDA are exposed through the following m
 
   * Their behavior is affected by the `nvcc` [optimization flags](../02-basics/nvcc.html#optimization-options).
 
-  * A subset of functionalities is also supported on constant expressions, such as `constexpr` functions, in accordance with the C++23 and C++26 standard specifications.
+  * A subset of functionalities is also supported in constant expressions, such as `constexpr` functions, in accordance with the C++23 and C++26 standard specifications.
 
 
 [CUDA C Standard Library Mathematical functions](#mathematical-functions-appendix-cxx-standard-functions) ([CUDA Math API](https://docs.nvidia.com/cuda/cuda-math-api/index.html)):
@@ -542,7 +546,7 @@ The following sections provide accuracy information for some of these functions,
 
 ## 5.5.6. Built-In Arithmetic Operators
 
-The built-in C/C++ language operators, such as `x + y`, `x - y`, `x * y`, `x / y`, `x++`, `x--`, and reciprocal `1 / x`, for single-, double-, and quad-precision types comply with the IEEE-754 standard. They guarantee a maximum ULP error of zero using a _round-to-nearest-even_ rounding mode. They are available in both host and device code.
+The built-in C/C++ language operators, such as `x + y`, `x - y`, `x * y`, `x / y`, `x++`, `x--`, and reciprocal `1 / x`, for single-, double-, and quad-precision types comply with the IEEE-754 standard. They guarantee a maximum ULP error of zero using a _round-to-nearest-ties-to-even_ rounding mode. They are available in both host and device code.
 
 The `nvcc` compilation flag `-fmad=true`, also included in `--use_fast_math`, enables contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations and has the following effect on the maximum ULP error for the single-precision type `float`:
 
@@ -560,11 +564,11 @@ The `nvcc` compilation flag `-prec-div=false`, also included in `--use_fast_math
 
 ## 5.5.7. CUDA C++ Mathematical Standard Library Functions
 
-CUDA provides comprehensive support for [C++ Standard Library mathematical functions](https://en.cppreference.com/w/cpp/header/cmath.html) through the `cuda::std::` namespace. The functionalities are part of the `<cuda/std/cmath>` header. They are available on both host and device code.
+CUDA provides comprehensive support for [C++ Standard Library mathematical functions](https://en.cppreference.com/w/cpp/header/cmath.html) through the `cuda::std::` namespace. The functionalities are part of the `<cuda/std/cmath>` header. They are available in both host and device code.
 
 The following sections specify the mapping with the [CUDA Math APIs](https://docs.nvidia.com/cuda/cuda-math-api/index.html) and the error bounds of each function when executed on the device.
 
-  * The maximum ULP error is defined as the absolute value of the difference between the ULPs returned by the function and a correctly rounded result of the corresponding precision obtained according to the _round-to-nearest ties-to-even_ rounding mode.
+  * The maximum ULP error is stated as the maximum observed absolute value of the difference in ULPs between the value returned by the function and a correctly rounded result of the corresponding precision obtained according to the _round-to-nearest ties-to-even_ rounding mode.
 
   * The error bounds are derived from extensive, though not exhaustive, testing. Therefore, they are not guaranteed.
 
@@ -596,7 +600,7 @@ C Math API Mapping
 [CUDA Math API](https://docs.nvidia.com/cuda/cuda-math-api/index.html) for exponential functions are available in both host and device code only for `float` and `double` types.
 
 Table 47 C++ Mathematical Standard Library Functions   
-C Math API Mapping and Accuracy (Maximal ULP)   
+C Math API Mapping and Accuracy (Maximum ULP)   
 **Exponential Functions** `cuda::std` Function | Meaning | `__nv_bfloat16` | `__half` | `float` | `double` | `__float128`  
 ---|---|---|---|---|---|---  
   
@@ -694,7 +698,7 @@ N/A | [log1pf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group
 [CUDA Math API](https://docs.nvidia.com/cuda/cuda-math-api/index.html) for power functions are available in both host and device code only for `float` and `double` types.
 
 Table 48 C++ Mathematical Standard Library Functions   
-C Math API Mapping and Accuracy (Maximal ULP)   
+C Math API Mapping and Accuracy (Maximum ULP)   
 **Power Functions** `cuda::std` Function | Meaning | `__nv_bfloat16` | `__half` | `float` | `double` | `__float128`  
 ---|---|---|---|---|---|---  
   
@@ -753,7 +757,7 @@ N/A | [hypotf(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/gr
 [CUDA Math API](https://docs.nvidia.com/cuda/cuda-math-api/index.html) for trigonometric functions are available in both host and device code only for `float` and `double` types.
 
 Table 49 C++ Mathematical Standard Library Functions   
-C Math API Mapping and Accuracy (Maximal ULP)   
+C Math API Mapping and Accuracy (Maximum ULP)   
 **Trigonometric Functions** `cuda::std` Function | Meaning | `__nv_bfloat16` | `__half` | `float` | `double` | `__float128`  
 ---|---|---|---|---|---|---  
   
@@ -937,9 +941,9 @@ C Math API Mapping and Accuracy (Maximum ULP)
 2 ULP  
   
 [erfc(x)](https://en.cppreference.com/w/cpp/numeric/math/erfc.html) |   
-\\(1 - \mathrm{erf}(x)\\) | [erfcf](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv45erfcff)   
+\\(1 - \mathrm{erf}(x)\\) | [erfcf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv45erfcff)   
   
-4 ULP | [erfc](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv44erfcd)   
+4 ULP | [erfc(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv44erfcd)   
   
 5 ULP  
   
@@ -956,7 +960,7 @@ C Math API Mapping and Accuracy (Maximum ULP)
 ▪ 6 ULP for \\(x \notin [-10.001, -2.264]\\)   
 ▪ larger otherwise | [lgamma(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv46lgammad)   
   
-4 ULP for \\(x \notin [-23.0001, -2.2637]\\)   
+▪ 4 ULP for \\(x \notin [-23.0001, -2.2637]\\)   
 ▪ larger otherwise  
   
 ### 5.5.7.7. Nearest Integer Floating-Point Operations
@@ -973,8 +977,8 @@ C Math API Mapping
 [floor(x)](https://en.cppreference.com/w/cpp/numeric/math/floor.html) | \\(\lfloor x \rfloor\\) | [hfloor(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__FUNCTIONS.html#_CPPv46hfloorK13__nv_bfloat16) | [hfloor(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__FUNCTIONS.html#_CPPv46hfloorK6__half) | [floorf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv46floorff) | [floor(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv45floord) | [__nv_fp128_floor(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv416__nv_fp128_floorg)  
 [trunc(x)](https://en.cppreference.com/w/cpp/numeric/math/trunc.html) | Truncate to integer | [htrunc(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__FUNCTIONS.html#_CPPv46htruncK13__nv_bfloat16) | [htrunc(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__FUNCTIONS.html#_CPPv46htruncK6__half) | [truncf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv46truncff) | [trunc(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv45truncd) | [__nv_fp128_trunc(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv416__nv_fp128_truncg)  
 [round(x)](https://en.cppreference.com/w/cpp/numeric/math/round.html) | Round to nearest integer, ties away from zero | N/A | N/A | [roundf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv46roundff) | [round(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv45roundd) | [__nv_fp128_round(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv416__nv_fp128_roundg)  
-[nearbyint(x)](https://en.cppreference.com/w/cpp/numeric/math/nearbyint.html) | Round to integer, ties to even | N/A | N/A | [nearbyintf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv410nearbyintff) | [nearbyint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv49nearbyintd) | N/A  
-[rint(x)](https://en.cppreference.com/w/cpp/numeric/math/rint.html) | Round to integer, ties to even | [hrint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__FUNCTIONS.html#_CPPv45hrintK13__nv_bfloat16) | [hrint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__FUNCTIONS.html#_CPPv45hrintK6__half) | [rintf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv45rintff) | [rint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv44rintd) | [__nv_fp128_rint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv415__nv_fp128_rintg)  
+[nearbyint(x)](https://en.cppreference.com/w/cpp/numeric/math/nearbyint.html) | Round to nearest integer, ties to even | N/A | N/A | [nearbyintf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv410nearbyintff) | [nearbyint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv49nearbyintd) | N/A  
+[rint(x)](https://en.cppreference.com/w/cpp/numeric/math/rint.html) | Round to nearest integer, ties to even | [hrint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__FUNCTIONS.html#_CPPv45hrintK13__nv_bfloat16) | [hrint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__FUNCTIONS.html#_CPPv45hrintK6__half) | [rintf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv45rintff) | [rint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv44rintd) | [__nv_fp128_rint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv415__nv_fp128_rintg)  
 [lrint(x)](https://en.cppreference.com/w/cpp/numeric/math/rint.html) | Round to nearest integer, ties to even (returns `long int`) | N/A | N/A | [lrintf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv46lrintff) | [lrint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv45lrintd) | N/A  
 [llrint(x)](https://en.cppreference.com/w/cpp/numeric/math/rint.html) | Round to nearest integer, ties to even (returns `long long int`) | N/A | N/A | [llrintf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv47llrintff) | [llrint(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv46llrintd) | N/A  
 [lround(x)](https://en.cppreference.com/w/cpp/numeric/math/round.html) | Round to nearest integer, ties away from zero (returns `long int`) | N/A | N/A | [lroundf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv47lroundff) | [lround(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv46lroundd) | N/A  
@@ -1028,7 +1032,7 @@ C Math API Mapping
 [isgreaterequal(x, y)](https://en.cppreference.com/w/cpp/numeric/math/isgreaterequal.html) | Check if \\(x \geq y\\) | [__hge(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__COMPARISON.html#_CPPv45__hgeK13__nv_bfloat16K13__nv_bfloat16) | [__hge(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__COMPARISON.html#_CPPv45__hge6__half6__half) | N/A | N/A | N/A  
 [isless(x, y)](https://en.cppreference.com/w/cpp/numeric/math/isless.html) | Check if \\(x < y\\) | [__hlt(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__COMPARISON.html#_CPPv45__hltK13__nv_bfloat16K13__nv_bfloat16) | [__hlt(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__COMPARISON.html#_CPPv45__hlt6__half6__half) | N/A | N/A | N/A  
 [islessequal(x, y)](https://en.cppreference.com/w/cpp/numeric/math/islessequal.html) | Check if \\(x \leq y\\) | [__hle(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__COMPARISON.html#_CPPv45__hleK13__nv_bfloat16K13__nv_bfloat16) | [__hle(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__COMPARISON.html#_CPPv45__hle6__half6__half) | N/A | N/A | N/A  
-[islessgreater(x, y)](https://en.cppreference.com/w/cpp/numeric/math/islessgreater.html) | Check if \\(x < y\\) or \\(x > y\\) | [__hge(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__COMPARISON.html#_CPPv45__hgeK13__nv_bfloat16K13__nv_bfloat16) | [__hge(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__COMPARISON.html#_CPPv45__hgeK6__halfK6__half) | N/A | N/A | N/A  
+[islessgreater(x, y)](https://en.cppreference.com/w/cpp/numeric/math/islessgreater.html) | Check if \\(x < y\\) or \\(x > y\\) | [__hne(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__COMPARISON.html#_CPPv45__hneK13__nv_bfloat16K13__nv_bfloat16) | [__hne(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__COMPARISON.html#_CPPv45__hneK6__halfK6__half) | N/A | N/A | N/A  
 [isunordered(x, y)](https://en.cppreference.com/w/cpp/numeric/math/isunordered.html) | Check if \\(x\\), \\(y\\), or both are NaN | N/A | N/A | N/A | N/A | [__nv_fp128_isunordered(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv422__nv_fp128_isunorderedgg)  
   
 ***** Mathematical functions marked with “N/A” are not natively available for CUDA-extended floating-point types, such as __half and __nv_bfloat16.
@@ -1039,7 +1043,7 @@ CUDA provides mathematical functions that are not part of the C/C++ Standard Lib
 
 This section specifies the error bounds of each function when executed on the device.
 
-  * The maximum ULP error is defined as the absolute value of the difference between the ULPs returned by the function and a correctly rounded result of the corresponding precision obtained according to the _round-to-nearest ties-to-even_ rounding mode.
+  * The maximum ULP error is stated as the maximum observed absolute value of the difference in ULPs between the value returned by the function and a correctly rounded result of the corresponding precision obtained according to the _round-to-nearest ties-to-even_ rounding mode.
 
   * The error bounds are derived from extensive, though not exhaustive, testing. Therefore, they are not guaranteed.
 
@@ -1208,7 +1212,7 @@ For \\(n = 128\\), the maximum absolute error \\(= 5 \cdot 10^{-12}\\)
   
 \\(Y_n(x)\\) | [ynf(n, x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv43ynfif)   
   
-▪ \\(\lceil(2 + 2.5n)\\) for \\(|x| < n\\)   
+▪ \\(\lceil 2 + 2.5n \rceil\\) for \\(|x| < n\\)   
 ▪ the maximum absolute error \\(= 2.2 \cdot 10^{-6}\\), otherwise | [yn(n, x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__DOUBLE.html#_CPPv42ynid)   
   
 For \\(|x| > 1.5n\\), the maximum absolute error \\(= 5 \cdot 10^{-12}\\)  
@@ -1232,7 +1236,7 @@ N/A
   
 0 ULP | [__nv_fp128_exp10(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__QUAD.html#_CPPv416__nv_fp128_exp10g)   
   
-0 ULP  
+1 ULP  
 \\(\dfrac{1}{\sqrt{x}}\\) | [hrsqrt(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____BFLOAT16__FUNCTIONS.html#_CPPv46hrsqrtK13__nv_bfloat16)   
   
 0 ULP | [hrsqrt(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH____HALF__FUNCTIONS.html#_CPPv46hrsqrtK6__half)   
@@ -1262,7 +1266,7 @@ Intrinsic mathematical functions are faster and less accurate versions of their 
 
 ### 5.5.9.1. Basic Intrinsic Functions
 
-A subset of mathematical intrinsic functions allow to specify the rounding mode:
+A subset of mathematical intrinsic functions allow specifying the rounding mode:
 
   * Functions suffixed with `_rn` operate using the _round to nearest even_ rounding mode.
 
@@ -1273,9 +1277,9 @@ A subset of mathematical intrinsic functions allow to specify the rounding mode:
   * Functions suffixed with `_rd` operate using the _round down_ (toward negative infinity) rounding mode.
 
 
-The `__fadd_[rn,rz,ru,rd]()`, `__dadd_rn()`, `__fmul_[rn,rz,ru,rd]()`, and `__dmul_rn()` functions map to addition and multiplication operations that the compiler never merges into the `FFMA` or `DFMA` instructions. In contrast, additions and multiplications generated from the `*` and `+` operators are often combined into `FFMA` or `DFMA`.
+The `__fadd_[rn,rz,ru,rd]()`, `__dadd_[rn,rz,ru,rd]()`, `__fmul_[rn,rz,ru,rd]()`, and `__dmul_[rn,rz,ru,rd]()` functions map to addition and multiplication operations that the compiler never merges into the `FFMA` or `DFMA` instructions. In contrast, additions and multiplications generated from the `*` and `+` operators are often combined into `FFMA` or `DFMA`.
 
-The following table lists the single-, double-, and quad-precision floating-point intrinsic functions. All of them have a maximum ULP error of 0 and are IEEE-compliant.
+The following table lists the single- and double-precision floating-point intrinsic functions. All of them have a maximum ULP error of 0 and are IEEE-compliant.
 
 Table 57 Single- and Double-Precision Floating-Point Intrinsic Functions Meaning | `float` | `double`  
 ---|---|---  
@@ -1291,7 +1295,7 @@ Table 57 Single- and Double-Precision Floating-Point Intrinsic Functions Meaning
 
 The following table lists the single-precision floating-point intrinsic functions with their maximum ULP error.
 
-  * The maximum ULP error is stated as the absolute value of the difference in ULPs between the result returned by the CUDA library function and a correctly rounded single-precision result obtained according to the _round-to-nearest ties-to-even_ rounding mode.
+  * The maximum ULP error is stated as the maximum observed absolute value of the difference in ULPs between the value returned by the function and a correctly rounded result of the corresponding precision obtained according to the _round-to-nearest ties-to-even_ rounding mode.
 
   * The error bounds are derived from extensive, though not exhaustive, testing. Therefore, they are not guaranteed.
 
@@ -1300,6 +1304,7 @@ Table 58 **Single-Precision Only Floating-Point Intrinsic Functions**
 Mapping and Accuracy (Maximum ULP) Function | Meaning | Maximum ULP Error  
 ---|---|---  
 [__fdividef(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv410__fdividefff) | \\(\dfrac{x}{y}\\) | \\(2\\) for \\(|y| \in [2^{-126}, 2^{126}]\\)  
+[__frsqrt_rn(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv411__frsqrt_rnf) | \\(\dfrac{1}{\sqrt{x}}\\) | 0 ULP  
 [__expf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv46__expff) | \\(e^x\\) | \\(2 + \lfloor |1.173 \cdot x| \rfloor\\)  
 [__exp10f(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv48__exp10ff) | \\(10^x\\) | \\(2 + \lfloor |2.97 \cdot x| \rfloor\\)  
 [__powf(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv46__powfff) | \\(x^y\\) | Derived from `exp2f(y * __log2f(x))`  
@@ -1326,6 +1331,7 @@ The `nvcc` compiler flag `--use_fast_math` translates a subset of [CUDA Math API
 
 Table 59 Functions Directly Affected by `--use_fast_math` Device Function | Intrinsic Function  
 ---|---  
+[x/y, fdividef(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv48fdividefff) | [__fdividef(x, y)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv410__fdividefff)  
 [sinf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv44sinff) | [__sinf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv46__sinff)  
 [cosf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv44cosff) | [__cosf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv46__cosff)  
 [tanf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__SINGLE.html#_CPPv44tanff) | [__tanf(x)](https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html#_CPPv46__tanff)  

@@ -31,7 +31,7 @@ int ptxVersion
 
 int requiredClusterWidth
 
-int reserved[16]
+int reserved[15]
 
 size_t sharedSizeBytes
 
@@ -113,7 +113,7 @@ The required cluster width/height/depth in blocks. The values must either all be
 
 If the value is set during compile time, it cannot be set at runtime. Setting it at runtime should return cudaErrorNotPermitted. See cudaFuncSetAttribute
 
-int cudaFuncAttributes::reserved[16]
+int cudaFuncAttributes::reserved[15]
 
 
 Reserved for future use.
@@ -124,8 +124,3 @@ size_t cudaFuncAttributes::sharedSizeBytes
 The size in bytes of statically-allocated shared memory per block required by this function. This does not include dynamically-allocated shared memory requested by the user at runtime.
 
 * * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

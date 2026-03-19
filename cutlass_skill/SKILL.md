@@ -1,6 +1,6 @@
 ---
 name: cutlass-skill
-description: "Write, debug, and optimize CUTLASS and CuTeDSL GPU kernels using local source code, examples, and header references. Use when the user mentions CUTLASS, CuTe, CuTeDSL, cute::Layout, cute::Tensor, TiledMMA, TiledCopy, CollectiveMainloop, CollectiveEpilogue, GEMM kernel, grouped GEMM, sparse GEMM, flash attention CUTLASS, blackwell GEMM, hopper GEMM, FP8 GEMM, blockwise scaling, MoE GEMM, StreamK, warp specialization CUTLASS, TMA CUTLASS, or asks about writing high-performance CUDA kernels with CUTLASS/CuTe templates."
+description: "Write, debug, and optimize CUTLASS and CuTeDSL GPU kernels using local source code, examples, and header references. Use when the user mentions CUTLASS, CuTe, CuTeDSL, cute::Layout, cute::Tensor, TiledMMA, TiledCopy, CollectiveMainloop, CollectiveEpilogue, GEMM kernel, grouped GEMM, sparse GEMM, flash attention CUTLASS, blackwell GEMM, hopper GEMM, FP8 GEMM, FP4 GEMM, blockwise scaling, MoE GEMM, StreamK, warp specialization CUTLASS, TMA CUTLASS, epilogue fusion, EVT (Epilogue Visitor Tree), pycute, Layout algebra, Swizzle pattern, GemmUniversal, KernelSchedule, EpilogueSchedule, CUTLASS collective builder, CUTLASS pipeline, or asks about writing high-performance CUDA kernels with CUTLASS/CuTe templates. Also use when the user wants to understand CUTLASS source code structure, compile CUTLASS examples, or debug CUTLASS template errors."
 ---
 
 # CUTLASS & CuTeDSL Development

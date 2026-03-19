@@ -1111,7 +1111,7 @@ Note that any atomic operation can be implemented based on `atomicCAS()` (Compar
     #include <cuda/std/bit>
     
     __device__ float customAtomicAdd(float* d_ptr, float value) {
-        unsigned* d_ptr_unsigned = reinterpret_cast<unsigned*>(d_ptr);
+        volatile unsigned* d_ptr_unsigned = reinterpret_cast<unsigned*>(d_ptr);
         unsigned  old_value      = *d_ptr_unsigned;
         unsigned  assumed;
         do {
@@ -1126,7 +1126,7 @@ Note that any atomic operation can be implemented based on `atomicCAS()` (Compar
     }
     
 
-See the example on [Compiler Explorer](https://godbolt.org/z/a69n5YT5f).
+See the example on [Compiler Explorer](https://godbolt.org/z/676e5bc7a).
 
 #### 5.4.5.1.1. `atomicAdd()`
     
@@ -1669,7 +1669,7 @@ The functions support the following data types:
   * `unsigned`, `int`, `unsigned long long`, `long long`
 
 
-#### 5.4.5.2.8. `__nv_atomic_exchange()`, `__nv_atomic_compare_exchange_n()`
+#### 5.4.5.2.8. `__nv_atomic_exchange()`, `__nv_atomic_exchange_n()`
     
     
     __device__ T    __nv_atomic_exchange_n(T* address, T val,          int order, int scope = __NV_THREAD_SCOPE_SYSTEM);

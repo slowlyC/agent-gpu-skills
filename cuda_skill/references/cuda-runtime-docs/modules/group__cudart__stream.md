@@ -23,15 +23,6 @@ cudaSuccess
 
 Resets all persisting lines in cache to normal status. Takes effect on function return.
 
-**See also:**
-
-cudaAccessPolicyWindow
-
-__host__ cudaError_t cudaStreamAddCallback ( cudaStream_t stream, cudaStreamCallback_t callback, void* userData, unsigned int  flags )
-
-
-Add a callback to a compute stream.
-
 ######  Parameters
 
 `stream`
@@ -70,15 +61,12 @@ For the purposes of Unified Memory, callback execution makes a number of guarant
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamQuery, cudaStreamSynchronize, cudaStreamWaitEvent, cudaStreamDestroy, cudaMallocManaged, cudaStreamAttachMemAsync, cudaLaunchHostFunc, cuStreamAddCallback
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamAttachMemAsync ( cudaStream_t stream, void* devPtr, size_t length = 0, unsigned int  flags = cudaMemAttachSingle )
-
-
-Attach memory to a stream asynchronously.
 
 ######  Parameters
 
@@ -120,15 +108,12 @@ It is a program's responsibility to order calls to cudaStreamAttachMemAsync via 
 
 If `stream` is destroyed while data is associated with it, the association is removed and the association reverts to the default visibility of the allocation as specified at cudaMallocManaged. For __managed__ variables, the default association is always cudaMemAttachGlobal. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamWaitEvent, cudaStreamSynchronize, cudaStreamAddCallback, cudaStreamDestroy, cudaMallocManaged, cuStreamAttachMemAsync
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamBeginCapture ( cudaStream_t stream, cudaStreamCaptureMode mode )
-
-
-Begins graph capture on a stream.
 
 ######  Parameters
 
@@ -148,15 +133,6 @@ Begin graph capture on `stream`. When a stream is in capture mode, all operation
 If `mode` is not cudaStreamCaptureModeRelaxed, cudaStreamEndCapture must be called on this stream from the same thread.
 
 Kernels captured using this API must not use texture and surface references. Reading or writing through any texture or surface reference is undefined behavior. This restriction does not apply to texture and surface objects.
-
-**See also:**
-
-cudaStreamCreate, cudaStreamIsCapturing, cudaStreamEndCapture, cudaThreadExchangeStreamCaptureMode
-
-__host__ cudaError_t cudaStreamBeginCaptureToGraph ( cudaStream_t stream, cudaGraph_t graph, const cudaGraphNode_t* dependencies, const cudaGraphEdgeData* dependencyData, size_t numDependencies, cudaStreamCaptureMode mode )
-
-
-Begins graph capture on a stream to an existing graph.
 
 ######  Parameters
 
@@ -187,15 +163,6 @@ If `mode` is not cudaStreamCaptureModeRelaxed, cudaStreamEndCapture must be call
 
 Kernels captured using this API must not use texture and surface references. Reading or writing through any texture or surface reference is undefined behavior. This restriction does not apply to texture and surface objects.
 
-**See also:**
-
-cudaStreamCreate, cudaStreamIsCapturing, cudaStreamEndCapture, cudaThreadExchangeStreamCaptureMode
-
-__host__ cudaError_t cudaStreamCopyAttributes ( cudaStream_t dst, cudaStream_t src )
-
-
-Copies attributes from source stream to destination stream.
-
 ######  Parameters
 
 `dst`
@@ -211,15 +178,6 @@ cudaSuccess, cudaErrorNotSupported
 
 Copies attributes from source stream `src` to destination stream `dst`. Both streams must have the same context.
 
-**See also:**
-
-cudaAccessPolicyWindow
-
-__host__ cudaError_t cudaStreamCreate ( cudaStream_t* pStream )
-
-
-Create an asynchronous stream.
-
 ######  Parameters
 
 `pStream`
@@ -227,21 +185,18 @@ Create an asynchronous stream.
 
 ###### Returns
 
-cudaSuccess, cudaErrorInvalidValue
+cudaSuccess, cudaErrorInvalidValuecudaErrorExternalDevice
 
 ###### Description
 
 Creates a new asynchronous stream on the context that is current to the calling host thread. If no context is current to the calling host thread, then the primary context for a device is selected, made current to the calling thread, and initialized before creating a stream on it.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreateWithPriority, cudaStreamCreateWithFlags, cudaStreamGetPriority, cudaStreamGetFlags, cudaStreamGetDevice, cudaStreamGetDevResource, cudaStreamQuery, cudaStreamSynchronize, cudaStreamWaitEvent, cudaStreamAddCallback, cudaSetDevice, cudaStreamDestroy, cuStreamCreate
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__  __device__ cudaError_t cudaStreamCreateWithFlags ( cudaStream_t* pStream, unsigned int  flags )
-
-
-Create an asynchronous stream.
 
 ######  Parameters
 
@@ -252,7 +207,7 @@ Create an asynchronous stream.
 
 ###### Returns
 
-cudaSuccess, cudaErrorInvalidValue
+cudaSuccess, cudaErrorInvalidValuecudaErrorExternalDevice
 
 ###### Description
 
@@ -263,14 +218,12 @@ Creates a new asynchronous stream on the context that is current to the calling 
   * cudaStreamNonBlocking: Specifies that work running in the created stream may run concurrently with work in stream 0 (the NULL stream), and that the created stream should perform no implicit synchronization with stream 0.
 
 
-**See also:**
+  *
 
-cudaStreamCreate, cudaStreamCreateWithPriority, cudaStreamGetFlags, cudaStreamGetDevice, cudaStreamGetDevResource, cudaStreamQuery, cudaStreamSynchronize, cudaStreamWaitEvent, cudaStreamAddCallback, cudaSetDevice, cudaStreamDestroy, cuStreamCreate
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-__host__ cudaError_t cudaStreamCreateWithPriority ( cudaStream_t* pStream, unsigned int  flags, int  priority )
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-
-Create an asynchronous stream with the specified priority.
 
 ######  Parameters
 
@@ -283,7 +236,7 @@ Create an asynchronous stream with the specified priority.
 
 ###### Returns
 
-cudaSuccess, cudaErrorInvalidValue
+cudaSuccess, cudaErrorInvalidValuecudaErrorExternalDevice
 
 ###### Description
 
@@ -291,19 +244,16 @@ Creates a stream with the specified priority and returns a handle in `pStream`. 
 
 `priority` follows a convention where lower numbers represent higher priorities. '0' represents default priority. The range of meaningful numerical priorities can be queried using cudaDeviceGetStreamPriorityRange. If the specified priority is outside the numerical range returned by cudaDeviceGetStreamPriorityRange, it will automatically be clamped to the lowest or the highest number in the range.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Stream priorities are supported only on GPUs with compute capability 3.5 or higher.
 
   * In the current implementation, only compute kernels launched in priority streams are affected by the stream's priority. Stream priorities have no effect on host-to-device and device-to-host memory operations.
 
-
-**See also:**
-
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaDeviceGetStreamPriorityRange, cudaStreamGetPriority, cudaStreamQuery, cudaStreamWaitEvent, cudaStreamAddCallback, cudaStreamSynchronize, cudaSetDevice, cudaStreamDestroy, cuStreamCreateWithPriority
-
-__host__  __device__ cudaError_t cudaStreamDestroy ( cudaStream_t stream )
-
-
-Destroys and cleans up an asynchronous stream.
 
 ######  Parameters
 
@@ -312,7 +262,7 @@ Destroys and cleans up an asynchronous stream.
 
 ###### Returns
 
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandlecudaErrorExternalDevice
 
 ###### Description
 
@@ -322,17 +272,14 @@ In case the device is still doing work in the stream `stream` when cudaStreamDes
 
   * This function uses standard default stream semantics.
 
+  *
+
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
   * Use of the handle after this call is undefined behavior.
 
-
-**See also:**
-
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamQuery, cudaStreamWaitEvent, cudaStreamSynchronize, cudaStreamAddCallback, cuStreamDestroy
-
-__host__ cudaError_t cudaStreamEndCapture ( cudaStream_t stream, cudaGraph_t* pGraph )
-
-
-Ends capture on a stream, returning the captured graph.
 
 ######  Parameters
 
@@ -351,15 +298,6 @@ End capture on `stream`, returning the captured graph via `pGraph`. Capture must
 
 If the `mode` argument to cudaStreamBeginCapture was not cudaStreamCaptureModeRelaxed, this call must be from the same thread as cudaStreamBeginCapture.
 
-**See also:**
-
-cudaStreamCreate, cudaStreamBeginCapture, cudaStreamIsCapturing, cudaGraphDestroy
-
-__host__ cudaError_t cudaStreamGetAttribute ( cudaStream_t hStream, cudaStreamAttrID attr, cudaStreamAttrValue* value_out )
-
-
-Queries stream attribute.
-
 ######  Parameters
 
 `hStream`
@@ -376,15 +314,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle
 ###### Description
 
 Queries attribute `attr` from `hStream` and stores it in corresponding member of `value_out`.
-
-**See also:**
-
-cudaAccessPolicyWindow
-
-__host__ cudaError_t cudaStreamGetCaptureInfo ( cudaStream_t stream, cudaStreamCaptureStatus ** captureStatus_out, unsigned long long* id_out = 0, cudaGraph_t* graph_out = 0, const cudaGraphNode_t** dependencies_out = 0, const cudaGraphEdgeData** edgeData_out = 0, size_t* numDependencies_out = 0 )
-
-
-Query a stream's capture state.
 
 ######  Parameters
 
@@ -425,15 +354,6 @@ If `edgeData_out` is non-NULL then `dependencies_out` must be as well. If `depen
   * Graph objects are not threadsafe. More here.
 
   *
-**See also:**
-
-cudaStreamBeginCapture, cudaStreamIsCapturing, cudaStreamUpdateCaptureDependencies
-
-__host__ cudaError_t cudaStreamGetDevice ( cudaStream_t hStream, int* device )
-
-
-Query the device of a stream.
-
 ######  Parameters
 
 `hStream`
@@ -451,15 +371,12 @@ Returns in `*device` the device of the stream.
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaSetDevice, cudaGetDevice, cudaStreamCreate, cudaStreamGetPriority, cudaStreamGetFlags, cuStreamGetId
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamGetFlags ( cudaStream_t hStream, unsigned int* flags )
-
-
-Query the flags of a stream.
 
 ######  Parameters
 
@@ -478,15 +395,12 @@ Query the flags of a stream. The flags are returned in `flags`. See cudaStreamCr
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreateWithPriority, cudaStreamCreateWithFlags, cudaStreamGetPriority, cudaStreamGetDevice, cuStreamGetFlags
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamGetId ( cudaStream_t hStream, unsigned long long* streamId )
-
-
-Query the Id of a stream.
 
 ######  Parameters
 
@@ -512,15 +426,12 @@ The stream handle `hStream` can refer to any of the following:
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreateWithPriority, cudaStreamCreateWithFlags, cudaStreamGetPriority, cudaStreamGetFlags, cuStreamGetId
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamGetPriority ( cudaStream_t hStream, int* priority )
-
-
-Query the priority of a stream.
 
 ######  Parameters
 
@@ -537,15 +448,12 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle
 
 Query the priority of a stream. The priority is returned in in `priority`. Note that if the stream was created with a priority outside the meaningful numerical range returned by cudaDeviceGetStreamPriorityRange, this function returns the clamped priority. See cudaStreamCreateWithPriority for details about priority clamping.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreateWithPriority, cudaDeviceGetStreamPriorityRange, cudaStreamGetFlags, cudaStreamGetDevice, cudaStreamGetDevResource, cuStreamGetPriority
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamIsCapturing ( cudaStream_t stream, cudaStreamCaptureStatus ** pCaptureStatus )
-
-
-Returns a stream's capture status.
 
 ######  Parameters
 
@@ -573,15 +481,6 @@ Note that, if this is called on cudaStreamLegacy (the "null stream") while a blo
 
 When a blocking stream is capturing, the legacy stream is in an unusable state until the blocking stream capture is terminated. The legacy stream is not supported for stream capture, but attempted use would have an implicit dependency on the capturing stream(s).
 
-**See also:**
-
-cudaStreamCreate, cudaStreamBeginCapture, cudaStreamEndCapture
-
-__host__ cudaError_t cudaStreamQuery ( cudaStream_t stream )
-
-
-Queries an asynchronous stream for completion status.
-
 ######  Parameters
 
 `stream`
@@ -599,15 +498,12 @@ For the purposes of Unified Memory, a return value of cudaSuccess is equivalent 
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamWaitEvent, cudaStreamSynchronize, cudaStreamAddCallback, cudaStreamDestroy, cuStreamQuery
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamSetAttribute ( cudaStream_t hStream, cudaStreamAttrID attr, const cudaStreamAttrValue* value )
-
-
-Sets stream attribute.
 
 ######  Parameters
 
@@ -626,15 +522,6 @@ cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle
 
 Sets attribute `attr` on `hStream` from corresponding attribute of `value`. The updated attribute will be applied to subsequent work submitted to the stream. It will not affect previously submitted work.
 
-**See also:**
-
-cudaAccessPolicyWindow
-
-__host__ cudaError_t cudaStreamSynchronize ( cudaStream_t stream )
-
-
-Waits for stream tasks to complete.
-
 ######  Parameters
 
 `stream`
@@ -650,15 +537,12 @@ Blocks until `stream` has completed all operations. If the cudaDeviceScheduleBlo
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamQuery, cudaStreamWaitEvent, cudaStreamAddCallback, cudaStreamDestroy, cuStreamSynchronize
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaStreamUpdateCaptureDependencies ( cudaStream_t stream, cudaGraphNode_t* dependencies, const cudaGraphEdgeData* dependencyData, size_t numDependencies, unsigned int  flags = 0 )
-
-
-Update the set of dependencies in a capturing stream.
 
 ######  Parameters
 
@@ -687,15 +571,6 @@ Nodes that are removed from the dependency set via this API do not result in cud
 
 Returns cudaErrorIllegalState if the stream is not capturing.
 
-**See also:**
-
-cudaStreamBeginCapture, cudaStreamGetCaptureInfo
-
-__host__  __device__ cudaError_t cudaStreamWaitEvent ( cudaStream_t stream, cudaEvent_t event, unsigned int  flags = 0 )
-
-
-Make a compute stream wait on an event.
-
 ######  Parameters
 
 `stream`
@@ -722,15 +597,12 @@ flags include:
 
   * This function uses standard default stream semantics.
 
+  *
 
-**See also:**
+  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-cudaStreamCreate, cudaStreamCreateWithFlags, cudaStreamQuery, cudaStreamSynchronize, cudaStreamAddCallback, cudaStreamDestroy, cuStreamWaitEvent
+  * Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-__host__ cudaError_t cudaThreadExchangeStreamCaptureMode ( cudaStreamCaptureMode ** mode )
-
-
-Swaps the stream capture interaction mode for a thread.
 
 ######  Parameters
 
@@ -764,13 +636,3 @@ A thread's mode is one of the following:
   * `cudaStreamCaptureModeRelaxed:` The local thread is not prohibited from potentially unsafe API calls. Note that the thread is still prohibited from API calls which necessarily conflict with stream capture, for example, attempting cudaEventQuery on an event that was last recorded inside a capture sequence.
 
 
-**See also:**
-
-cudaStreamBeginCapture
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

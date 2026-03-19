@@ -40,6 +40,8 @@ typedef CUdevResourceDesc_st * CUdevResourceDesc
 
 enum CUdevResourceType
 
+enum CUdevSmResourceGroup_flags
+
 enum CUdevWorkqueueConfigScope
 
 
@@ -172,7 +174,7 @@ For a valid call:
     * `preferredCoscheduledSmCount:` Attempts to merge `coscheduledSmCount` groups into larger groups, in order to make use of `preferredClusterDimensions` on Compute Architecture 10.0+. The default value is set to `coscheduledSmCount`.
 
     * `flags:`
-      * `CU_DEV_SM_RESOURCE_SPLIT_BACKFILL:` lets `smCount` be a non-multiple of `coscheduledSmCount`, filling the difference between SM count and already assigned co-scheduled groupings with other SMs. This lets any resulting group behave similar to the `remainder` group for example.
+      * `CU_DEV_SM_RESOURCE_GROUP_BACKFILL:` lets `smCount` be a non-multiple of `coscheduledSmCount`, filling the difference between SM count and already assigned co-scheduled groupings with other SMs. This lets any resulting group behave similar to the `remainder` group for example.
 
 
 **Example params and their effect:**
@@ -201,13 +203,13 @@ A groupParams array element is defined in the following order:
           // A single piece is split-off, but instead of assigning the rest to the remainder, a second group contains everything else
           // This assumes the device has 10+ SMs (8 of which are coscheduled in groups of 4)
           // otherwise the second group could end up with 0 SMs, which is not allowed.
-          CU_DEV_SM_RESOURCE_GROUP_PARAMS params { {8, 4, 0, 0}, {0, 2, 0, CU_DEV_SM_RESOURCE_SPLIT_BACKFILL } }
+          CU_DEV_SM_RESOURCE_GROUP_PARAMS params { {8, 4, 0, 0}, {0, 2, 0, CU_DEV_SM_RESOURCE_GROUP_BACKFILL } }
 
 The difference between a catch-all param group as the last entry and the remainder is in two aspects:
 
   * The remainder may be NULL / _TYPE_INVALID (if there are no SMs remaining), while a result group must always be valid.
 
-  * The remainder does not have a structure, while the result group will always need to adhere to a structure of coscheduledSmCount (even if its just 2), and therefore must always have enough coscheduled SMs to cover that requirement (even with the `CU_DEV_SM_RESOURCE_SPLIT_BACKFILL` flag enabled).
+  * The remainder does not have a structure, while the result group will always need to adhere to a structure of coscheduledSmCount (even if its just 2), and therefore must always have enough coscheduled SMs to cover that requirement (even with the `CU_DEV_SM_RESOURCE_GROUP_BACKFILL` flag enabled).
 
 
 Splitting an input into N groups, can be accomplished by repeatedly splitting off 1 group and re-splitting the remainder (a bisect operation). However, it's recommended to accomplish this with a single call wherever possible.

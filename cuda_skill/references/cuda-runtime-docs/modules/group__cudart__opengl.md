@@ -37,15 +37,6 @@ Returns in `*pCudaDeviceCount` the number of CUDA-compatible devices correspondi
   * This function is not supported on Mac OS X.
 
   *
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuGLGetDevices
-
-__host__ cudaError_t cudaGraphicsGLRegisterBuffer ( cudaGraphicsResource** resource, GLuint buffer, unsigned int  flags )
-
-
-Registers an OpenGL buffer object.
-
 ######  Parameters
 
 `resource`
@@ -69,15 +60,6 @@ Registers the buffer object specified by `buffer` for access by CUDA. A handle t
 
   * cudaGraphicsRegisterFlagsWriteDiscard: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
 
-
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsResourceGetMappedPointer, cuGraphicsGLRegisterBuffer
-
-__host__ cudaError_t cudaGraphicsGLRegisterImage ( cudaGraphicsResource** resource, GLuint image, GLenum target, unsigned int  flags )
-
-
-Register an OpenGL texture or renderbuffer object.
 
 ######  Parameters
 
@@ -129,15 +111,6 @@ The following image classes are currently disallowed:
   * Multisampled renderbuffers
 
 
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cuGraphicsGLRegisterImage
-
-__host__ cudaError_t cudaWGLGetDevice ( int* device, HGPUNV hGpu )
-
-
-Gets the CUDA device associated with hGpu.
-
 ######  Parameters
 
 `device`
@@ -153,13 +126,4 @@ cudaSuccess
 
 Returns the CUDA device associated with a hGpu, if applicable.
 
-**See also:**
 
-WGL_NV_gpu_affinity, cuWGLGetDevice
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
