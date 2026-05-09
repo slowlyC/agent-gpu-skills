@@ -11,7 +11,7 @@ All documentation is under the `references/` directory within this skill's insta
 The base path depends on which agent tool is used:
 - Cursor: `~/.cursor/skills/cuda-skill/references/`
 - Claude Code: `~/.claude/skills/cuda-skill/references/`
-- Codex: `~/.agents/skills/cuda-skill/references/`
+- Codex: `~/.codex/skills/cuda-skill/references/`
 
 Below, `CUDA_REFS` refers to the `references/` directory inside the skill's install path.
 For example: `~/.cursor/skills/cuda-skill/references/` (Cursor) or `~/.claude/skills/cuda-skill/references/` (Claude Code).

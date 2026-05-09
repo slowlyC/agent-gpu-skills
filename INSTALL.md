@@ -23,10 +23,19 @@ bash install.sh --agent gemini     # Gemini CLI
 |:-----|:---------------|:---------|:---------|
 | Cursor | `~/.cursor/skills/` | 已验证 | [Cursor Skills](https://cursor.com/docs/context/skills) |
 | Claude Code | `~/.claude/skills/` | 未验证 | [Claude Code Skills](https://docs.anthropic.com/en/docs/claude-code/skills) |
-| Codex | `~/.agents/skills/` | 未验证 | [Codex Skills](https://developers.openai.com/codex/skills) |
+| Codex | `~/.codex/skills/` | 未验证 | [Codex Skills](https://developers.openai.com/codex/skills) |
 | Gemini CLI | `~/.gemini/skills/` | 未验证 | [Gemini CLI Skills](https://geminicli.com/docs/cli/skills/) |
 
 注: SKILL.md 格式是跨工具通用的，但 skill 发现机制和搜索工具的行为可能因工具而异。Cursor 以外的工具如遇问题，建议让对应 AI 协助排查。
+
+## 路径说明
+
+本仓库对 Codex 统一使用：
+
+- 配置文件：`~/.codex/config.toml`
+- skill 目录：`~/.codex/skills/`
+
+因此 `bash install.sh --agent codex` 会直接安装到 `~/.codex/skills/`。
 
 ## 安装方式
 

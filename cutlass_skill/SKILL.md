@@ -11,7 +11,7 @@ CUTLASS 源码位于此 skill 安装目录下的 `repos/cutlass/`。
 实际路径取决于所用工具:
 - Cursor: `~/.cursor/skills/cutlass-skill/repos/cutlass/`
 - Claude Code: `~/.claude/skills/cutlass-skill/repos/cutlass/`
-- Codex: `~/.agents/skills/cutlass-skill/repos/cutlass/`
+- Codex: `~/.codex/skills/cutlass-skill/repos/cutlass/`
 
 **CUTLASS_REPO**: 下文示例用 `~/.cursor/skills/cutlass-skill/repos/cutlass/` 作占位符，**替换为实际路径**。
 

@@ -11,7 +11,7 @@ Triton 源码位于此 skill 安装目录下的 `repos/triton/`。
 实际路径取决于所用工具:
 - Cursor: `~/.cursor/skills/triton-skill/repos/triton/`
 - Claude Code: `~/.claude/skills/triton-skill/repos/triton/`
-- Codex: `~/.agents/skills/triton-skill/repos/triton/`
+- Codex: `~/.codex/skills/triton-skill/repos/triton/`
 
 **TRITON_REPO**: 下文示例用 `~/.cursor/skills/triton-skill/repos/triton/` 作占位符，**替换为实际路径**。
 

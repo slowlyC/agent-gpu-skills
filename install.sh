@@ -31,7 +31,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "安装到其他工具 (未验证，如遇问题让对应 AI 协助排查):"
             echo "  bash install.sh --agent claude   # Claude Code (~/.claude/skills/)"
-            echo "  bash install.sh --agent codex    # Codex (~/.agents/skills/)"
+            echo "  bash install.sh --agent codex    # Codex (~/.codex/skills/)"
             echo "  bash install.sh --agent gemini   # Gemini CLI (~/.gemini/skills/)"
             echo ""
             echo "选项:"
@@ -46,7 +46,7 @@ get_skill_dir() {
     case $1 in
         cursor) echo "${HOME}/.cursor/skills" ;;
         claude) echo "${HOME}/.claude/skills" ;;
-        codex)  echo "${HOME}/.agents/skills" ;;
+        codex)  echo "${HOME}/.codex/skills" ;;
         gemini) echo "${HOME}/.gemini/skills" ;;
         *)      echo "Unknown agent: $1" >&2; return 1 ;;
     esac

@@ -11,7 +11,7 @@ SGLang 源码位于此 skill 安装目录下的 `repos/sglang/`。
 实际路径取决于所用工具:
 - Cursor: `~/.cursor/skills/sglang-skill/repos/sglang/`
 - Claude Code: `~/.claude/skills/sglang-skill/repos/sglang/`
-- Codex: `~/.agents/skills/sglang-skill/repos/sglang/`
+- Codex: `~/.codex/skills/sglang-skill/repos/sglang/`
 
 **SGLANG_REPO**: 下文示例用 `~/.cursor/skills/sglang-skill/repos/sglang/` 作占位符，**替换为实际路径**。
 
